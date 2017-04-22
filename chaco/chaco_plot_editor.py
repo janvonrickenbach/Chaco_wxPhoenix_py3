@@ -19,11 +19,11 @@ from traitsui.toolkit import toolkit_object
 Editor = toolkit_object('editor:Editor')
 
 # Local relative imports
-from axis import PlotAxis
-from plot_containers import OverlayPlotContainer
-from plot_factory import create_line_plot, create_scatter_plot, \
+from .axis import PlotAxis
+from .plot_containers import OverlayPlotContainer
+from .plot_factory import create_line_plot, create_scatter_plot, \
                          add_default_grids, add_default_axes
-from plot_label import PlotLabel
+from .plot_label import PlotLabel
 
 # Somewhat unorthodox...
 from chaco.tools.api import PanTool, ZoomTool
@@ -329,13 +329,13 @@ class ChacoPlotEditor ( Editor ):
         plot_creator_map = { "line": self._create_line_plot,
                              "scatter": self._create_scatter_plot }
 
-        if plot_type in plot_creator_map.keys():
+        if plot_type in list(plot_creator_map.keys()):
             plot = plot_creator_map[plot_type](plotitem, (x_values, y_values),
                                                 index_bounds = index_bounds,
                                                 value_bounds = value_bounds,
                                                 orientation = plotitem.orientation)
         else:
-            raise RuntimeError, "Unknown plot type '%s' in ChacoPlotEditor." % plot_type
+            raise RuntimeError("Unknown plot type '%s' in ChacoPlotEditor." % plot_type)
 
         self._set_basic_properties(plot, plotitem)
 

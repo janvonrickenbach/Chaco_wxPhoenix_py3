@@ -1,5 +1,5 @@
 
-from __future__ import with_statement
+
 
 # Major library imports
 from numpy import column_stack, compress, invert, isnan, transpose
@@ -9,8 +9,8 @@ import logging
 from traits.api import Any, Enum, Float, Instance
 
 # Chaco imports
-from lineplot import LinePlot
-from abstract_data_source import AbstractDataSource
+from .lineplot import LinePlot
+from .abstract_data_source import AbstractDataSource
 
 # Set up a logger for this module
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ class ErrorBarPlot(LinePlot):
         value_high, value_high_mask = self.value_high.get_data_mask()
         value_mask = value_low_mask & value_high_mask
 
-        l1, l2, l3 = map(len, (index, value_low, value_high))
+        l1, l2, l3 = list(map(len, (index, value_low, value_high)))
         if 0 in (l1, l2, l3) or not (l1 == l2 == l3):
             logger.warn("Chaco: using empty dataset; index_len=%d, value_low_len=%d, value_high_len=%d." % (l1,l2,l3))
             self._cached_data_pts = []

@@ -10,38 +10,38 @@ from types import FunctionType
 from traits.api import Delegate, Dict, Instance, Int, List, Property, Str
 
 # Local, relative imports
-from abstract_colormap import AbstractColormap
-from abstract_data_source import AbstractDataSource
-from abstract_plot_data import AbstractPlotData
-from array_data_source import ArrayDataSource
-from array_plot_data import ArrayPlotData
-from base_xy_plot import BaseXYPlot
-from barplot import BarPlot
-from candle_plot import CandlePlot
-from colormapped_scatterplot import ColormappedScatterPlot
-from contour_line_plot import ContourLinePlot
-from contour_poly_plot import ContourPolyPlot
-from cmap_image_plot import CMapImagePlot
-from data_range_1d import DataRange1D
-from data_view import DataView
-from default_colormaps import Spectral
-from grid_data_source import GridDataSource
-from grid_mapper import GridMapper
-from image_data import ImageData
-from image_plot import ImagePlot
-from legend import Legend
-from lineplot import LinePlot
-from line_scatterplot_1d import LineScatterPlot1D
-from linear_mapper import LinearMapper
-from log_mapper import LogMapper
-from plot_label import PlotLabel
-from polygon_plot import PolygonPlot
-from scatterplot import ScatterPlot
-from scatterplot_1d import ScatterPlot1D
-from text_plot_1d import TextPlot1D
-from filled_line_plot import FilledLinePlot
-from quiverplot import QuiverPlot
-from jitterplot import JitterPlot
+from .abstract_colormap import AbstractColormap
+from .abstract_data_source import AbstractDataSource
+from .abstract_plot_data import AbstractPlotData
+from .array_data_source import ArrayDataSource
+from .array_plot_data import ArrayPlotData
+from .base_xy_plot import BaseXYPlot
+from .barplot import BarPlot
+from .candle_plot import CandlePlot
+from .colormapped_scatterplot import ColormappedScatterPlot
+from .contour_line_plot import ContourLinePlot
+from .contour_poly_plot import ContourPolyPlot
+from .cmap_image_plot import CMapImagePlot
+from .data_range_1d import DataRange1D
+from .data_view import DataView
+from .default_colormaps import Spectral
+from .grid_data_source import GridDataSource
+from .grid_mapper import GridMapper
+from .image_data import ImageData
+from .image_plot import ImagePlot
+from .legend import Legend
+from .lineplot import LinePlot
+from .line_scatterplot_1d import LineScatterPlot1D
+from .linear_mapper import LinearMapper
+from .log_mapper import LogMapper
+from .plot_label import PlotLabel
+from .polygon_plot import PolygonPlot
+from .scatterplot import ScatterPlot
+from .scatterplot_1d import ScatterPlot1D
+from .text_plot_1d import TextPlot1D
+from .filled_line_plot import FilledLinePlot
+from .quiverplot import QuiverPlot
+from .jitterplot import JitterPlot
 
 
 
@@ -173,8 +173,8 @@ class Plot(DataView):
             elif type(data) in (ndarray, tuple, list):
                 self.data = ArrayPlotData(data)
             else:
-                raise ValueError, "Don't know how to create PlotData for data" \
-                                  "of type " + str(type(data))
+                raise ValueError("Don't know how to create PlotData for data" \
+                                  "of type " + str(type(data)))
 
         if not self._title:
             self._title = PlotLabel(font="swiss 16", visible=False,
@@ -301,7 +301,7 @@ class Plot(DataView):
         if len(data) == 0:
             return
 
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             data = (data,)
 
         self.index_scale = index_scale
@@ -435,7 +435,7 @@ class Plot(DataView):
                 value = self._get_or_create_datasource(data[1])
                 self.value_range.add(value)
                 color = self._get_or_create_datasource(data[2])
-                if not styles.has_key("color_mapper"):
+                if "color_mapper" not in styles:
                     raise ValueError("Scalar 2D data requires a color_mapper.")
 
                 colormap = styles.pop("color_mapper", None)
@@ -699,12 +699,12 @@ class Plot(DataView):
         array_data = value_ds.get_data()
 
         # process bounds to get linspaces
-        if isinstance(xbounds, basestring):
+        if isinstance(xbounds, str):
             xbounds = self._get_or_create_datasource(xbounds).get_data()
 
         xs = self._process_2d_bounds(xbounds, array_data, 1, cell_plot)
 
-        if isinstance(ybounds, basestring):
+        if isinstance(ybounds, str):
             ybounds = self._get_or_create_datasource(ybounds).get_data()
 
         ys = self._process_2d_bounds(ybounds, array_data, 0, cell_plot)
@@ -804,24 +804,24 @@ class Plot(DataView):
 
         # Create the datasources
         if len(data) == 3:
-            index, bar_min, bar_max = map(self._get_or_create_datasource, data)
+            index, bar_min, bar_max = list(map(self._get_or_create_datasource, data))
             self.value_range.add(bar_min, bar_max)
             center = None
             min = None
             max = None
         elif len(data) == 4:
-            index, bar_min, center, bar_max = map(self._get_or_create_datasource, data)
+            index, bar_min, center, bar_max = list(map(self._get_or_create_datasource, data))
             self.value_range.add(bar_min, center, bar_max)
             min = None
             max = None
         elif len(data) == 5:
             index, min, bar_min, bar_max, max = \
-                            map(self._get_or_create_datasource, data)
+                            list(map(self._get_or_create_datasource, data))
             self.value_range.add(min, bar_min, bar_max, max)
             center = None
         elif len(data) == 6:
             index, min, bar_min, center, bar_max, max = \
-                            map(self._get_or_create_datasource, data)
+                            list(map(self._get_or_create_datasource, data))
             self.value_range.add(min, bar_min, center, bar_max, max)
         self.index_range.add(index)
 
@@ -900,7 +900,7 @@ class Plot(DataView):
         if origin is None:
             origin = self.default_origin
 
-        index, value, vectors = map(self._get_or_create_datasource, data)
+        index, value, vectors = list(map(self._get_or_create_datasource, data))
 
         self.index_range.add(index)
         self.value_range.add(value)
@@ -959,7 +959,7 @@ class Plot(DataView):
         if len(data) == 0:
             return
 
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             data = (data,)
 
         # TODO: support lists of plot types
@@ -1062,7 +1062,7 @@ class Plot(DataView):
 
         # Cull the candidate list of sources to remove by checking the other plots
         sources_in_use = set()
-        for p in itertools.chain(*self.plots.values()):
+        for p in itertools.chain(*list(self.plots.values())):
                 sources_in_use.add(p.index)
                 sources_in_use.add(p.value)
 
@@ -1164,7 +1164,7 @@ class Plot(DataView):
     #------------------------------------------------------------------------
 
     def _color_mapper_changed(self):
-        for plist in self.plots.values():
+        for plist in list(self.plots.values()):
             for plot in plist:
                 plot.color_mapper = self.color_mapper
         self.invalidate_draw()
@@ -1273,7 +1273,7 @@ class Plot(DataView):
                 if new is not None:
                     new.add(datasource)
         range_name = name + "_range"
-        for renderer in itertools.chain(*self.plots.values()):
+        for renderer in itertools.chain(*list(self.plots.values())):
             if hasattr(renderer, range_name):
                 setattr(renderer, range_name, new)
 

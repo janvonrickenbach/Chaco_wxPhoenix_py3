@@ -7,14 +7,14 @@
 #
 #################################################################################
 
-from __future__ import with_statement
+
 
 # Enthought library imports
 from traits.api import Bool, Float
 
 # Local, relative imports
-from base_plot_frame import BasePlotFrame
-from plot_containers import HPlotContainer, OverlayPlotContainer, VPlotContainer
+from .base_plot_frame import BasePlotFrame
+from .plot_containers import HPlotContainer, OverlayPlotContainer, VPlotContainer
 
 
 class CrossPlotFrame(BasePlotFrame):
@@ -52,7 +52,7 @@ class CrossPlotFrame(BasePlotFrame):
 
 
     def __init__(self, **kwtraits):
-        if kwtraits.has_key("bounds"):
+        if "bounds" in kwtraits:
             bounds = kwtraits.pop("bounds")
         else:
             bounds = list(self.default_bounds)
@@ -148,7 +148,7 @@ class CrossPlotFrame(BasePlotFrame):
         center.outer_position = [center_x, center_y]
         center.outer_bounds = [bottom.width, left.height]
 
-        for slot in self._frame_slots.values():
+        for slot in list(self._frame_slots.values()):
             if slot.visible:
                 preferred_size = slot.get_preferred_size()
                 if "h" not in slot.resizable:
@@ -167,7 +167,7 @@ class CrossPlotFrame(BasePlotFrame):
     def __getstate__(self):
         state = super(CrossPlotFrame,self).__getstate__()
         for key in ['_layout_needed']:
-            if state.has_key(key):
+            if key in state:
                 del state[key]
 
         return state

@@ -12,7 +12,7 @@ __all__ = ([x for x in dir(stdlib_time) if not x.startswith('_')]
     + ['safe_fromtimestamp', 'datetime', 'timedelta', 'MINYEAR', 'MAXYEAR',
         'EPOCH'])
 
-EPOCH = datetime.fromtimestamp(0.0)
+EPOCH = datetime.fromtimestamp(stdlib_time.time())
 
 # Can't monkeypatch methods of anything in datetime, so we have to wrap them
 def safe_fromtimestamp(timestamp, *args, **kwds):
@@ -26,7 +26,7 @@ def safe_fromtimestamp(timestamp, *args, **kwds):
     """
     try:
         return EPOCH + timedelta(seconds=timestamp)
-    except (ValueError, OverflowError), e:
+    except (ValueError, OverflowError) as e:
         warnings.warn("Timestamp out of range.  Returning safe default value.")
         if timestamp <= 0:
             return datetime(MINYEAR, 1, 1, 0, 0, 0)

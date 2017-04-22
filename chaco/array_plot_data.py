@@ -62,7 +62,7 @@ class ArrayPlotData(AbstractPlotData):
         """
         super(AbstractPlotData, self).__init__()
         self._update_data(kw)
-        data = dict(zip(self._generate_names(len(data)), data))
+        data = dict(list(zip(self._generate_names(len(data)), data)))
         self._update_data(data)
 
 
@@ -73,7 +73,7 @@ class ArrayPlotData(AbstractPlotData):
     def list_data(self):
         """ Returns a list of the names of the arrays managed by this instance.
         """
-        return self.arrays.keys()
+        return list(self.arrays.keys())
 
 
     def get_data(self, name):
@@ -189,7 +189,7 @@ class ArrayPlotData(AbstractPlotData):
         """
         # note that this call modifies data, but that's OK since the callers
         # all create the dictionary that they pass in
-        for name, value in data.items():
+        for name, value in list(data.items()):
             if not isinstance(value, (ndarray, AbstractDataSource)):
                 data[name] = array(value)
             else:

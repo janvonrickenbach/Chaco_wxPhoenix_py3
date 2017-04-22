@@ -50,7 +50,7 @@ if ETSConfig.toolkit == "wx":
             sizer.Add(self.plot_window.control, 1, wx.EXPAND)
 
             # Hook up event handlers for destroy, etc.
-            wx.EVT_WINDOW_DESTROY(self, self._on_window_close)
+            self.Bind(wx.EVT_WINDOW_DESTROY, self._on_window_close)
 
             # More WX boilerplate.
             self.SetSizer(sizer)

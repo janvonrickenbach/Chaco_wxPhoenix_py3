@@ -1,7 +1,7 @@
 """ Defines the PolygonPlot class.
 """
 
-from __future__ import with_statement
+
 
 # Major library imports
 import numpy as np
@@ -14,7 +14,7 @@ from traits.api import Enum, Float, Tuple, Property, cached_property, \
                         on_trait_change
 
 # Local imports.
-from base_xy_plot import BaseXYPlot
+from .base_xy_plot import BaseXYPlot
 
 class PolygonPlot(BaseXYPlot):
     """ Plots a polygon in dataspace.

@@ -12,9 +12,9 @@ def float_or_auto(val):
     try:
         return float(val)
     except:
-        if isinstance(val, basestring) and val == "auto":
+        if isinstance(val, str) and val == "auto":
             return val
-    raise TraitError, "Tick interval must be a number or 'auto'."
+    raise TraitError("Tick interval must be a number or 'auto'.")
 
 # Traits UI for a PlotAxis.
 AxisView = View(VGroup(

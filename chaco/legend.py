@@ -2,7 +2,7 @@
 CompositeIconRenderer classes.
 """
 
-from __future__ import with_statement
+
 
 from numpy import array, zeros_like
 
@@ -13,11 +13,11 @@ from traits.api import Any, Dict, Enum, Bool, HasTraits, Int, \
                                  Instance, List, CList, Float, Str
 
 # Local relative imports
-from abstract_overlay import AbstractOverlay
-from label import Label
-from lineplot import LinePlot
-from plot_component import PlotComponent
-from scatterplot import ScatterPlot
+from .abstract_overlay import AbstractOverlay
+from .label import Label
+from .lineplot import LinePlot
+from .plot_component import PlotComponent
+from .scatterplot import ScatterPlot
 
 
 class AbstractCompositeIconRenderer(HasTraits):
@@ -355,7 +355,7 @@ class Legend(AbstractOverlay):
         if len(self.plots) == 0:
             return [0, 0]
 
-        plot_names, visible_plots = map(list, zip(*sorted(self.plots.items())))
+        plot_names, visible_plots = list(map(list, list(zip(*sorted(self.plots.items())))))
         label_names = self.labels
         if len(label_names) == 0:
             if len(self.plots) > 0:

@@ -8,8 +8,8 @@ import numpy as np
 from traits.api import Any, Constant, Int, Tuple
 
 # Chaco imports
-from base import NumericalSequenceTrait, reverse_map_1d, SortOrderTrait
-from abstract_data_source import AbstractDataSource
+from .base import NumericalSequenceTrait, reverse_map_1d, SortOrderTrait
+from .abstract_data_source import AbstractDataSource
 
 
 def bounded_nanargmin(arr):
@@ -120,8 +120,23 @@ class ArrayDataSource(AbstractDataSource):
         sort_order : SortOrderTrait
             The sort order of the data
         """
-        self._data = newdata
-        if sort_order is not None:
+        try:
+            ndl=len(newdata)
+            if ndl>0:
+                do_assign=True
+            else:
+                do_assign=False
+        except:
+            do_assign=False
+        if do_assign:# not (newdata is None):
+            self._data = array(newdata)
+        try:
+            editor=sort_order.editor
+        except:
+            sort_is_none=True
+        else:
+            sort_is_none=False
+        if not sort_is_none: #sort_order is not None:
             self.sort_order = sort_order
         self._compute_bounds()
         self.data_changed = True

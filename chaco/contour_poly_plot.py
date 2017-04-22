@@ -1,7 +1,7 @@
 """ Defines the ContourPolyPlot class.
 """
 
-from __future__ import with_statement
+
 
 # Major library imports
 from numpy import array, isfinite, meshgrid, transpose
@@ -10,8 +10,8 @@ from numpy import array, isfinite, meshgrid, transpose
 from traits.api import Bool, Dict
 
 # Local relative imports
-from base_contour_plot import BaseContourPlot
-from contour.contour import Cntr
+from .base_contour_plot import BaseContourPlot
+from .contour.contour import Cntr
 
 
 class ContourPolyPlot(BaseContourPlot):

@@ -1,7 +1,7 @@
 """ Defines the PlotAxis class, and associated validator and UI.
 """
 
-from __future__ import with_statement
+
 
 # Major library import
 from numpy import array, around, absolute, cos, dot, float64, inf, pi, \
@@ -14,11 +14,11 @@ from traits.api import Any, Float, Int, Str, Trait, Unicode, \
      Bool, Event, List, Array, Instance, Enum, Callable
 
 # Local relative imports
-from ticks import AbstractTickGenerator, DefaultTickGenerator, MinorTickGenerator
-from abstract_mapper import AbstractMapper
-from abstract_overlay import AbstractOverlay
-from label import Label
-from log_mapper import LogMapper
+from .ticks import AbstractTickGenerator, DefaultTickGenerator, MinorTickGenerator
+from .abstract_mapper import AbstractMapper
+from .abstract_overlay import AbstractOverlay
+from .label import Label
+from .log_mapper import LogMapper
 
 
 def DEFAULT_TICK_FORMATTER(val):
@@ -193,7 +193,7 @@ class PlotAxis(AbstractOverlay):
         called automatically be the Traits framework when .edit_traits() is
         invoked.
         """
-        from axis_view import AxisView
+        from .axis_view import AxisView
         return AxisView
 
 
@@ -434,8 +434,14 @@ class PlotAxis(AbstractOverlay):
 
         datalow = self.mapper.range.low
         datahigh = self.mapper.range.high
+        #if datalow>datahigh:
+            #datalow=self.mapper.range.high
+            #datahigh = self.mapper.range.low
+            #self.mapper.range.low = datalow
+            #self.mapper.range.high=datahigh
         screenhigh = self.mapper.high_pos
         screenlow = self.mapper.low_pos
+
         if overlay_component is not None:
             origin = getattr(overlay_component, 'origin', 'bottom left')
         else:
@@ -460,7 +466,7 @@ class PlotAxis(AbstractOverlay):
             return
 
         if datalow > datahigh:
-            raise RuntimeError, "DataRange low is greater than high; unable to compute axis ticks."
+            raise RuntimeError("DataRange low is greater than high; unable to compute axis ticks.")
 
         if not self.tick_generator:
             return
@@ -783,7 +789,7 @@ class PlotAxis(AbstractOverlay):
 
         state = super(PlotAxis,self).__getstate__()
         for key in dont_pickle:
-            if state.has_key(key):
+            if key in state:
                 del state[key]
 
         return state

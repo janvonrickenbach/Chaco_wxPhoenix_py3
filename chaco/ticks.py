@@ -159,12 +159,12 @@ def auto_ticks ( data_low, data_high, bound_low, bound_high, tick_interval,
     is_auto_low  = (bound_low  == 'auto')
     is_auto_high = (bound_high == 'auto')
 
-    if isinstance(bound_low, basestring):
+    if isinstance(bound_low, str):
         lower = data_low
     else:
         lower = float( bound_low )
 
-    if isinstance(bound_high, basestring):
+    if isinstance(bound_high, str):
         upper = data_high
     else:
         upper = float( bound_high )
@@ -281,8 +281,11 @@ def auto_interval ( data_low, data_high, max_ticks=9 ):
         interval : float
             tick mark interval for axis
     """
+    #if data_high<data_low:
+        #hold=data_high
+        #data_high=data_low
+        #data_low=hold
     range = float( data_high ) - float( data_low )
-
     # We'll choose from between 2 and 8 tick marks.
     # Preference is given to more ticks:
     #   Note reverse order and see kludge below...

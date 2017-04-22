@@ -5,7 +5,7 @@ from numpy import take, array, concatenate, nonzero
 from traits.api import HasStrictTraits, Instance, Delegate, Array, List, \
                              Tuple, Property, Trait, Any, Disallow
 
-from datamapper import AbstractDataMapper, right_shift, left_shift, sort_points
+from .datamapper import AbstractDataMapper, right_shift, left_shift, sort_points
 
 
 def find_runs(int_array, order='ascending'):
@@ -48,7 +48,7 @@ def arg_find_runs(int_array, order='ascending'):
     rshifted = right_shift(int_array, int_array[0]-increment)
     start_indices = concatenate([[0], nonzero(int_array - (rshifted+increment))[0]])
     end_indices = left_shift(start_indices, len(int_array))
-    return zip(start_indices, end_indices)
+    return list(zip(start_indices, end_indices))
 
 
 class AbstractCell(HasStrictTraits):
@@ -216,7 +216,7 @@ class RangedCell(AbstractCell):
         return
 
     def _get_indices(self):
-        list_of_indices = [range(i,j) for (i,j) in self._ranges]
+        list_of_indices = [list(range(i,j)) for (i,j) in self._ranges]
         return sum(list_of_indices, [])
 
 

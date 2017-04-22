@@ -1,7 +1,7 @@
 """ Defines the BarPlot class.
 """
 
-from __future__ import with_statement
+
 
 import logging
 
@@ -13,9 +13,9 @@ from kiva.constants import FILL_STROKE
 
 # Local relative imports
 from chaco.abstract_plot_renderer import AbstractPlotRenderer
-from abstract_mapper import AbstractMapper
-from array_data_source import ArrayDataSource
-from base import reverse_map_1d
+from .abstract_mapper import AbstractMapper
+from .array_data_source import ArrayDataSource
+from .base import reverse_map_1d
 
 
 logger = logging.getLogger(__name__)

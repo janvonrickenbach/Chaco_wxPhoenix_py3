@@ -23,7 +23,7 @@ class BroadcasterTool(BaseTool):
         handled = False   # keeps track of whether any tool handled this event
 
         if event.window.mouse_owner == self:
-            tools = self.mouse_owners.keys()
+            tools = list(self.mouse_owners.keys())
             mouse_owned = True
         else:
             tools = self.tools

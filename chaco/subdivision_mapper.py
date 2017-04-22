@@ -10,10 +10,10 @@ import numpy
 from traits.api import List, Array, Tuple, Int, Float
 
 # Local, relative imports
-from datamapper import AbstractDataMapper, right_shift, left_shift, \
+from .datamapper import AbstractDataMapper, right_shift, left_shift, \
                        sort_points, ArraySortTrait, \
                        array_zip
-from subdivision_cells import AbstractCell, Cell, RangedCell, find_runs, \
+from .subdivision_cells import AbstractCell, Cell, RangedCell, find_runs, \
                               arg_find_runs
 
 
@@ -165,7 +165,7 @@ class SubdivisionDataMapper(AbstractDataMapper):
             if celltype == RangedCell:
                 self._cellgrid[gridx,gridy].add_ranges([(start,end)])
             else:
-                self._cellgrid[gridx,gridy].add_indices(range(start,end))
+                self._cellgrid[gridx,gridy].add_indices(list(range(start,end)))
         return
 
     def _get_indices_for_points(self, pointlist):

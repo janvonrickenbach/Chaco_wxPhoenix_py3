@@ -8,14 +8,14 @@
 #
 #################################################################################
 
-from __future__ import with_statement
+
 
 # Enthought library imports
 from traits.api import Bool
 
 # Local, relative imports
-from base_plot_frame import BasePlotFrame
-from plot_containers import OverlayPlotContainer
+from .base_plot_frame import BasePlotFrame
+from .plot_containers import OverlayPlotContainer
 
 class SimplePlotFrame(BasePlotFrame):
     """
@@ -50,7 +50,7 @@ class SimplePlotFrame(BasePlotFrame):
 
     def __init__(self, **kwtraits):
         # Delay setting the bounds until after base class initialization
-        if kwtraits.has_key("bounds"):
+        if "bounds" in kwtraits:
             bounds = kwtraits.pop("bounds")
         else:
             bounds = list(self.default_bounds)
@@ -141,7 +141,7 @@ class SimplePlotFrame(BasePlotFrame):
     def __getstate__(self):
         state = super(SimplePlotFrame,self).__getstate__()
         for key in ['_layout_needed']:
-            if state.has_key(key):
+            if key in state:
                 del state[key]
 
         return state

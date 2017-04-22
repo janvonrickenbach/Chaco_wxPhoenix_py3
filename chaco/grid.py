@@ -2,7 +2,7 @@
 function.
 """
 
-from __future__ import with_statement
+
 
 from numpy import around, array, asarray, column_stack, float64, inf, zeros, zeros_like
 
@@ -13,10 +13,10 @@ from traits.api import Any, Bool, Callable, Enum, Float, Instance, \
 from traitsui.api import HGroup, Item, VGroup, View, TextEditor
 
 # Local, relative imports
-from abstract_overlay import AbstractOverlay
-from abstract_mapper import AbstractMapper
-from log_mapper import LogMapper
-from ticks import AbstractTickGenerator, DefaultTickGenerator
+from .abstract_overlay import AbstractOverlay
+from .abstract_mapper import AbstractMapper
+from .log_mapper import LogMapper
+from .ticks import AbstractTickGenerator, DefaultTickGenerator
 
 
 def float_or_auto(val):
@@ -28,9 +28,9 @@ def float_or_auto(val):
     try:
         return float(val)
     except:
-        if isinstance(val, basestring) and val == "auto":
+        if isinstance(val, str) and val == "auto":
             return val
-    raise TraitError, "Tick interval must be a number or 'auto'."
+    raise TraitError("Tick interval must be a number or 'auto'.")
 
 # View for setting grid properties.
 GridView = View(VGroup(
@@ -413,7 +413,7 @@ class PlotGrid(AbstractOverlay):
     def __getstate__(self):
         state = super(PlotGrid,self).__getstate__()
         for key in ['_cache_valid', '_tick_list', '_tick_positions', '_tick_extents']:
-            if state.has_key(key):
+            if key in state:
                 del state[key]
 
         return state

@@ -4,7 +4,7 @@ Classes for formatting labels for values or times.
 
 from math import ceil, floor, fmod, log10
 from numpy import abs, all, array, asarray, amax, amin
-from safetime import strftime, time, safe_fromtimestamp, localtime
+from .safetime import strftime, time, safe_fromtimestamp, localtime
 import warnings
 
 
@@ -128,9 +128,9 @@ class BasicFormatter(object):
         else:
             # For decimal mode,
             if not (ticks % 1).any():
-                labels = map(str, ticks.astype(int))
+                labels = list(map(str, ticks.astype(int)))
             else:
-                labels = map(str, ticks)
+                labels = list(map(str, ticks))
 
         return labels
 
@@ -209,7 +209,7 @@ class BasicFormatter(object):
             return 0, 0
 
         # use the start and end points as ticks and average their label sizes
-        labelsizes = map(len, self.format([start, end]))
+        labelsizes = list(map(len, self.format([start, end])))
         avg_size = sum(labelsizes) / 2.0
 
         if ticker:
@@ -236,7 +236,7 @@ class IntegerFormatter(BasicFormatter):
     def format(self, ticks, numlabels=None, char_width=None, fill_ratio=0.3):
         """ Formats integer tick labels.
         """
-        return map(str, map(int, ticks))
+        return list(map(str, list(map(int, ticks))))
 
 
 class OffsetFormatter(BasicFormatter):
@@ -358,7 +358,7 @@ class OffsetFormatter(BasicFormatter):
         elif char_width:
             est_ticks = round(fill_ratio * char_width / avg_size)
 
-        start, mid, end = map(len, self.format([start, (start+end)/2.0, end]))
+        start, mid, end = list(map(len, self.format([start, (start+end)/2.0, end])))
         if est_ticks > 2:
             size = start + end + (est_ticks-2) * mid
         else:
@@ -459,7 +459,7 @@ class TimeFormatter(object):
         if self.formats:
             return
 
-        for fmt_name, fmt_strings in self._formats.items():
+        for fmt_name, fmt_strings in list(self._formats.items()):
             sizes = []
             tmptime = time()
             for s in fmt_strings:
@@ -567,7 +567,7 @@ class TimeFormatter(object):
             try:
                 tm = localtime(t)
                 s = strftimeEx(format, t, tm)
-            except ValueError, e:
+            except ValueError as e:
                 warnings.warn("Unable to convert tick for timestamp " + str(t))
                 labels.append("ERR")
                 continue

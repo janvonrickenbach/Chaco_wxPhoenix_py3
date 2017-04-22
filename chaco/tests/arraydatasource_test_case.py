@@ -173,10 +173,10 @@ class ArrayDataSourceTestCase(UnittestTools, unittest.TestCase):
         self.assertEqual(bounds, (-np.inf, np.inf))
 
     def test_bounds_non_numeric(self):
-        myarray = np.array([u'abc', u'foo', u'bar', u'def'], dtype=unicode)
+        myarray = np.array(['abc', 'foo', 'bar', 'def'], dtype=str)
         data_source = ArrayDataSource(myarray)
         bounds = data_source.get_bounds()
-        self.assertEqual(bounds, (u'abc', u'def'))
+        self.assertEqual(bounds, ('abc', 'def'))
 
     def test_data_size(self):
         # We know that ArrayDataTestCase always returns the exact length of
@@ -259,13 +259,13 @@ class PointDataTestCase(unittest.TestCase):
     # Since PointData is mostly the same as ScalarData, the key things to
     # test are functionality that use _compute_bounds() and reverse_map().
     def create_array(self):
-        return array(zip(range(10), range(0, 100, 10)))
+        return array(list(zip(list(range(10)), list(range(0, 100, 10)))))
 
     def test_basic_set_get(self):
         myarray = self.create_array()
         pd = PointDataSource(myarray)
         self.assertTrue(allclose(myarray, pd._data))
-        self.assert_(pd.value_dimension == "point")
+        self.assertTrue(pd.value_dimension == "point")
         return
 
     def test_bounds(self):

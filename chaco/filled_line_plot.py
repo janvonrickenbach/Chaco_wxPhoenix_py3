@@ -1,12 +1,12 @@
 
-from __future__ import with_statement
+
 
 from numpy import empty
 from traits.api import Property, Enum
 
 # Local imports
-from lineplot import LinePlot
-from polygon_plot import PolygonPlot
+from .lineplot import LinePlot
+from .polygon_plot import PolygonPlot
 
 
 def Alias(name):

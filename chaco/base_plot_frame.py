@@ -8,14 +8,14 @@
 #
 #################################################################################
 
-from __future__ import with_statement
+
 
 # Enthought library imports
 from enable.api import Container
 from traits.api import Enum
 
 # Local, relative imports
-from plot_component import PlotComponent, DEFAULT_DRAWING_ORDER
+from .plot_component import PlotComponent, DEFAULT_DRAWING_ORDER
 
 
 class BasePlotFrame(Container, PlotComponent):
@@ -62,7 +62,7 @@ class BasePlotFrame(Container, PlotComponent):
         """
         Sets the named slot to use the given container. *container* can be None.
         """
-        if self._frame_slots.has_key(slotname):
+        if slotname in self._frame_slots:
             old_container = self._frame_slots[slotname]
             Container.remove(self, old_container)
         if container is not None:
@@ -106,7 +106,7 @@ class BasePlotFrame(Container, PlotComponent):
         layout; if so, the frame needs to do layout also.
         """
         if not self._layout_needed and not force and self.fit_components != "":
-            for slot in self._frame_slots.values():
+            for slot in list(self._frame_slots.values()):
                 if slot._layout_needed:
                     self._layout_needed = True
                     break
@@ -150,8 +150,8 @@ class BasePlotFrame(Container, PlotComponent):
         if name in self.slot_names:
             return self._frame_slots[name]
         else:
-            raise AttributeError, "'%s' object has no attribute '%s'" % \
-                                    (self.__class__.__name__, name)
+            raise AttributeError("'%s' object has no attribute '%s'" % \
+                                    (self.__class__.__name__, name))
 
     def __setattr__(self, name, value):
         if name in self.slot_names:
@@ -165,7 +165,7 @@ class BasePlotFrame(Container, PlotComponent):
 
     def post_load(self, path=None):
         super(BasePlotFrame, self).post_load(path)
-        for slot in self._frame_slots.values():
+        for slot in list(self._frame_slots.values()):
             slot.post_load(path)
         return
 

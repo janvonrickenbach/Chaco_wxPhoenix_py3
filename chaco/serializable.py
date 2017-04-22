@@ -56,7 +56,7 @@ class Serializable(object):
         you want post_load() to happen in the same order as MRO, which super()
         does automatically.
         """
-        print 'Serializable._post_load'
+        print('Serializable._post_load')
         pass
 
     def _do_setstate(self, state):

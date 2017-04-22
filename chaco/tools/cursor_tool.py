@@ -13,7 +13,7 @@ TODO:
     plot component
 
 """
-from __future__ import with_statement
+
 
 # Major library imports
 import numpy
@@ -27,7 +27,7 @@ from traits.api import Int, Property, cached_property, Float,\
 from chaco.scatter_markers import CircleMarker
 from chaco.base_xy_plot import BaseXYPlot
 from chaco.base_2d_plot import Base2DPlot
-from line_inspector import LineInspector
+from .line_inspector import LineInspector
 
 
 def CursorTool(component, *args, **kwds):

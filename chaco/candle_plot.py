@@ -1,5 +1,5 @@
 
-from __future__ import with_statement
+
 
 # Major library imports
 from numpy import array, compress, concatenate, searchsorted
@@ -8,8 +8,8 @@ from numpy import array, compress, concatenate, searchsorted
 from traits.api import Instance, Property
 
 # Chaco imports
-from abstract_data_source import AbstractDataSource
-from base_candle_plot import BaseCandlePlot
+from .abstract_data_source import AbstractDataSource
+from .base_candle_plot import BaseCandlePlot
 
 def broaden(mask):
     """ Takes a 1D boolean mask array and returns a copy with all the non-zero
