@@ -2,12 +2,18 @@ import os, re, pydoc
 from docscrape_sphinx import SphinxDocString, SphinxClassDoc, SphinxFunctionDoc
 import inspect
 
-def mangle_docstrings(app, what, name, obj, options, lines,
+
+def mangle_docstrings(app,
+                      what,
+                      name,
+                      obj,
+                      options,
+                      lines,
                       reference_offset=[0]):
     if what == 'module':
         # Strip top title
         title_re = re.compile(r'^\s*[#*=]{4,}\n[a-z0-9 -]+\n[#*=]{4,}\s*',
-                              re.I|re.S)
+                              re.I | re.S)
         lines[:] = title_re.sub('', "\n".join(lines)).split("\n")
     else:
         doc = get_doc_object(obj, what)
@@ -35,12 +41,11 @@ def mangle_docstrings(app, what, name, obj, options, lines,
         for i, line in enumerate(lines):
             for r in references:
                 new_r = reference_offset[0] + r
-                lines[i] = lines[i].replace('[%d]_' % r,
-                                            '[%d]_' % new_r)
-                lines[i] = lines[i].replace('.. [%d]' % r,
-                                            '.. [%d]' % new_r)
+                lines[i] = lines[i].replace('[%d]_' % r, '[%d]_' % new_r)
+                lines[i] = lines[i].replace('.. [%d]' % r, '.. [%d]' % new_r)
 
     reference_offset[0] += len(references)
+
 
 def get_doc_object(obj, what=None):
     if what is None:
@@ -59,10 +64,11 @@ def get_doc_object(obj, what=None):
     else:
         return SphinxDocString(pydoc.getdoc(obj))
 
+
 def mangle_signature(app, what, name, obj, options, sig, retann):
     # Do not try to inspect classes that don't define `__init__`
     if (inspect.isclass(obj) and
-        'initializes x; see ' in pydoc.getdoc(obj.__init__)):
+            'initializes x; see ' in pydoc.getdoc(obj.__init__)):
         return '', ''
 
     if not (callable(obj) or hasattr(obj, '__argspec_is_invalid_')): return
@@ -72,6 +78,7 @@ def mangle_signature(app, what, name, obj, options, sig, retann):
     if doc['Signature']:
         sig = re.sub("^[^(]*", "", doc['Signature'])
         return sig, ''
+
 
 def initialize(app):
     try:
@@ -84,6 +91,7 @@ def initialize(app):
         print "[numpydoc] Phantom importing modules from", fn, "..."
         import_phantom_module(fn)
 
+
 def setup(app):
     app.connect('autodoc-process-docstring', mangle_docstrings)
     app.connect('builder-inited', initialize)
@@ -92,6 +100,7 @@ def setup(app):
 
     app.add_directive('autosummary', autosummary_directive, 1, (0, 0, False))
     app.add_role('autolink', autolink_role)
+
 
 #------------------------------------------------------------------------------
 # .. autosummary::
@@ -102,6 +111,7 @@ from docutils import nodes
 import sphinx.addnodes, sphinx.roles
 from sphinx.util import patfilter
 import posixpath
+
 
 def autosummary_directive(dirname, arguments, options, content, lineno,
                           content_offset, block_text, state, state_machine):
@@ -137,9 +147,10 @@ def autosummary_directive(dirname, arguments, options, content, lineno,
             docname = docname[:-len(suffix)]
         docname = posixpath.normpath(posixpath.join(dirname, docname))
         if docname not in env.found_docs:
-            warnings.append(state.document.reporter.warning(
-                'toctree references unknown document %r' % docname,
-                line=lineno))
+            warnings.append(
+                state.document.reporter.warning(
+                    'toctree references unknown document %r' % docname,
+                    line=lineno))
         docnames.append(docname)
 
     tocnode = sphinx.addnodes.toctree()
@@ -149,6 +160,7 @@ def autosummary_directive(dirname, arguments, options, content, lineno,
     tocnode['glob'] = None
 
     return warnings + node.children + [tocnode]
+
 
 def get_autosummary(names, document):
     """
@@ -175,8 +187,8 @@ def get_autosummary(names, document):
         try:
             obj, real_name = import_by_name(name, prefixes=prefixes)
         except ImportError:
-            warnings.append(document.reporter.warning(
-                'failed to import %s' % name))
+            warnings.append(
+                document.reporter.warning('failed to import %s' % name))
             rows.append((":obj:`%s`" % name, ""))
             continue
 
@@ -211,7 +223,7 @@ def get_autosummary(names, document):
 
     max_name_len = max([len(x[0]) for x in rows])
     row_fmt = "%%-%ds  %%s" % max_name_len
-    table_banner = ('='*max_name_len) + '  ' + '==============='
+    table_banner = ('=' * max_name_len) + '  ' + '==============='
 
     result.append(table_banner, '<autosummary>')
     for row in rows:
@@ -220,6 +232,7 @@ def get_autosummary(names, document):
     result.append('', '<autosummary>')
 
     return result, warnings, titles
+
 
 def import_by_name(name, prefixes=[None]):
     """
@@ -252,13 +265,14 @@ def import_by_name(name, prefixes=[None]):
             pass
     raise ImportError
 
+
 def _import_by_name(name):
     """Import a Python object given its full name"""
     try:
         name_parts = name.split('.')
         last_j = 0
         modname = None
-        for j in reversed(range(1, len(name_parts)+1)):
+        for j in reversed(range(1, len(name_parts) + 1)):
             last_j = j
             modname = '.'.join(name_parts[:j])
             try:
@@ -278,12 +292,14 @@ def _import_by_name(name):
     except (ValueError, ImportError, AttributeError, KeyError), e:
         raise ImportError(e)
 
+
 #------------------------------------------------------------------------------
 # :autolink: (smart default role)
 #------------------------------------------------------------------------------
 
-def autolink_role(typ, rawtext, etext, lineno, inliner,
-                  options={}, content=[]):
+
+def autolink_role(typ, rawtext, etext, lineno, inliner, options={},
+                  content=[]):
     """
     Smart linking role.
 
@@ -300,13 +316,15 @@ def autolink_role(typ, rawtext, etext, lineno, inliner,
         obj, name = import_by_name(pnode['reftarget'], prefixes)
     except ImportError:
         content = pnode[0]
-        r[0][0] = nodes.emphasis(rawtext, content[0].astext(),
-                                 classes=content['classes'])
+        r[0][0] = nodes.emphasis(
+            rawtext, content[0].astext(), classes=content['classes'])
     return r
+
 
 #------------------------------------------------------------------------------
 # Monkeypatch sphinx.ext.autodoc to accept argspecless autodocs (Sphinx < 0.5)
 #------------------------------------------------------------------------------
+
 
 def monkeypatch_sphinx_ext_autodoc():
     global _original_format_signature
@@ -319,6 +337,7 @@ def monkeypatch_sphinx_ext_autodoc():
     _original_format_signature = sphinx.ext.autodoc.format_signature
     sphinx.ext.autodoc.format_signature = our_format_signature
 
+
 def our_format_signature(what, obj):
     r = mangle_signature(None, what, None, obj, None, None, None)
     if r is not None:
@@ -326,10 +345,12 @@ def our_format_signature(what, obj):
     else:
         return _original_format_signature(what, obj)
 
+
 #------------------------------------------------------------------------------
 # Creating 'phantom' modules from an XML description
 #------------------------------------------------------------------------------
 import imp, sys, compiler, types
+
 
 def import_phantom_module(xml_file):
     """
@@ -369,7 +390,8 @@ def import_phantom_module(xml_file):
             while True:
                 try:
                     b = bases[j]
-                except IndexError: break
+                except IndexError:
+                    break
                 if b in all_nodes:
                     bases.extend(_get_bases(all_nodes[b]))
                 j += 1
@@ -416,8 +438,9 @@ def import_phantom_module(xml_file):
             obj.__doc__ = doc
             sys.modules[name] = obj
         elif node.tag == 'class':
-            bases = [object_cache[b] for b in _get_bases(node)
-                     if b in object_cache]
+            bases = [
+                object_cache[b] for b in _get_bases(node) if b in object_cache
+            ]
             bases.append(object)
             init = lambda self: None
             init.__doc__ = doc
@@ -437,7 +460,10 @@ def import_phantom_module(xml_file):
             if inspect.isclass(object_cache[parent]):
                 obj.__objclass__ = object_cache[parent]
         else:
-            class Dummy(object): pass
+
+            class Dummy(object):
+                pass
+
             obj = Dummy()
             obj.__name__ = name
             obj.__doc__ = doc

@@ -4,8 +4,6 @@ This module defines the CoordinateLineOverlay class, a Chaco overlay
 for Plot (and similar) objects.
 """
 
-
-
 from traits.api import Instance, Float, Array
 from enable.api import black_color_trait, LineStyle, Component
 from chaco.api import AbstractOverlay
@@ -84,6 +82,8 @@ class CoordinateLineOverlay(AbstractOverlay):
     def _draw_horizontal_line(self, gc, screen_y):
         if screen_y < self.component.y or screen_y > self.component.y2:
             return
-        gc.move_to(self.component.x, screen_y,)
+        gc.move_to(
+            self.component.x,
+            screen_y, )
         gc.line_to(self.component.x2, screen_y)
         gc.stroke_path()

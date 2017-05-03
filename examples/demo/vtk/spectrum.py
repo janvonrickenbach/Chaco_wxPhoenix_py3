@@ -25,24 +25,25 @@ SPECTROGRAM_LENGTH = 100
 
 def create_plot_component(obj):
     # Setup the spectrum plot
-    frequencies = linspace(0., float(SAMPLING_RATE)/2, num=NUM_SAMPLES/2)
+    frequencies = linspace(0., float(SAMPLING_RATE) / 2, num=NUM_SAMPLES / 2)
     obj.spectrum_data = ArrayPlotData(frequency=frequencies)
-    empty_amplitude = zeros(NUM_SAMPLES/2)
+    empty_amplitude = zeros(NUM_SAMPLES / 2)
     obj.spectrum_data.set_data('amplitude', empty_amplitude)
 
     obj.spectrum_plot = Plot(obj.spectrum_data)
-    obj.spectrum_plot.plot(("frequency", "amplitude"), name="Spectrum",
-                           color="red")
+    obj.spectrum_plot.plot(
+        ("frequency", "amplitude"), name="Spectrum", color="red")
     obj.spectrum_plot.padding = 50
     obj.spectrum_plot.title = "Spectrum"
-    spec_range = list(obj.spectrum_plot.plots.values())[0][0].value_mapper.range
+    spec_range = list(obj.spectrum_plot.plots.values())[0][
+        0].value_mapper.range
     spec_range.low = 0.0
     spec_range.high = 5.0
     obj.spectrum_plot.index_axis.title = 'Frequency (hz)'
     obj.spectrum_plot.value_axis.title = 'Amplitude'
 
     # Time Series plot
-    times = linspace(0., float(NUM_SAMPLES)/SAMPLING_RATE, num=NUM_SAMPLES)
+    times = linspace(0., float(NUM_SAMPLES) / SAMPLING_RATE, num=NUM_SAMPLES)
     obj.time_data = ArrayPlotData(time=times)
     empty_amplitude = zeros(NUM_SAMPLES)
     obj.time_data.set_data('amplitude', empty_amplitude)
@@ -58,22 +59,24 @@ def create_plot_component(obj):
     time_range.high = 0.2
 
     # Spectrogram plot
-    spectrogram_data = zeros(( NUM_SAMPLES/2, SPECTROGRAM_LENGTH))
+    spectrogram_data = zeros((NUM_SAMPLES / 2, SPECTROGRAM_LENGTH))
     obj.spectrogram_plotdata = ArrayPlotData()
     obj.spectrogram_plotdata.set_data('imagedata', spectrogram_data)
     spectrogram_plot = Plot(obj.spectrogram_plotdata)
     spectrogram_time = linspace(
-        0.0, float(SPECTROGRAM_LENGTH*NUM_SAMPLES)/float(SAMPLING_RATE),
+        0.0,
+        float(SPECTROGRAM_LENGTH * NUM_SAMPLES) / float(SAMPLING_RATE),
         num=SPECTROGRAM_LENGTH)
-    spectrogram_freq = linspace(0.0, float(SAMPLING_RATE/2), num=NUM_SAMPLES/2)
+    spectrogram_freq = linspace(
+        0.0, float(SAMPLING_RATE / 2), num=NUM_SAMPLES / 2)
     xbounds = (spectrogram_time[0], spectrogram_time[-1])
     ybounds = (spectrogram_freq[0], spectrogram_freq[-1])
-    spectrogram_plot.img_plot('imagedata',
-                              name='Spectrogram',
-                              xbounds=xbounds,
-                              ybounds=ybounds,
-                              colormap=jet,
-                              )
+    spectrogram_plot.img_plot(
+        'imagedata',
+        name='Spectrogram',
+        xbounds=xbounds,
+        ybounds=ybounds,
+        colormap=jet, )
     range_obj = spectrogram_plot.plots['Spectrogram'][0].value_mapper.range
     range_obj.high = 5
     range_obj.low = 0.0
@@ -82,7 +85,10 @@ def create_plot_component(obj):
 
     return obj.spectrum_plot, obj.time_plot, obj.spectrogram_plot
 
+
 _stream = None
+
+
 def get_audio_data():
     global _stream
     if _stream is None:
@@ -90,13 +96,17 @@ def get_audio_data():
         # The stream is always closed (if it was opened) in a try finally
         # block at the end of this file,
         pa = pyaudio.PyAudio()
-        _stream = pa.open(format=pyaudio.paInt16, channels=1,
-                          rate=SAMPLING_RATE,
-                          input=True, frames_per_buffer=NUM_SAMPLES)
+        _stream = pa.open(
+            format=pyaudio.paInt16,
+            channels=1,
+            rate=SAMPLING_RATE,
+            input=True,
+            frames_per_buffer=NUM_SAMPLES)
 
-    audio_data  = fromstring(_stream.read(NUM_SAMPLES), dtype=short)
+    audio_data = fromstring(_stream.read(NUM_SAMPLES), dtype=short)
     normalized_data = audio_data / 32768.0
-    return (abs(fft(normalized_data))[:NUM_SAMPLES/2], normalized_data)
+    return (abs(fft(normalized_data))[:NUM_SAMPLES / 2], normalized_data)
+
 
 class TimerController(HasTraits):
     interactor = Any()
@@ -110,18 +120,19 @@ class TimerController(HasTraits):
         self.spectrum_data.set_data('amplitude', spectrum)
         self.time_data.set_data('amplitude', time)
         spectrogram_data = self.spectrogram_plotdata.get_data('imagedata')
-        spectrogram_data = hstack((spectrogram_data[:,1:],
+        spectrogram_data = hstack((spectrogram_data[:, 1:],
                                    transpose([spectrum])))
 
         self.spectrogram_plotdata.set_data('imagedata', spectrogram_data)
         self.spectrum_plot.request_redraw()
         return
 
+
 def main():
     from tvtk.api import tvtk
     from mayavi import mlab
     from enable.vtk_backend.vtk_window import EnableVTKWindow
-    f = mlab.figure(size=(900,850))
+    f = mlab.figure(size=(900, 850))
     m = mlab.test_mesh()
     scene = mlab.gcf().scene
     render_window = scene.render_window
@@ -134,10 +145,12 @@ def main():
     specplot, timeplot, spectrogram = plots
 
     for i, p in enumerate(plots):
-        p.set(resizable = "", bounds = [200,200], outer_x = 0,
-                bgcolor = "transparent",
-                )
-        p.outer_y = i*250
+        p.set(
+            resizable="",
+            bounds=[200, 200],
+            outer_x=0,
+            bgcolor="transparent", )
+        p.outer_y = i * 250
         p.tools.append(MoveTool(p, drag_button="right"))
         p.tools.append(PanTool(p))
         p.tools.append(ZoomTool(p))
@@ -145,20 +158,20 @@ def main():
     spectrogram.tools[-1].set(tool_mode="range", axis="value")
     spectrogram.tools[-2].set(constrain=True, constrain_direction="y")
 
-    container = OverlayPlotContainer(bgcolor = "transparent",
-                    fit_window = True)
+    container = OverlayPlotContainer(bgcolor="transparent", fit_window=True)
     container.add(*plots)
     container.timer_callback = timer_controller.on_timer
 
-    window = EnableVTKWindow(rwi, renderer,
-            component = container,
-            istyle_class = tvtk.InteractorStyleTrackballCamera,
-            bgcolor = "transparent",
-            event_passthrough = True,
-            )
+    window = EnableVTKWindow(
+        rwi,
+        renderer,
+        component=container,
+        istyle_class=tvtk.InteractorStyleTrackballCamera,
+        bgcolor="transparent",
+        event_passthrough=True, )
 
     mlab.show()
 
+
 if __name__ == "__main__":
     main()
-

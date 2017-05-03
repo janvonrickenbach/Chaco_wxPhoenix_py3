@@ -2,14 +2,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 try:
     from chaco.downsample import _lttb
 except ImportError:
     _lttb = None
     logger.warning(
-        "Can't import _lttb extension module, lttb downsampling will not work."
-    )
+        "Can't import _lttb extension module, lttb downsampling will not work.")
 
 
 def largest_triangle_three_buckets(points, n_buckets):

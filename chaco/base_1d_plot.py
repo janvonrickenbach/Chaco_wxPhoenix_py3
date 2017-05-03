@@ -2,8 +2,6 @@
 Abstract base class for 1-D plots which only use one axis
 """
 
-
-
 # Standard library imports
 from numpy import argsort, asarray
 
@@ -49,8 +47,7 @@ class Base1DPlot(AbstractPlotRenderer):
     #: Faux origin for the axes and other objects to look at
     origin = Property(
         Enum('bottom left', 'top left', 'bottom right', 'top right'),
-        depends_on=['orientation', 'direction']
-    )
+        depends_on=['orientation', 'direction'])
 
     #------------------------------------------------------------------------
     # Private traits
@@ -130,7 +127,10 @@ class Base1DPlot(AbstractPlotRenderer):
         else:
             return asarray(self.index_mapper.map_data(x))
 
-    def map_index(self, screen_pt, threshold=2.0, outside_returns_none=True,
+    def map_index(self,
+                  screen_pt,
+                  threshold=2.0,
+                  outside_returns_none=True,
                   index_only=True):
         """ Maps a screen space point to an index into the plot's index array.
 
@@ -172,7 +172,8 @@ class Base1DPlot(AbstractPlotRenderer):
 
         if self._cached_data_pts_sorted is None:
             self._cached_data_argsort = argsort(self._cached_data)
-            self._cached_data_pts_sorted = self._cached_data[self._cached_data_argsort]
+            self._cached_data_pts_sorted = self._cached_data[
+                self._cached_data_argsort]
 
         # XXX better to just use argmin(abs(data - data_pt))?
 

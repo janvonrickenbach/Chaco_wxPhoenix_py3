@@ -1,8 +1,8 @@
-
 from chaco.tools.api import SelectTool
 from traits.api import List
 
 from .legend import Legend
+
 
 class SelectableLegend(Legend, SelectTool):
 
@@ -33,8 +33,9 @@ class SelectableLegend(Legend, SelectTool):
             label_width, label_height = self._cached_label_sizes[i]
             y -= label_height
             icon_y = y + (label_height - icon_height) / 2
-            dims.append((icon_x, icon_y, icon_width + self.icon_spacing + label_width,
-                         label_height))
+            dims.append(
+                (icon_x, icon_y, icon_width + self.icon_spacing + label_width,
+                 label_height))
             y -= self.line_spacing
         self._cached_label_dims = dims
 
@@ -45,7 +46,7 @@ class SelectableLegend(Legend, SelectTool):
     def _get_selection_state(self, event):
         for ndx, dims in enumerate(self._cached_label_dims):
             x, y, w, h = dims
-            if (x <= event.x <= x+w) and (y <= event.y <= y+h):
+            if (x <= event.x <= x + w) and (y <= event.y <= y + h):
                 return (ndx in self.selections), True
         else:
             if len(self._cached_label_dims) > 0:
@@ -56,7 +57,7 @@ class SelectableLegend(Legend, SelectTool):
     def _get_selection_token(self, event):
         for ndx, dims in enumerate(self._cached_label_dims):
             x, y, w, h = dims
-            if (x <= event.x <= x+w) and (y <= event.y <= y+h):
+            if (x <= event.x <= x + w) and (y <= event.y <= y + h):
                 return ndx
         else:
             return None
@@ -72,4 +73,3 @@ class SelectableLegend(Legend, SelectTool):
         if index in self.selections:
             self.selections.remove(index)
         return
-

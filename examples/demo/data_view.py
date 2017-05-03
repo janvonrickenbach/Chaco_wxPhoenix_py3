@@ -12,33 +12,39 @@ from enable.api import Component, ComponentEditor
 from traits.api import HasTraits, Instance
 from traitsui.api import UItem, View
 
+
 class PlotExample(HasTraits):
     plot = Instance(Component)
 
-    traits_view = View(UItem('plot', editor=ComponentEditor()),
-                       width=700, height=600, resizable=True,
-                       title="Dataview + renderer example"
-                       )
+    traits_view = View(
+        UItem(
+            'plot', editor=ComponentEditor()),
+        width=700,
+        height=600,
+        resizable=True,
+        title="Dataview + renderer example")
 
     def _plot_default(self):
         x = linspace(-5, 10, 500)
         y = sin(x)
-        y2 = 0.5 * cos(2*x)
+        y2 = 0.5 * cos(2 * x)
 
-        view = DataView(border_visible = True)
-        scatter = ScatterPlot(index = ArrayDataSource(x),
-                              value = ArrayDataSource(y),
-                              marker = "square",
-                              color = "red",
-                              outline_color = "transparent",
-                              index_mapper = LinearMapper(range=view.index_range),
-                              value_mapper = LinearMapper(range=view.value_range))
+        view = DataView(border_visible=True)
+        scatter = ScatterPlot(
+            index=ArrayDataSource(x),
+            value=ArrayDataSource(y),
+            marker="square",
+            color="red",
+            outline_color="transparent",
+            index_mapper=LinearMapper(range=view.index_range),
+            value_mapper=LinearMapper(range=view.value_range))
 
-        line = LinePlot(index = scatter.index,
-                        value = ArrayDataSource(y2),
-                        color = "blue",
-                        index_mapper = LinearMapper(range=view.index_range),
-                        value_mapper = LinearMapper(range=view.value_range))
+        line = LinePlot(
+            index=scatter.index,
+            value=ArrayDataSource(y2),
+            color="blue",
+            index_mapper=LinearMapper(range=view.index_range),
+            value_mapper=LinearMapper(range=view.value_range))
 
         # Add the plot's index and value datasources to the dataview's
         # ranges so that it can auto-scale and fit appropriately

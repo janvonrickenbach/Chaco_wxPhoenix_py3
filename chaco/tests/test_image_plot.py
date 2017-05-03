@@ -8,7 +8,6 @@ from traits.etsconfig.api import ETSConfig
 from chaco.api import (PlotGraphicsContext, GridDataSource, GridMapper,
                        DataRange2D, ImageData, ImagePlot)
 
-
 # The Quartz backend rescales pixel values, so use a higher threshold.
 MAX_RMS_ERROR = 16 if ETSConfig.kiva_backend == 'quartz' else 1
 
@@ -30,7 +29,7 @@ def temp_image_file(suffix='.tif', prefix='test', dir=None):
 
 def get_image_index_and_mapper(image):
     h, w = image.shape[:2]
-    index = GridDataSource(np.arange(h+1), np.arange(w+1))
+    index = GridDataSource(np.arange(h + 1), np.arange(w + 1))
     index_mapper = GridMapper(range=DataRange2D(low=(0, 0), high=(h, w)))
     return index, index_mapper
 
@@ -60,9 +59,11 @@ def image_from_renderer(renderer, orientation):
 def rendered_image_result(image, filename=None, **plot_kwargs):
     data_source = ImageData(data=image)
     index, index_mapper = get_image_index_and_mapper(image)
-    renderer = ImagePlot(value=data_source, index=index,
-                         index_mapper=index_mapper,
-                         **plot_kwargs)
+    renderer = ImagePlot(
+        value=data_source,
+        index=index,
+        index_mapper=index_mapper,
+        **plot_kwargs)
     orientation = plot_kwargs.get('orientation', 'h')
     return image_from_renderer(renderer, orientation)
 
@@ -139,22 +140,22 @@ def test_vertical_top_left():
 def test_vertical_bottom_left():
     # Vertical orientation with bottom left origin renders transposed image
     # that is vertically flipped.
-    verify_result_image(RGB, (IMAGE.T)[::-1],
-                        origin='bottom left', orientation='v')
+    verify_result_image(
+        RGB, (IMAGE.T)[::-1], origin='bottom left', orientation='v')
 
 
 def test_vertical_top_right():
     # Vertical orientation with top right origin renders transposed image
     # that is horizontally flipped.
-    verify_result_image(RGB, (IMAGE.T)[:, ::-1],
-                        origin='top right', orientation='v')
+    verify_result_image(
+        RGB, (IMAGE.T)[:, ::-1], origin='top right', orientation='v')
 
 
 def test_vertical_bottom_right():
     # Vertical orientation with bottom right origin renders transposed image
     # that is flipped vertically and horizontally.
-    verify_result_image(RGB, (IMAGE.T)[::-1, ::-1],
-                        origin='bottom right', orientation='v')
+    verify_result_image(
+        RGB, (IMAGE.T)[::-1, ::-1], origin='bottom right', orientation='v')
 
 
 if __name__ == "__main__":

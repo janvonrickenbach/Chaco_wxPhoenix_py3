@@ -33,34 +33,36 @@ class Foo(HasTraits):
 
     # Default TraitsUI view
     traits_view = View(
-                       ChacoPlotItem("xdata", "_ydata",
-                                      type_trait="plot_type",
+        ChacoPlotItem(
+            "xdata",
+            "_ydata",
+            type_trait="plot_type",
 
-                                      # Basic axis and label properties
-                                      show_label=False,
-                                      resizable=True,
-                                      orientation="h",
-                                      x_label = "Index data",
-                                      y_label = "Value data",
+            # Basic axis and label properties
+            show_label=False,
+            resizable=True,
+            orientation="h",
+            x_label="Index data",
+            y_label="Value data",
 
-                                      # Plot properties
-                                      color = "green",
-                                      bgcolor = "white",
+            # Plot properties
+            color="green",
+            bgcolor="white",
 
-                                      # Specific to scatter plot
-                                      marker = "circle",
-                                      marker_size = 2,
-                                      outline_color = "none",
+            # Specific to scatter plot
+            marker="circle",
+            marker_size=2,
+            outline_color="none",
 
-                                      # Border, padding properties
-                                      border_visible=True,
-                                      border_width=1,
-                                      padding_bg_color = "lightgray"),
-                Item("plot_type"),
-                Item("eq"),
-                resizable=True,
-                width=500, height=500)
-
+            # Border, padding properties
+            border_visible=True,
+            border_width=1,
+            padding_bg_color="lightgray"),
+        Item("plot_type"),
+        Item("eq"),
+        resizable=True,
+        width=500,
+        height=500)
 
     # Private Traits
     _d = Dict
@@ -79,10 +81,11 @@ class Foo(HasTraits):
         except:
             pass
 
+
 #===============================================================================
 # # demo object that is used by the demo.py application.
 #===============================================================================
-demo = Foo(xdata=linspace(-2*pi, 2*pi ,100), eq="sin(x)")
+demo = Foo(xdata=linspace(-2 * pi, 2 * pi, 100), eq="sin(x)")
 
 if __name__ == "__main__":
     demo.edit_traits(kind="modal")

@@ -4,6 +4,7 @@ from traits.api import Enum, Event, HasTraits, Instance
 
 from .data_range_1d import DataRange1D
 
+
 class AbstractColormap(HasTraits):
     """
     Abstract class for color maps, which map from scalar values to color values.
@@ -65,8 +66,7 @@ class AbstractColormap(HasTraits):
         **color_depth** setting.
         """
         # default implementation (not efficient)
-        return (self.map_screen(val)*255.0).astype('uint8')
-
+        return (self.map_screen(val) * 255.0).astype('uint8')
 
 
 # EOF

@@ -30,26 +30,24 @@ class Demo(HasTraits):
 
     traits_view = View(
         Group(
-            UItem('plot', editor=ComponentEditor(size=(1000, 500))),
-            orientation="vertical"
-        ),
-        resizable=True, title="Demo of image origin and orientation"
-    )
+            UItem(
+                'plot', editor=ComponentEditor(size=(1000, 500))),
+            orientation="vertical"),
+        resizable=True,
+        title="Demo of image origin and orientation")
 
     def _plot_default(self):
         # Create a GridContainer to hold all of our plots: 2 rows, 4 columns:
-        container = GridContainer(fill_padding=True,
-                                  bgcolor="lightgray", use_backbuffer=True,
-                                  shape=(2, 4))
+        container = GridContainer(
+            fill_padding=True,
+            bgcolor="lightgray",
+            use_backbuffer=True,
+            shape=(2, 4))
 
-        arrangements = [('top left', 'h'),
-                        ('top right', 'h'),
-                        ('top left', 'v'),
-                        ('top right', 'v'),
-                        ('bottom left', 'h'),
-                        ('bottom right', 'h'),
-                        ('bottom left', 'v'),
-                        ('bottom right', 'v')]
+        arrangements = [('top left', 'h'), ('top right', 'h'),
+                        ('top left', 'v'), ('top right', 'v'),
+                        ('bottom left', 'h'), ('bottom right', 'h'),
+                        ('bottom left', 'v'), ('bottom right', 'v')]
         orientation_name = {'h': 'horizontal', 'v': 'vertical'}
 
         pd = ArrayPlotData(image=lena())
@@ -74,7 +72,6 @@ class Demo(HasTraits):
 
 
 demo = Demo()
-
 
 if __name__ == "__main__":
     demo.configure_traits()

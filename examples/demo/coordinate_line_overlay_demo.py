@@ -79,8 +79,8 @@ class PlotExample(HasTraits):
 
     def _time_plot_data_default(self):
         t = np.linspace(0, 10, 201)
-        y = (0.5 * t + 0.1 * np.sin(0.4 * 2 * np.pi * t) +
-                0.3 * (t + 2) * (8 - t) * np.cos(0.33 * 2 * np.pi * t))
+        y = (0.5 * t + 0.1 * np.sin(0.4 * 2 * np.pi * t) + 0.3 * (t + 2) *
+             (8 - t) * np.cos(0.33 * 2 * np.pi * t))
         data = ArrayPlotData(t=t, y=y)
         return data
 
@@ -93,23 +93,25 @@ class PlotExample(HasTraits):
 
         time_plot.tools.append(PanTool(time_plot))
 
-        zoomtool = ZoomTool(time_plot, drag_button='right',
-                                                    always_on=True)
+        zoomtool = ZoomTool(time_plot, drag_button='right', always_on=True)
         time_plot.overlays.append(zoomtool)
 
-        lines1 = CoordinateLineOverlay(component=time_plot,
-                    index_data=self.x1,
-                    value_data=self.y1,
-                    color=(0.75, 0.25, 0.25, 0.75),
-                    line_style='dash', line_width=1)
+        lines1 = CoordinateLineOverlay(
+            component=time_plot,
+            index_data=self.x1,
+            value_data=self.y1,
+            color=(0.75, 0.25, 0.25, 0.75),
+            line_style='dash',
+            line_width=1)
         time_plot.underlays.append(lines1)
         self.line_overlay1 = lines1
 
-        lines2 = CoordinateLineOverlay(component=time_plot,
-                    index_data=self.x2,
-                    value_data=self.y2,
-                    color=(0.2, 0.5, 1.0, 0.75),
-                    line_width=3)
+        lines2 = CoordinateLineOverlay(
+            component=time_plot,
+            index_data=self.x2,
+            value_data=self.y2,
+            color=(0.2, 0.5, 1.0, 0.75),
+            line_width=3)
         time_plot.underlays.append(lines2)
         self.line_overlay2 = lines2
 
@@ -117,7 +119,6 @@ class PlotExample(HasTraits):
 
 
 demo = PlotExample()
-
 
 if __name__ == "__main__":
     ##demo.edit_traits()

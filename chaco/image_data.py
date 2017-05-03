@@ -10,6 +10,7 @@ from traits.api import Bool, Int, Property, ReadOnly, Tuple
 from .base import DimensionTrait, ImageTrait
 from .abstract_data_source import AbstractDataSource
 
+
 class ImageData(AbstractDataSource):
     """
     Represents a grid of data to be plotted using a Numpy 2-D grid.
@@ -25,8 +26,8 @@ class ImageData(AbstractDataSource):
     #
     # * 3: color images, without alpha channel
     # * 4: color images, with alpha channel
-    value_depth = Int(1) # TODO: Modify ImageData to explicitly support scalar
-                         # value arrays, as needed by CMapImagePlot
+    value_depth = Int(1)  # TODO: Modify ImageData to explicitly support scalar
+    # value arrays, as needed by CMapImagePlot
 
     # Holds the grid data that forms the image.  The shape of the array is
     # (N, M, D) where:
@@ -59,7 +60,6 @@ class ImageData(AbstractDataSource):
 
     # A read-only attribute that exposes the underlying array.
     raw_value = Property(ImageTrait)
-
 
     #------------------------------------------------------------------------
     # Private traits
@@ -119,9 +119,9 @@ class ImageData(AbstractDataSource):
         """ Always returns ((0, width), (0, height)) for x-bounds and y-bounds.
         """
         if self.transposed:
-            b = ((0,self._data.shape[0]), (0,self._data.shape[1]))
+            b = ((0, self._data.shape[0]), (0, self._data.shape[1]))
         else:
-            b = ((0,self._data.shape[1]), (0,self._data.shape[0]))
+            b = ((0, self._data.shape[1]), (0, self._data.shape[0]))
         return b
 
     #------------------------------------------------------------------------
@@ -154,9 +154,9 @@ class ImageData(AbstractDataSource):
                 # nanmin and nanmax raise an annoying RuntimeWarning when
                 # all raw_value entries are NaN.  Use fmin.reduce and
                 # fmax.reduce to avoid this.
-                self._cached_bounds = (
-                    fmin.reduce(self.raw_value, axis=None),
-                    fmax.reduce(self.raw_value, axis=None))
+                self._cached_bounds = (fmin.reduce(
+                    self.raw_value, axis=None), fmax.reduce(
+                        self.raw_value, axis=None))
             self._bounds_cache_valid = True
         return self._cached_bounds
 
@@ -198,7 +198,6 @@ class ImageData(AbstractDataSource):
     def _get_raw_value(self):
         return self._data
 
-
     #------------------------------------------------------------------------
     # Event handlers
     #------------------------------------------------------------------------
@@ -208,8 +207,6 @@ class ImageData(AbstractDataSource):
 
     def _metadata_items_changed(self, event):
         self.metadata_changed = True
-
-
 
 
 # EOF

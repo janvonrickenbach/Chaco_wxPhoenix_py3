@@ -37,8 +37,8 @@ class DrawPointsTool(BaseTool):
         Maps the event position into data space, adds the point to the points
         for this tool, and redraws.
         """
-        x,y = event.x, event.y
-        data_x, data_y = self.component.map_data((x,y))
+        x, y = event.x, event.y
+        data_x, data_y = self.component.map_data((x, y))
         self._append_data(self.xdata, data_x)
         self._append_data(self.ydata, data_y)
         self.component.request_redraw()
@@ -60,5 +60,3 @@ class DrawPointsTool(BaseTool):
 
 
 #EOF
-
-

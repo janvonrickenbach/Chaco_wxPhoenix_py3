@@ -16,6 +16,7 @@ class BackgroundColorTestCase(EnableTestAssistant, TestCase):
     appear completely opaque. This issue was reported (and fixed) in GH #309.
 
     """
+
     def setUp(self):
         values = numpy.arange(10)
         self.plot = create_line_plot((values, values))
@@ -34,11 +35,9 @@ class BackgroundColorTestCase(EnableTestAssistant, TestCase):
         tool.tool_mode = 'box'
         tool.alpha = 0.3
         tool.color = 'red'
-        gc = self.create_mock_gc(100, 100, methods=('set_fill_color',))
+        gc = self.create_mock_gc(100, 100, methods=('set_fill_color', ))
 
-        kwargs = {
-            'window': self.plot._window, 'control_down': True
-        }
+        kwargs = {'window': self.plot._window, 'control_down': True}
         self.mouse_down(self.tool, 0.0, 0.0, **kwargs)
         self.mouse_move(self.tool, 10.0, 10.0, **kwargs)
 
@@ -52,11 +51,9 @@ class BackgroundColorTestCase(EnableTestAssistant, TestCase):
         tool.tool_mode = 'range'
         tool.alpha = 0.3
         tool.color = 'red'
-        gc = self.create_mock_gc(100, 100, methods=('set_fill_color',))
+        gc = self.create_mock_gc(100, 100, methods=('set_fill_color', ))
 
-        kwargs = {
-            'window': self.plot._window, 'control_down': True
-        }
+        kwargs = {'window': self.plot._window, 'control_down': True}
         self.mouse_down(self.tool, 0.0, 0.0, **kwargs)
         self.mouse_move(self.tool, 10.0, 10.0, **kwargs)
 

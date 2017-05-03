@@ -1,10 +1,9 @@
-
 from chaco.scales.formatters import strftimeEx, TimeFormatter
-
 
 #----------------------------------------------------------------
 # strftimeEx tests
 #----------------------------------------------------------------
+
 
 def test_strftimeEx_01():
     t = 0.123
@@ -12,11 +11,13 @@ def test_strftimeEx_01():
     result = strftimeEx(fmt, t)
     assert result == "123"
 
+
 def test_strftimeEx_02():
     t = 0.123456
     fmt = "%(us)"
     result = strftimeEx(fmt, t)
     assert result == "456"
+
 
 def test_strftimeEx_03():
     t = 0.678910
@@ -25,6 +26,7 @@ def test_strftimeEx_03():
     # so this formt should give "679".
     result = strftimeEx(fmt, t)
     assert result == "679"
+
 
 def test_strftimeEx_04():
     t = 0.678910
@@ -36,6 +38,7 @@ def test_strftimeEx_04():
     expected = "679.910ms"
     assert result == expected
 
+
 def test_strftimeEx_04():
     t = 0.678910
     fmt = "%(ms_).%(us)ms"
@@ -44,6 +47,7 @@ def test_strftimeEx_04():
     expected = "678.910ms"
     print('result = "%s"  expected = "%s"' % (result, expected))
     assert result == expected
+
 
 def test_strftimeEx_05():
     """Test rounding that affects the seconds."""
@@ -54,6 +58,7 @@ def test_strftimeEx_05():
     print('result = "%s"  expected = "%s"' % (result, expected))
     assert result == expected
 
+
 def test_strftimeEx_06():
     """Test rounding that affects the seconds."""
     t = 7.9996
@@ -62,6 +67,7 @@ def test_strftimeEx_06():
     expected = "08 000"
     print('result = "%s"  expected = "%s"' % (result, expected))
     assert result == expected
+
 
 def test_strftimeEx_07():
     """Test rounding that affects the seconds."""
@@ -72,9 +78,11 @@ def test_strftimeEx_07():
     print('result = "%s"  expected = "%s"' % (result, expected))
     assert result == expected
 
+
 #----------------------------------------------------------------
 # TimeFormatter tests
 #----------------------------------------------------------------
+
 
 def test_time_formatter_01():
     tf = TimeFormatter()

@@ -1,16 +1,11 @@
-
 # This contains python implementations of all the speedups
 from ._speedups_fallback import *
-
 
 # cython implementation of speedups. Import these if we can.
 try:
     from _cython_speedups import *
 except ImportError:
     pass
-
-
-
 
 #try:
 #    from numpy import asarray
@@ -44,8 +39,5 @@ except ImportError:
 #                      value_mask=value_mask, value_sel=value_sel,
 #                      value_sel_mask=value_sel_mask)
 
-
 #except ImportError:
 #    from _speedups_fallback import *
-
-

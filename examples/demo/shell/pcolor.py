@@ -11,15 +11,14 @@ from numpy import linspace, meshgrid, sin
 from chaco.shell import show, title, pcolor, colormap
 from chaco.default_colormaps import jet
 
-
 # Crate some scalar data
-xs = linspace(0,10,200)
-ys = linspace(0,20,400)
-x,y = meshgrid(xs,ys)
+xs = linspace(0, 10, 200)
+ys = linspace(0, 20, 400)
+x, y = meshgrid(xs, ys)
 z = sin(x) * y
 
 # Create a pseudo-color-map
-pcolor(x,y,z)
+pcolor(x, y, z)
 
 #change the color mapping
 colormap(jet)

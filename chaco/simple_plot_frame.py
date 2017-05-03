@@ -8,14 +8,13 @@
 #
 #################################################################################
 
-
-
 # Enthought library imports
 from traits.api import Bool
 
 # Local, relative imports
 from .base_plot_frame import BasePlotFrame
 from .plot_containers import OverlayPlotContainer
+
 
 class SimplePlotFrame(BasePlotFrame):
     """
@@ -46,7 +45,6 @@ class SimplePlotFrame(BasePlotFrame):
 
     # Does the component need to do a layout call?
     _layout_needed = Bool(True)
-
 
     def __init__(self, **kwtraits):
         # Delay setting the bounds until after base class initialization
@@ -83,7 +81,7 @@ class SimplePlotFrame(BasePlotFrame):
 
         Overrides PlotComponent.
         """
-        size = [0,0]
+        size = [0, 0]
         component_pref_size = None
         if "h" not in self.resizable:
             if "h" in self.fit_components:
@@ -131,7 +129,7 @@ class SimplePlotFrame(BasePlotFrame):
             # auto-size to our bounds, so do nothing.
             pass
 
-        component.outer_position = [0,0]
+        component.outer_position = [0, 0]
         component.do_layout()
         return
 
@@ -139,7 +137,7 @@ class SimplePlotFrame(BasePlotFrame):
     #_pickles = ()
 
     def __getstate__(self):
-        state = super(SimplePlotFrame,self).__getstate__()
+        state = super(SimplePlotFrame, self).__getstate__()
         for key in ['_layout_needed']:
             if key in state:
                 del state[key]

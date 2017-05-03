@@ -27,7 +27,8 @@ class DataLabelTool(DragTool):
 
     # This is used in the auto_arrow_root = 'corners' case.
     _corner_names = ("bottom left", "bottom right", "top right", "top left",
-                     "top center", "bottom center", "left center", "right center")
+                     "top center", "bottom center", "left center",
+                     "right center")
 
     def is_draggable(self, x, y):
         """ Returns whether the (x,y) position is in a region that is OK to
@@ -42,7 +43,6 @@ class DataLabelTool(DragTool):
         else:
             return False
 
-
     def drag_start(self, event):
         """ Called when the drag operation starts.
 
@@ -55,7 +55,6 @@ class DataLabelTool(DragTool):
             event.window.set_mouse_owner(self, event.net_transform())
             event.handled = True
         return
-
 
     def dragging(self, event):
         """ This method is called for every mouse_move event that the tool
@@ -77,18 +76,17 @@ class DataLabelTool(DragTool):
                 x, y = label.position
                 x2 = label.x2
                 y2 = label.y2
-                xmid = (x+x2)/2
-                ymid = (y+y2)/2
+                xmid = (x + x2) / 2
+                ymid = (y + y2) / 2
                 anchors = array(((x, y), (x2, y), (x2, y2), (x, y2),
-                                (xmid, y2), (xmid, y), (x, ymid), (x2, ymid)))
+                                 (xmid, y2), (xmid, y), (x, ymid), (x2, ymid)))
                 diff = anchors - p
-                closest = argmin((diff ** 2).sum(axis=-1))
+                closest = argmin((diff**2).sum(axis=-1))
                 label.arrow_root = self._corner_names[closest]
 
             event.handled = True
             label.request_redraw()
         return
-
 
     def drag_end(self, event):
         """ Called when a mouse event causes the drag operation to end.

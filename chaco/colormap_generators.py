@@ -41,7 +41,8 @@ def adjust_hue(msh_sat, m_unsat):
     if m_sat >= m_unsat:
         return h_sat
     else:
-        spin = s_sat * np.sqrt(m_unsat*m_unsat - m_sat*m_sat) / (m_sat * np.sin(s_sat))
+        spin = s_sat * np.sqrt(m_unsat * m_unsat - m_sat * m_sat) / (
+            m_sat * np.sin(s_sat))
         if h_sat > -np.pi / 3:
             return h_sat + spin
         else:
@@ -97,8 +98,11 @@ def generate_diverging_palette(srgb1, srgb2, n_colors=256):
     return srgb_palette
 
 
-def generate_cubehelix_palette(start=0.5, rot=-1.5, saturation=1.2,
-                               lightness_range=(0.0, 1.0), gamma=1.0,
+def generate_cubehelix_palette(start=0.5,
+                               rot=-1.5,
+                               saturation=1.2,
+                               lightness_range=(0.0, 1.0),
+                               gamma=1.0,
                                n_colors=256):
     """ Generate a sequential color palette from black to white spiraling
     through intermediate colors.
@@ -127,8 +131,9 @@ def generate_cubehelix_palette(start=0.5, rot=-1.5, saturation=1.2,
     theta = 2.0 * np.pi * (start / 3.0 + rot * x + 1.)
     x **= gamma
     amplitude = saturation * x * (1 - x) / 2.0
-    red = x + amplitude * (-0.14861*np.cos(theta) + 1.78277*np.sin(theta))
-    green = x + amplitude * (-0.29227*np.cos(theta) - 0.90649*np.sin(theta))
-    blue = x + amplitude * (1.97294*np.cos(theta))
+    red = x + amplitude * (-0.14861 * np.cos(theta) + 1.78277 * np.sin(theta))
+    green = x + amplitude * (-0.29227 * np.cos(theta) - 0.90649 * np.sin(theta)
+                             )
+    blue = x + amplitude * (1.97294 * np.cos(theta))
     srgb_palette = np.column_stack([red, green, blue]).clip(0.0, 1.0)
     return srgb_palette

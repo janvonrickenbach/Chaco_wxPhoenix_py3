@@ -20,7 +20,7 @@ class Base1DMapper(AbstractMapper):
     low_pos = Float(0.0)
 
     # The screen space position of the upper bound of the data space.
-    high_pos  = Float(1.0)
+    high_pos = Float(1.0)
 
     # Convenience property to get low and high positions in one structure.
     # Must be a tuple (low_pos, high_pos).
@@ -64,8 +64,8 @@ class Base1DMapper(AbstractMapper):
 
     def _range_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._range_change_handler, "updated",
-                                remove = True)
+            old.on_trait_change(
+                self._range_change_handler, "updated", remove=True)
         if new is not None:
             new.on_trait_change(self._range_change_handler, "updated")
 
@@ -84,10 +84,10 @@ class Base1DMapper(AbstractMapper):
 
     def _get_sign(self):
         delta_screen = (self.high_pos - self.low_pos)
-        delta_data = (self.range.high-self.range.low)
+        delta_data = (self.range.high - self.range.low)
         if delta_screen == 0 or delta_data == 0:
             return 0
-        elif delta_screen/float(delta_data) < 0:
+        elif delta_screen / float(delta_data) < 0:
             return -1
         else:
             return 1
@@ -97,8 +97,8 @@ class Base1DMapper(AbstractMapper):
             return
         if not self.stretch_data:
             self._adjust_range((self.low_pos, self.high_pos), new_bounds)
-        self.set(low_pos = new_bounds[0], trait_change_notify=False)
-        self.set(high_pos = new_bounds[1], trait_change_notify=False)
+        self.set(low_pos=new_bounds[0], trait_change_notify=False)
+        self.set(high_pos=new_bounds[1], trait_change_notify=False)
         self._cache_valid = False
         self._low_bound_initialized = True
         self._high_bound_initialized = True
@@ -114,5 +114,6 @@ class Base1DMapper(AbstractMapper):
             d_data = rangehigh - rangelow
             old_d_screen = old_bounds[1] - old_bounds[0]
             if d_data != 0 and old_d_screen != 0:
-                new_data_extent = d_data / old_d_screen * (new_bounds[1] - new_bounds[0])
+                new_data_extent = d_data / old_d_screen * (
+                    new_bounds[1] - new_bounds[0])
                 self.range.set_bounds(rangelow, rangelow + new_data_extent)

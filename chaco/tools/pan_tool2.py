@@ -1,4 +1,3 @@
-
 from numpy import inf
 
 from enable.api import Pointer
@@ -61,7 +60,6 @@ class PanTool(DragTool):
     # The possible event states of this tool (overrides enable.Interactor).
     #event_state = Enum("normal", "panning")
 
-
     def drag_start(self, event):
         """ Called when the drag operation starts """
         self._start_pan(event)
@@ -71,12 +69,14 @@ class PanTool(DragTool):
 
         if self._auto_constrain and self.constrain_direction is None:
             # Determine the constraint direction
-            if abs(event.x - self._original_xy[0]) > abs(event.y - self._original_xy[1]):
+            if abs(event.x - self._original_xy[0]) > abs(event.y -
+                                                         self._original_xy[1]):
                 self.constrain_direction = "x"
             else:
                 self.constrain_direction = "y"
 
-        for direction, bound_name, ndx in [("x","width",0), ("y","height",1)]:
+        for direction, bound_name, ndx in [("x", "width", 0), ("y", "height", 1
+                                                               )]:
             if not self.constrain or self.constrain_direction == direction:
                 mapper = getattr(plot, direction + "_mapper")
                 range = mapper.range
@@ -101,12 +101,16 @@ class PanTool(DragTool):
                 # linear mappers (which is used 99% of the time).
                 if domain_min is None:
                     if self.restrict_to_data:
-                        domain_min = min([source.get_data().min() for source in range.sources])
+                        domain_min = min([
+                            source.get_data().min() for source in range.sources
+                        ])
                     else:
                         domain_min = -inf
                 if domain_max is None:
                     if self.restrict_to_data:
-                        domain_max = max([source.get_data().max() for source in range.sources])
+                        domain_max = max([
+                            source.get_data().max() for source in range.sources
+                        ])
                     else:
                         domain_max = inf
                 if (newlow <= domain_min) and (newhigh >= domain_max):
@@ -168,5 +172,3 @@ class PanTool(DragTool):
             event.window.set_mouse_owner(None)
         event.handled = True
         return
-
-

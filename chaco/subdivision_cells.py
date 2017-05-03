@@ -27,9 +27,10 @@ def find_runs(int_array, order='ascending'):
     """
     ranges = arg_find_runs(int_array, order)
     if ranges:
-        return [int_array[i:j] for (i,j) in ranges]
+        return [int_array[i:j] for (i, j) in ranges]
     else:
         return []
+
 
 def arg_find_runs(int_array, order='ascending'):
     """
@@ -38,15 +39,17 @@ def arg_find_runs(int_array, order='ascending'):
     """
     if len(int_array) == 0:
         return []
-    assert len(int_array.shape)==1, "find_runs() requires a 1D integer array."
+    assert len(
+        int_array.shape) == 1, "find_runs() requires a 1D integer array."
     if order == 'ascending':
         increment = 1
     elif order == 'descending':
         increment = -1
     else:
         increment = 0
-    rshifted = right_shift(int_array, int_array[0]-increment)
-    start_indices = concatenate([[0], nonzero(int_array - (rshifted+increment))[0]])
+    rshifted = right_shift(int_array, int_array[0] - increment)
+    start_indices = concatenate(
+        [[0], nonzero(int_array - (rshifted + increment))[0]])
     end_indices = left_shift(start_indices, len(int_array))
     return list(zip(start_indices, end_indices))
 
@@ -149,7 +152,7 @@ class Cell(AbstractCell):
         Implements AbstractCell.
         """
         length = len(self.data)
-        self._indices = [length-i-1 for i in self._indices]
+        self._indices = [length - i - 1 for i in self._indices]
         return
 
     def _set_indices(self, indices):
@@ -158,7 +161,6 @@ class Cell(AbstractCell):
 
     def _get_indices(self):
         return self._indices
-
 
 
 class RangedCell(AbstractCell):
@@ -208,7 +210,8 @@ class RangedCell(AbstractCell):
         Implements AbstractCell.
         """
         length = len(self.data)
-        self._ranges = [(length-end-1, length-start-1) for (start,end) in self._ranges]
+        self._ranges = [(length - end - 1, length - start - 1)
+                        for (start, end) in self._ranges]
         return
 
     def _set_indices(self, indices):
@@ -216,9 +219,8 @@ class RangedCell(AbstractCell):
         return
 
     def _get_indices(self):
-        list_of_indices = [list(range(i,j)) for (i,j) in self._ranges]
+        list_of_indices = [list(range(i, j)) for (i, j) in self._ranges]
         return sum(list_of_indices, [])
-
 
     #---------------------------------------------------------------------
     # additional RangedCell methods
@@ -240,4 +242,6 @@ class RangedCell(AbstractCell):
         else:
             self._ranges = ranges
         return
+
+
 #EOF

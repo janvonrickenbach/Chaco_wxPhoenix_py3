@@ -28,26 +28,31 @@ from chaco.api import create_line_plot, add_default_axes, \
 from chaco.tools.api import PanTool, LegendTool, TraitsTool, \
                                       BroadcasterTool
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
 def _create_plot_component():
 
-    container = OverlayPlotContainer(padding = 50, fill_padding = True,
-                                     bgcolor = "lightgray", use_backbuffer=True)
+    container = OverlayPlotContainer(
+        padding=50,
+        fill_padding=True,
+        bgcolor="lightgray",
+        use_backbuffer=True)
 
     # Create the initial X-series of data
     numpoints = 100
     low = -5
     high = 15.0
-    x = arange(low, high+0.001, (high-low)/numpoints)
+    x = arange(low, high + 0.001, (high - low) / numpoints)
 
     # Plot some bessel functions
     plots = {}
     broadcaster = BroadcasterTool()
     for i in range(4):
         y = jn(i, x)
-        plot = create_line_plot((x,y), color=tuple(COLOR_PALETTE[i]), width=2.0)
+        plot = create_line_plot(
+            (x, y), color=tuple(COLOR_PALETTE[i]), width=2.0)
         plot.index.sort_order = "ascending"
         plot.bgcolor = "white"
         plot.border_visible = True
@@ -62,7 +67,7 @@ def _create_plot_component():
         broadcaster.tools.append(pan)
 
         container.add(plot)
-        plots["Bessel j_%d"%i] = plot
+        plots["Bessel j_%d" % i] = plot
 
     # Add an axis on the right-hand side that corresponds to the second plot.
     # Note that it uses plot.value_mapper instead of plot0.value_mapper.
@@ -82,20 +87,24 @@ def _create_plot_component():
     legend.plots = plots
 
     # Add the title at the top
-    container.overlays.append(PlotLabel("Bessel functions",
-                              component=container,
-                              font = "swiss 16",
-                              overlay_position="top"))
+    container.overlays.append(
+        PlotLabel(
+            "Bessel functions",
+            component=container,
+            font="swiss 16",
+            overlay_position="top"))
 
     # Add the traits inspector tool to the container
     container.tools.append(TraitsTool(container))
 
     return container
 
+
 #===============================================================================
 # Attributes to use for the plot view.
-size=(800,700)
-title="Multi-Y plot"
+size = (800, 700)
+title = "Multi-Y plot"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -104,16 +113,18 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title=title,
-                    width=size[0], height=size[1]
-                    )
+        Group(
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title,
+        width=size[0],
+        height=size[1])
 
     def _plot_default(self):
         return _create_plot_component()
+
 
 demo = Demo()
 

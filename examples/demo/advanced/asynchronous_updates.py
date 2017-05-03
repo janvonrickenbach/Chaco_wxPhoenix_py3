@@ -116,8 +116,8 @@ class BlurPlotController(HasTraits):
     component = Instance(Component)
 
     def _image_default(self):
-        x, y = ogrid[-pi:pi:1024j, 0:2*pi:1024j]
-        z = (sin(11*x**2)**2 * sin(5*y**2))**2
+        x, y = ogrid[-pi:pi:1024j, 0:2 * pi:1024j]
+        z = (sin(11 * x**2)**2 * sin(5 * y**2))**2
         return z
 
     def _blurred_image_default(self):
@@ -132,18 +132,20 @@ class BlurPlotController(HasTraits):
     def _component_default(self):
         padding = (25, 5, 5, 25)
         image_plot = Plot(self.plot_data, padding=padding)
-        image_plot.img_plot("image",
-                            origin="top left",
-                            xbounds=(-pi, pi),
-                            ybounds=(-pi, pi),
-                            colormap=gray)
+        image_plot.img_plot(
+            "image",
+            origin="top left",
+            xbounds=(-pi, pi),
+            ybounds=(-pi, pi),
+            colormap=gray)
 
         blurred_image_plot = Plot(self.plot_data, padding=padding)
-        blurred_image_plot.img_plot("blurred_image",
-                                    origin="top left",
-                                    xbounds=(-pi, pi),
-                                    ybounds=(-pi, pi),
-                                    colormap=gray)
+        blurred_image_plot.img_plot(
+            "blurred_image",
+            origin="top left",
+            xbounds=(-pi, pi),
+            ybounds=(-pi, pi),
+            colormap=gray)
 
         container = VPlotContainer()
         container.add(blurred_image_plot)
@@ -196,18 +198,14 @@ class Demo(HasTraits):
             Item(
                 'component',
                 editor=ComponentEditor(size=size),
-                show_label=False
-            ),
+                show_label=False),
             Group(
                 Item('asynchronous'),
                 Item('blur_level'),
-                orientation="horizontal"
-            ),
-            orientation="vertical"
-        ),
+                orientation="horizontal"),
+            orientation="vertical"),
         resizable=True,
-        title=title
-    )
+        title=title)
 
 
 demo = Demo()

@@ -5,11 +5,8 @@
 # This file is open source software distributed according to the terms in
 # LICENSE.txt
 #
-
 """ Defines the ImagePlot class.
 """
-
-
 
 # Standard library imports
 from math import ceil, floor, pi
@@ -32,10 +29,11 @@ try:
 except ImportError:
     pass
 else:
-    QUARTZ_INTERP_QUALITY = {"nearest": InterpolationQuality.none,
-                             "bilinear": InterpolationQuality.low,
-                             "bicubic": InterpolationQuality.high}
-
+    QUARTZ_INTERP_QUALITY = {
+        "nearest": InterpolationQuality.none,
+        "bilinear": InterpolationQuality.low,
+        "bicubic": InterpolationQuality.high
+    }
 
 KIVA_DEPTH_MAP = {3: "rgb24", 4: "rgba32"}
 
@@ -151,7 +149,10 @@ class ImagePlot(Base2DPlot):
             with self._temporary_interp_setting(gc):
                 gc.draw_image(self._cached_image, self._cached_dest_rect)
 
-    def map_index(self, screen_pt, threshold=0.0, outside_returns_none=True,
+    def map_index(self,
+                  screen_pt,
+                  threshold=0.0,
+                  outside_returns_none=True,
                   index_only=False):
         """ Maps a screen space point to an index into the plot's index
         array(s).
@@ -179,7 +180,7 @@ class ImagePlot(Base2DPlot):
             gc.scale_ctm(-1, 1)
         else:
             gc.scale_ctm(1, -1)
-        gc.rotate_ctm(pi/2)
+        gc.rotate_ctm(pi / 2)
 
     @contextmanager
     def _temporary_interp_setting(self, gc):

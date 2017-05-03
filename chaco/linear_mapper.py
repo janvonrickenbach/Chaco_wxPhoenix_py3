@@ -106,4 +106,5 @@ class LinearMapper(Base1DMapper):
         self._cache_valid = True
         return
 
+
 # EOF

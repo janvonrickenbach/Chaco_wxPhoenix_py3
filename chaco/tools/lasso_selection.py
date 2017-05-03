@@ -100,7 +100,7 @@ class LassoSelection(AbstractController):
             disjoint_selections property is almost always the preferred
             method of accessingselected points
         """
-        composite = empty((0,2))
+        composite = empty((0, 2))
         for region in self.disjoint_selections:
             if len(region) > 0:
                 composite = vstack((composite, region))
@@ -136,10 +136,11 @@ class LassoSelection(AbstractController):
         """
         # We may want to generalize this for the n-dimensional case...
 
-        self._active_selection = empty((0,2), dtype=numpy.bool)
+        self._active_selection = empty((0, 2), dtype=numpy.bool)
 
         if self.selection_datasource is not None:
-            self.selection_datasource.metadata[self.metadata_name] = zeros(len(self.selection_datasource.get_data()), dtype=numpy.bool)
+            self.selection_datasource.metadata[self.metadata_name] = zeros(
+                len(self.selection_datasource.get_data()), dtype=numpy.bool)
         self.selection_mode = "include"
         self.event_state = 'selecting'
         self.selecting_mouse_move(event)
@@ -151,7 +152,8 @@ class LassoSelection(AbstractController):
                 self.selection_mode = "exclude"
             else:
                 self.selection_mode = "include"
-        self.trait_property_changed("disjoint_selections", [], self.disjoint_selections)
+        self.trait_property_changed("disjoint_selections", [],
+                                    self.disjoint_selections)
         return
 
     def selecting_left_up(self, event):
@@ -172,7 +174,7 @@ class LassoSelection(AbstractController):
         self._update_selection()
 
         self._previous_selections.append(self._active_selection)
-        self._active_selection = empty((0,2), dtype=numpy.bool)
+        self._active_selection = empty((0, 2), dtype=numpy.bool)
         return
 
     def selecting_mouse_move(self, event):
@@ -184,7 +186,8 @@ class LassoSelection(AbstractController):
         xform = self.component.get_event_transform(event)
         event.push_transform(xform, caller=self)
         new_point = self._map_data(array((event.x, event.y)))
-        self._active_selection = vstack((self._active_selection, array((new_point,))))
+        self._active_selection = vstack((self._active_selection, array(
+            (new_point, ))))
         self.updated = True
         if self.incremental_select:
             self._update_selection()
@@ -222,13 +225,13 @@ class LassoSelection(AbstractController):
     #----------------------------------------------------------------------
 
     def _dataspace_points_default(self):
-        return empty((0,2), dtype=numpy.bool)
+        return empty((0, 2), dtype=numpy.bool)
 
     def _reset(self):
         """ Resets the selection
         """
-        self.event_state='normal'
-        self._active_selection = empty((0,2), dtype=numpy.bool)
+        self.event_state = 'normal'
+        self._active_selection = empty((0, 2), dtype=numpy.bool)
         self._previous_selections = []
         self._update_selection()
 
@@ -238,14 +241,15 @@ class LassoSelection(AbstractController):
             much cooler, but more time-intensive solution would be to make
             a selection polygon representing the convex hull.
         """
-        points = [self._map_data(array((self.plot.x, self.plot.y2))),
-                  self._map_data(array((self.plot.x2, self.plot.y2))),
-                  self._map_data(array((self.plot.x2, self.plot.y))),
-                  self._map_data(array((self.plot.x, self.plot.y)))]
+        points = [
+            self._map_data(array((self.plot.x, self.plot.y2))),
+            self._map_data(array((self.plot.x2, self.plot.y2))),
+            self._map_data(array((self.plot.x2, self.plot.y))),
+            self._map_data(array((self.plot.x, self.plot.y)))
+        ]
 
         self._active_selection = numpy.array(points)
         self._update_selection()
-
 
     def _update_selection(self):
         """ Sets the selection datasource's metadata to a mask of all
@@ -254,8 +258,8 @@ class LassoSelection(AbstractController):
         if self.selection_datasource is None:
             return
 
-        selected_mask = zeros(self.selection_datasource._data.shape,
-                              dtype=numpy.bool)
+        selected_mask = zeros(
+            self.selection_datasource._data.shape, dtype=numpy.bool)
         data = self._get_data()
 
         # Compose the selection mask from the cached selections first, then
@@ -263,11 +267,12 @@ class LassoSelection(AbstractController):
         # for the active selection
 
         for selection in self._previous_selections:
-            selected_mask |= points_in_polygon(
-                data, selection, False).astype(bool, copy=False)
+            selected_mask |= points_in_polygon(data, selection, False).astype(
+                bool, copy=False)
 
-        active_selection = points_in_polygon(
-            data, self._active_selection, False).astype(bool, copy=False)
+        active_selection = points_in_polygon(data, self._active_selection,
+                                             False).astype(
+                                                 bool, copy=False)
 
         if self.selection_mode == 'exclude':
             # XXX I think this should be "set difference"? - CJW
@@ -279,8 +284,10 @@ class LassoSelection(AbstractController):
         else:
             selected_mask |= active_selection
 
-        if sometrue(selected_mask != self.selection_datasource.metadata[self.metadata_name]):
-            self.selection_datasource.metadata[self.metadata_name] = selected_mask
+        if sometrue(selected_mask !=
+                    self.selection_datasource.metadata[self.metadata_name]):
+            self.selection_datasource.metadata[
+                self.metadata_name] = selected_mask
             self.selection_changed = True
 
     def _map_screen(self, points):
@@ -289,7 +296,7 @@ class LassoSelection(AbstractController):
         Normally this method is a pass-through, but it may do more in
         specialized plots.
         """
-        return self.plot.map_screen(points)[:,:2]
+        return self.plot.map_screen(points)[:, :2]
 
     def _map_data(self, point):
         """ Maps a point in screen space to data space.
@@ -303,13 +310,14 @@ class LassoSelection(AbstractController):
         elif isinstance(self.plot, BaseXYPlot):
             return self.plot.map_data(point, all_values=True)[:2]
         else:
-            raise RuntimeError("LassoSelection only supports BaseXY and Base2D plots")
+            raise RuntimeError(
+                "LassoSelection only supports BaseXY and Base2D plots")
 
     def _get_data(self):
         """ Returns the datapoints in the plot, as an Nx2 array of (x,y).
         """
-        return transpose(array((self.plot.index.get_data(), self.plot.value.get_data())))
-
+        return transpose(
+            array((self.plot.index.get_data(), self.plot.value.get_data())))
 
     #------------------------------------------------------------------------
     # Property getter/setters

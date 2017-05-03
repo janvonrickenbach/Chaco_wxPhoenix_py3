@@ -1,6 +1,3 @@
-
-
-
 import os
 import numpy
 
@@ -8,6 +5,7 @@ from chaco.api import GridMapper
 from traits.api import Property, Enum, Str, cached_property
 
 from .status_layer import StatusLayer
+
 
 class SvgRangeSelectionOverlay(StatusLayer):
     """ This is a primitive range selection overlay which uses
@@ -20,10 +18,8 @@ class SvgRangeSelectionOverlay(StatusLayer):
             the other which defines the fill.
     """
 
-
-
-    filename = os.path.join(os.path.dirname(__file__), 'data',
-                                            'range_selection.svg')
+    filename = os.path.join(
+        os.path.dirname(__file__), 'data', 'range_selection.svg')
 
     alpha = 0.5
 
@@ -67,14 +63,16 @@ class SvgRangeSelectionOverlay(StatusLayer):
 
             if self.axis == 'index':
                 if isinstance(self.mapper, GridMapper):
-                    scale_width = (coords[-1][0] - coords[0][0])/self.doc_width
+                    scale_width = (
+                        coords[-1][0] - coords[0][0]) / self.doc_width
                 else:
-                    scale_width = (coords[0][-1] - coords[0][0])/self.doc_width
-                scale_height = float(plot_height)/self.doc_height
+                    scale_width = (
+                        coords[0][-1] - coords[0][0]) / self.doc_width
+                scale_height = float(plot_height) / self.doc_height
                 gc.translate_ctm(coords[0][0], origin_y + plot_height)
             else:
-                scale_height = (coords[0][-1] - coords[0][0])/self.doc_height
-                scale_width = float(plot_width)/self.doc_width
+                scale_height = (coords[0][-1] - coords[0][0]) / self.doc_height
+                scale_width = float(plot_width) / self.doc_width
                 gc.translate_ctm(origin_x, coords[0][0])
 
             # SVG origin is the upper right with y positive down, so
@@ -104,12 +102,12 @@ class SvgRangeSelectionOverlay(StatusLayer):
                 return []
         # All other metadata is interpreted as a mask on dataspace
         else:
-            ar = numpy.arange(0,len(selection), 1)
+            ar = numpy.arange(0, len(selection), 1)
             runs = arg_find_runs(ar[selection])
             coords = []
             for inds in runs:
                 start = ds._data[ar[selection][inds[0]]]
-                end = ds._data[ar[selection][inds[1]-1]]
+                end = ds._data[ar[selection][inds[1] - 1]]
                 coords.append(self.map_screen(numpy.array((start, end))))
             return coords
 

@@ -1,8 +1,6 @@
 """ Defines the base class for XY plots.
 """
 
-
-
 from math import sqrt
 from numpy import around, array, isnan, transpose
 
@@ -10,7 +8,6 @@ from numpy import around, array, isnan, transpose
 from enable.api import black_color_trait
 from traits.api import Any, Array, Bool, Enum, Float, Instance, \
                              Property, Range
-
 
 # Local relative imports
 from .abstract_mapper import AbstractMapper
@@ -46,7 +43,6 @@ class BaseXYPlot(AbstractPlotRenderer):
     index_mapper = Instance(AbstractMapper)
     # Screen mapper for value data
     value_mapper = Instance(AbstractMapper)
-
 
     # Convenience properties that correspond to either index_mapper or
     # value_mapper, depending on the orientation of the plot.
@@ -94,7 +90,6 @@ class BaseXYPlot(AbstractPlotRenderer):
     y_axis = Property
     # Read-only property for labels.
     labels = Property
-
 
     #------------------------------------------------------------------------
     # Other public traits
@@ -186,15 +181,21 @@ class BaseXYPlot(AbstractPlotRenderer):
         self.set(**kwargs_tmp)
         AbstractPlotRenderer.__init__(self, **kwtraits)
         if self.index is not None:
-            self.index.on_trait_change(self._either_data_changed, "data_changed")
-            self.index.on_trait_change(self._either_metadata_changed, "metadata_changed")
+            self.index.on_trait_change(self._either_data_changed,
+                                       "data_changed")
+            self.index.on_trait_change(self._either_metadata_changed,
+                                       "metadata_changed")
         if self.index_mapper:
-            self.index_mapper.on_trait_change(self._mapper_updated_handler, "updated")
+            self.index_mapper.on_trait_change(self._mapper_updated_handler,
+                                              "updated")
         if self.value is not None:
-            self.value.on_trait_change(self._either_data_changed, "data_changed")
-            self.value.on_trait_change(self._either_metadata_changed, "metadata_changed")
+            self.value.on_trait_change(self._either_data_changed,
+                                       "data_changed")
+            self.value.on_trait_change(self._either_metadata_changed,
+                                       "metadata_changed")
         if self.value_mapper:
-            self.value_mapper.on_trait_change(self._mapper_updated_handler, "updated")
+            self.value_mapper.on_trait_change(self._mapper_updated_handler,
+                                              "updated")
 
         # If we are not resizable, we will not get a bounds update upon layout,
         # so we have to manually update our mappers
@@ -271,7 +272,7 @@ class BaseXYPlot(AbstractPlotRenderer):
         if ndx is not None:
             x = self.x_mapper.map_screen(self.index.get_data()[ndx])
             y = self.y_mapper.map_screen(self.value.get_data()[ndx])
-            return (x, y, sqrt((x-screen_pt[0])**2 + (y-screen_pt[1])**2))
+            return (x, y, sqrt((x - screen_pt[0])**2 + (y - screen_pt[1])**2))
         else:
             return None
 
@@ -310,7 +311,7 @@ class BaseXYPlot(AbstractPlotRenderer):
         # even that we only have 1 point, just return that point.
         datalen = len(index_data)
         if datalen == 1:
-            dist = (x, y, sqrt((x-screen_pt[0])**2 + (y-screen_pt[1])**2))
+            dist = (x, y, sqrt((x - screen_pt[0])**2 + (y - screen_pt[1])**2))
             if (threshold == 0.0) or (dist <= threshold):
                 return (x, y, x, y, dist)
             else:
@@ -322,12 +323,11 @@ class BaseXYPlot(AbstractPlotRenderer):
                 ndx2 = ndx - 1
             x2 = self.x_mapper.map_screen(index_data[ndx2])
             y2 = self.y_mapper.map_screen(value_data[ndx2])
-            dist = point_line_distance(screen_pt, (x,y), (x2,y2))
+            dist = point_line_distance(screen_pt, (x, y), (x2, y2))
             if (threshold == 0.0) or (dist <= threshold):
                 return (x, y, x2, y2, dist)
             else:
                 return None
-
 
     #------------------------------------------------------------------------
     # AbstractPlotRenderer interface
@@ -348,9 +348,9 @@ class BaseXYPlot(AbstractPlotRenderer):
         sx = self.index_mapper.map_screen(x_ary)
         sy = self.value_mapper.map_screen(y_ary)
         if self.orientation == "h":
-            return transpose(array((sx,sy)))
+            return transpose(array((sx, sy)))
         else:
-            return transpose(array((sy,sx)))
+            return transpose(array((sy, sx)))
 
     def map_data(self, screen_pt, all_values=False):
         """ Maps a screen space point into the "index" space of the plot.
@@ -362,14 +362,17 @@ class BaseXYPlot(AbstractPlotRenderer):
         """
         x, y = screen_pt
         if self.orientation == 'v':
-                x, y = y, x
+            x, y = y, x
         if all_values:
             return array((self.index_mapper.map_data(x),
                           self.value_mapper.map_data(y)))
         else:
             return self.index_mapper.map_data(x)
 
-    def map_index(self, screen_pt, threshold=2.0, outside_returns_none=True,
+    def map_index(self,
+                  screen_pt,
+                  threshold=2.0,
+                  outside_returns_none=True,
                   index_only=False):
         """ Maps a screen space point to an index into the plot's index array(s).
 
@@ -432,12 +435,12 @@ class BaseXYPlot(AbstractPlotRenderer):
         # map_screen. this makes it robust against differences in
         # the map_screen methods of logmapper and linearmapper
         # when passed a scalar
-        xy = array([[x,y]])
+        xy = array([[x, y]])
         sx, sy = self.map_screen(xy).T
-        if index_only and (threshold == 0.0 or screen_pt[0]-sx < threshold):
+        if index_only and (threshold == 0.0 or screen_pt[0] - sx < threshold):
             return ndx
-        elif ((screen_pt[0]-sx)**2 + (screen_pt[1]-sy)**2
-              < threshold*threshold):
+        elif ((screen_pt[0] - sx)**2 +
+              (screen_pt[1] - sy)**2 < threshold * threshold):
             return ndx
         else:
             return None
@@ -454,7 +457,6 @@ class BaseXYPlot(AbstractPlotRenderer):
             return self._downsample()
         else:
             return self.map_screen(self._cached_data_pts)
-
 
     #------------------------------------------------------------------------
     # PlotComponent interface
@@ -487,11 +489,11 @@ class BaseXYPlot(AbstractPlotRenderer):
                 if (range.low < 0) and (range.high > 0):
                     if range == self.index_mapper.range:
                         dual = self.value_mapper.range
-                        data_pts = array([[0.0,dual.low], [0.0, dual.high]])
+                        data_pts = array([[0.0, dual.low], [0.0, dual.high]])
                     else:
                         dual = self.index_mapper.range
-                        data_pts = array([[dual.low,0.0], [dual.high,0.0]])
-                    start,end = self.map_screen(data_pts)
+                        data_pts = array([[dual.low, 0.0], [dual.high, 0.0]])
+                    start, end = self.map_screen(data_pts)
                     start = around(start)
                     end = around(end)
                     gc.move_to(int(start[0]), int(start[1]))
@@ -540,36 +542,38 @@ class BaseXYPlot(AbstractPlotRenderer):
             return self.index_mapper
 
     def _get_hgrid(self):
-        for obj in self.underlays+self.overlays:
-            if isinstance(obj, PlotGrid) and obj.orientation=="horizontal":
+        for obj in self.underlays + self.overlays:
+            if isinstance(obj, PlotGrid) and obj.orientation == "horizontal":
                 return obj
         else:
             return None
 
     def _get_vgrid(self):
-        for obj in self.underlays+self.overlays:
-            if isinstance(obj, PlotGrid) and obj.orientation=="vertical":
+        for obj in self.underlays + self.overlays:
+            if isinstance(obj, PlotGrid) and obj.orientation == "vertical":
                 return obj
         else:
             return None
 
     def _get_x_axis(self):
-        for obj in self.underlays+self.overlays:
-            if isinstance(obj, PlotAxis) and obj.orientation in ("bottom", "top"):
+        for obj in self.underlays + self.overlays:
+            if isinstance(obj,
+                          PlotAxis) and obj.orientation in ("bottom", "top"):
                 return obj
         else:
             return None
 
     def _get_y_axis(self):
-        for obj in self.underlays+self.overlays:
-            if isinstance(obj, PlotAxis) and obj.orientation in ("left", "right"):
+        for obj in self.underlays + self.overlays:
+            if isinstance(obj,
+                          PlotAxis) and obj.orientation in ("left", "right"):
                 return obj
         else:
             return None
 
     def _get_labels(self):
         labels = []
-        for obj in self.underlays+self.overlays:
+        for obj in self.underlays + self.overlays:
             if isinstance(obj, PlotLabel):
                 labels.append(obj)
         return labels
@@ -623,12 +627,14 @@ class BaseXYPlot(AbstractPlotRenderer):
 
     def _index_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._either_data_changed, "data_changed", remove=True)
-            old.on_trait_change(self._either_metadata_changed, "metadata_changed",
-                                remove=True)
+            old.on_trait_change(
+                self._either_data_changed, "data_changed", remove=True)
+            old.on_trait_change(
+                self._either_metadata_changed, "metadata_changed", remove=True)
         if new is not None:
             new.on_trait_change(self._either_data_changed, "data_changed")
-            new.on_trait_change(self._either_metadata_changed, "metadata_changed")
+            new.on_trait_change(self._either_metadata_changed,
+                                "metadata_changed")
         self._either_data_changed()
         return
 
@@ -645,12 +651,14 @@ class BaseXYPlot(AbstractPlotRenderer):
 
     def _value_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._either_data_changed, "data_changed", remove=True)
-            old.on_trait_change(self._either_metadata_changed, "metadata_changed",
-                                remove=True)
+            old.on_trait_change(
+                self._either_data_changed, "data_changed", remove=True)
+            old.on_trait_change(
+                self._either_metadata_changed, "metadata_changed", remove=True)
         if new is not None:
             new.on_trait_change(self._either_data_changed, "data_changed")
-            new.on_trait_change(self._either_metadata_changed, "metadata_changed")
+            new.on_trait_change(self._either_metadata_changed,
+                                "metadata_changed")
         self._either_data_changed()
         return
 
@@ -686,7 +694,8 @@ class BaseXYPlot(AbstractPlotRenderer):
 
     def _either_mapper_changed(self, obj, name, old, new):
         if old is not None:
-            old.on_trait_change(self._mapper_updated_handler, "updated", remove=True)
+            old.on_trait_change(
+                self._mapper_updated_handler, "updated", remove=True)
         if new is not None:
             new.on_trait_change(self._mapper_updated_handler, "updated")
         self.invalidate_draw()
@@ -717,9 +726,11 @@ class BaseXYPlot(AbstractPlotRenderer):
     #------------------------------------------------------------------------
 
     def __getstate__(self):
-        state = super(BaseXYPlot,self).__getstate__()
-        for key in ['_cache_valid', '_cached_data_pts', '_screen_cache_valid',
-                    '_cached_screen_pts']:
+        state = super(BaseXYPlot, self).__getstate__()
+        for key in [
+                '_cache_valid', '_cached_data_pts', '_screen_cache_valid',
+                '_cached_screen_pts'
+        ]:
             if key in state:
                 del state[key]
 
@@ -728,16 +739,17 @@ class BaseXYPlot(AbstractPlotRenderer):
     def __setstate__(self, state):
         super(BaseXYPlot, self).__setstate__(state)
         if self.index is not None:
-            self.index.on_trait_change(self._either_data_changed, "data_changed")
+            self.index.on_trait_change(self._either_data_changed,
+                                       "data_changed")
         if self.value is not None:
-            self.value.on_trait_change(self._either_data_changed, "data_changed")
+            self.value.on_trait_change(self._either_data_changed,
+                                       "data_changed")
 
         self.invalidate_draw()
         self._cache_valid = False
         self._screen_cache_valid = False
         self._update_mappers()
         return
-
 
 
 # EOF

@@ -2,9 +2,6 @@
 Scatterplot in one dimension only
 """
 
-
-
-
 from numpy import empty
 
 # Enthought library imports
@@ -89,7 +86,6 @@ class ScatterPlot1D(Base1DPlot):
     #: private trait holding postion of markers relative to non-index direction
     _marker_position = Float
 
-
     def _draw_plot(self, gc, view_bounds=None, mode="normal"):
         coord = self._compute_screen_coord()
         pts = empty(shape=(len(coord), 2))
@@ -120,19 +116,19 @@ class ScatterPlot1D(Base1DPlot):
                 outline_color = list(self.outline_color_)
                 outline_color[3] *= self.unselected_alpha
                 if unselected_pts.size > 0:
-                    self.render_markers_func(gc, unselected_pts, self.marker,
-                        self.marker_size, tuple(color),
-                        self.unselected_line_width, tuple(outline_color),
-                        self.custom_symbol)
+                    self.render_markers_func(
+                        gc, unselected_pts, self.marker, self.marker_size,
+                        tuple(color), self.unselected_line_width,
+                        tuple(outline_color), self.custom_symbol)
                 if selected_pts.size > 0:
-                    self.render_markers_func(gc, selected_pts, self.marker,
-                        self.marker_size, self.selection_color_,
-                        self.line_width, self.outline_color_,
-                        self.custom_symbol)
-            else:
-                self.render_markers_func(gc, pts, self.marker,
-                        self.marker_size, self.color_, self.line_width,
+                    self.render_markers_func(
+                        gc, selected_pts, self.marker, self.marker_size,
+                        self.selection_color_, self.line_width,
                         self.outline_color_, self.custom_symbol)
+            else:
+                self.render_markers_func(
+                    gc, pts, self.marker, self.marker_size, self.color_,
+                    self.line_width, self.outline_color_, self.custom_symbol)
 
     def __marker_positon_default(self):
         return self._get_marker_position()
@@ -145,7 +141,7 @@ class ScatterPlot1D(Base1DPlot):
             y, h = x, w
 
         if self.alignment == 'center':
-            position = y + h/2.0
+            position = y + h / 2.0
         elif self.alignment in ['left', 'bottom']:
             position = y
         elif self.alignment in ['right', 'top']:

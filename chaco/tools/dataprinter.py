@@ -30,12 +30,14 @@ class DataPrinter(BaseTool):
         plot = self.component
         if plot is not None:
             if isinstance(plot, BaseXYPlot):
-                ndx = plot.map_index((event.x, event.y), index_only = True)
+                ndx = plot.map_index((event.x, event.y), index_only=True)
                 x = plot.index.get_data()[ndx]
                 y = plot.value.get_data()[ndx]
-                print(self.format % (x,y))
+                print(self.format % (x, y))
             else:
-                print("dataprinter: don't know how to handle plots of type", end=' ')
+                print(
+                    "dataprinter: don't know how to handle plots of type",
+                    end=' ')
                 print(plot.__class__.__name__)
         return
 

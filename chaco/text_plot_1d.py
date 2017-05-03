@@ -3,11 +3,6 @@ A plot that renders text values along one dimension
 
 """
 
-
-
-
-
-
 from numpy import array, empty
 
 # Enthought library imports
@@ -75,10 +70,12 @@ class TextPlot1D(Base1DPlot):
                 font=self.text_font,
                 color=self.text_color,
                 rotate_angle=self.text_rotate_angle,
-                margin=self.text_margin
-            ) for text in self.value.get_data()]
-        self._label_box_cache = [array(label.get_bounding_box(gc), float)
-                                 for label in self._label_cache]
+                margin=self.text_margin) for text in self.value.get_data()
+        ]
+        self._label_box_cache = [
+            array(label.get_bounding_box(gc), float)
+            for label in self._label_cache
+        ]
         self._label_cache_valid = True
 
     def _draw_plot(self, gc, view_bounds=None, mode="normal"):
@@ -118,7 +115,7 @@ class TextPlot1D(Base1DPlot):
             y, h = x, w
 
         if self.alignment == 'center':
-            position = y + h/2.0
+            position = y + h / 2.0
         elif self.alignment in ['left', 'bottom']:
             position = y
         elif self.alignment in ['right', 'top']:

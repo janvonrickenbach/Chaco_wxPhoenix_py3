@@ -1,4 +1,3 @@
-
 import unittest
 
 from numpy import arange, array, zeros, inf
@@ -24,7 +23,6 @@ class Foo(HasTraits):
 
 
 class DataRangeTestCase(unittest.TestCase):
-
     def test_empty_range(self):
         r = DataRange1D()
         self.assertEqual(r.low, -inf)
@@ -208,7 +206,6 @@ class DataRangeTestCase(unittest.TestCase):
         self.assertEqual(r.high, 0.0)
         return
 
-
     def test_multi_source(self):
         ds1 = ArrayDataSource(array([3, 4, 5, 6, 7]))
         ds2 = ArrayDataSource(array([5, 10, 15, 20]))
@@ -220,41 +217,41 @@ class DataRangeTestCase(unittest.TestCase):
     def test_clip_data(self):
         r = DataRange1D(low=2.0, high=10.0)
         ary = array([1, 3, 4, 9.8, 10.2, 12])
-        assert_equal(r.clip_data(ary) , array([3.0,4.0,9.8]))
+        assert_equal(r.clip_data(ary), array([3.0, 4.0, 9.8]))
 
         r = DataRange1D(low=10, high=20)
         ary = array([5, 10, 15, 20, 25, 30])
-        assert_equal(r.clip_data(ary) , array([10, 15, 20]))
-        assert_equal(r.clip_data(ary[::-1]) , array([20, 15, 10]))
+        assert_equal(r.clip_data(ary), array([10, 15, 20]))
+        assert_equal(r.clip_data(ary[::-1]), array([20, 15, 10]))
 
         r = DataRange1D(low=2.0, high=2.5)
-        assert_equal(len(r.clip_data(ary)) , 0)
+        assert_equal(len(r.clip_data(ary)), 0)
         return
 
     def test_mask_data(self):
         r = DataRange1D(low=2.0, high=10.0)
         ary = array([1, 3, 4, 9.8, 10.2, 12])
-        assert_equal(r.mask_data(ary) , array([0,1,1,1,0,0], 'b'))
+        assert_equal(r.mask_data(ary), array([0, 1, 1, 1, 0, 0], 'b'))
 
         r = DataRange1D(low=10, high=20)
         ary = array([5, 10, 15, 20, 25, 30])
-        target_mask = array([0,1,1,1,0,0], 'b')
-        assert_equal(r.mask_data(ary) , target_mask)
-        assert_equal(r.mask_data(ary[::-1]) , target_mask[::-1])
+        target_mask = array([0, 1, 1, 1, 0, 0], 'b')
+        assert_equal(r.mask_data(ary), target_mask)
+        assert_equal(r.mask_data(ary[::-1]), target_mask[::-1])
 
         r = DataRange1D(low=2.0, high=2.5)
-        assert_equal(r.mask_data(ary) , zeros(len(ary)))
+        assert_equal(r.mask_data(ary), zeros(len(ary)))
         return
 
     def test_bound_data(self):
         r = DataRange1D(low=2.9, high=6.1)
         ary = arange(10)
-        assert_equal(r.bound_data(ary) , (3,6))
+        assert_equal(r.bound_data(ary), (3, 6))
 
         # test non-monotonic data
-        ary = array([-5,-4,-7,-8,-2,1,2,3,4,5,4,3,8,9,10,9,8])
+        ary = array([-5, -4, -7, -8, -2, 1, 2, 3, 4, 5, 4, 3, 8, 9, 10, 9, 8])
         bounds = r.bound_data(ary)
-        assert_equal(bounds , (7,11))
+        assert_equal(bounds, (7, 11))
         return
 
     def test_custom_bounds_func(self):
@@ -265,7 +262,8 @@ class DataRangeTestCase(unittest.TestCase):
             assert_equal(margin, 1.0)
             return -999., 999.
 
-        r = DataRange1D(tight_bounds=False, margin=1.0, bounds_func=custom_func)
+        r = DataRange1D(
+            tight_bounds=False, margin=1.0, bounds_func=custom_func)
         ary = arange(10.0)
         ds = ArrayDataSource(ary)
         r.sources.append(ds)
@@ -280,7 +278,7 @@ class DataRangeTestCase(unittest.TestCase):
         self.assertEqual(r.low, 1.0)
         self.assertEqual(r.high, inf)
         data = array([-100.0, 0.0, 100.0])
-        assert_equal(r.clip_data(data) , array([100.0]))
+        assert_equal(r.clip_data(data), array([100.0]))
 
         r = DataRange1D()
         ary2 = array([-inf, 1.0])

@@ -1,16 +1,14 @@
 """ Defines the PlotLabel class.
 """
 
-
-
 from enable.font_metrics_provider import font_metrics_provider
 from traits.api import DelegatesTo, Enum, Instance, Str, Trait
 
 from .abstract_overlay import AbstractOverlay
 from .label import Label
 
-
 LabelDelegate = DelegatesTo("_label")
+
 
 class PlotLabel(AbstractOverlay):
     """ A label used by plots.
@@ -74,7 +72,6 @@ class PlotLabel(AbstractOverlay):
 
     # The Label instance this plot label is wrapping.
     _label = Instance(Label, args=())
-
 
     def __init__(self, text="", *args, **kw):
         super(PlotLabel, self).__init__(*args, **kw)
@@ -232,7 +229,6 @@ class PlotLabel(AbstractOverlay):
         else:
             self.draw_layer = "plot"
         return
-
 
 
 # EOF

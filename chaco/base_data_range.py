@@ -32,6 +32,3 @@ class BaseDataRange(AbstractDataRange):
         for datasource in datasources:
             if datasource in self.sources:
                 self.sources.remove(datasource)
-
-
-

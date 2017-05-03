@@ -16,7 +16,6 @@ from numpy import array, concatenate, take, argsort, argmin, \
 from traits.api import HasStrictTraits, Bool, Enum, Tuple, \
                              Property, Any, Float
 
-
 #-------------------------------------------------------------------
 # Module-specific traits
 #-------------------------------------------------------------------
@@ -24,18 +23,20 @@ from traits.api import HasStrictTraits, Bool, Enum, Tuple, \
 # Expresses sorting order of
 ArraySortTrait = Enum('ascending', 'descending')
 
-
 #-------------------------------------------------------------------
 # Module-specific utility functions
 #-------------------------------------------------------------------
+
 
 def right_shift(ary, newval):
     "Returns a right-shifted version of *ary* with *newval* inserted on the left."
     return concatenate([[newval], ary[:-1]])
 
+
 def left_shift(ary, newval):
     "Returns a left-shifted version of *ary* with *newval* inserted on the right."
     return concatenate([ary[1:], [newval]])
+
 
 def sort_points(points, index=0):
     """
@@ -46,7 +47,8 @@ def sort_points(points, index=0):
     """
     if len(points.shape) != 2 or (2 not in points.shape):
         raise RuntimeError("sort_points(): Array of wrong shape.")
-    return take( points, argsort(points[:,index]) )
+    return take(points, argsort(points[:, index]))
+
 
 def array_zip(*arys):
     """
@@ -74,7 +76,6 @@ class AbstractDataMapper(HasStrictTraits):
     # A read-only property that describes the origin and size of the data
     # set in data space as a 4-tuple (min_x, min_y, width, height)
     extents = Property()
-
 
     #-------------------------------------------------------------------
     # Private traits
@@ -208,7 +209,7 @@ class AbstractDataMapper(HasStrictTraits):
         data set/data space.
         """
         self._data = None
-        self._extents = (0,0,0,0)
+        self._extents = (0, 0, 0, 0)
         self._clear()
         return
 
@@ -233,7 +234,7 @@ class AbstractDataMapper(HasStrictTraits):
         returns nothing.
         """
         if len(self._data) == 0:
-            self._extents = ((0,0), (0,0))
+            self._extents = ((0, 0), (0, 0))
         else:
             value = self._data
             min_indices = argmin(value, axis=0)
@@ -242,9 +243,8 @@ class AbstractDataMapper(HasStrictTraits):
             y = value[min_indices[1], 1] - self._extents_delta
             maxX = value[max_indices[0], 0] + self._extents_delta
             maxY = value[max_indices[1], 1] + self._extents_delta
-            self._extents = ((x, y), (maxX-x, maxY-y))
+            self._extents = ((x, y), (maxX - x, maxY - y))
         return
-
 
     #-------------------------------------------------------------------
     # Abstract private methods and event handlers
@@ -297,5 +297,6 @@ class BruteForceDataMapper(AbstractDataMapper):
             else:
                 self._data = sort_points(self._data)[::-1]
         return
+
 
 #EOF

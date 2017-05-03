@@ -2,7 +2,6 @@ from numpy.testing import assert_allclose, assert_equal
 
 from chaco.image_utils import trim_screen_rect, X_PARAMS, Y_PARAMS
 
-
 SINGLE_PIXEL = (1, 1)
 FOUR_PIXELS = (2, 2)
 
@@ -28,14 +27,14 @@ def test_viewer_zoomed_into_single_pixel():
 def test_viewer_at_corner_of_single_image():
     offset = 0.2
     screen_rect = [1, 1, 1, 1]
-    new_size = [1-offset, 1-offset]
+    new_size = [1 - offset, 1 - offset]
 
-    down_right = [1+offset, 1+offset, 1, 1]
+    down_right = [1 + offset, 1 + offset, 1, 1]
     new_rect = trim_screen_rect(screen_rect, down_right, SINGLE_PIXEL)
     expected_rect = down_right[:2] + new_size
     assert_midpoints_equal((new_rect, expected_rect))
 
-    up_left = [1-offset, 1-offset, 1, 1]
+    up_left = [1 - offset, 1 - offset, 1, 1]
     new_rect = trim_screen_rect(screen_rect, up_left, SINGLE_PIXEL)
     expected_rect = [1, 1] + new_size
     assert_midpoints_equal((new_rect, expected_rect))
@@ -43,9 +42,10 @@ def test_viewer_at_corner_of_single_image():
 
 def test_viewer_zoomed_into_four_pixel_intersection():
     screen_rect = [0, 0, 100, 100]  # 4-pixel intersection at (50, 50)
-    view_rectangles = ([49, 49, 2, 2],  # Centered pixel intersection
-                       [49, 49, 3, 3],  # Intersection at 1/3 of view
-                       [49, 49, 2, 3])  # Intersection at 1/2, 1/3 of view
+    view_rectangles = (
+        [49, 49, 2, 2],  # Centered pixel intersection
+        [49, 49, 3, 3],  # Intersection at 1/3 of view
+        [49, 49, 2, 3])  # Intersection at 1/2, 1/3 of view
     for view_rect in view_rectangles:
         new_rect = trim_screen_rect(screen_rect, view_rect, FOUR_PIXELS)
         yield assert_midpoints_equal, (new_rect, screen_rect)
@@ -54,8 +54,9 @@ def test_viewer_zoomed_into_four_pixel_intersection():
 def test_viewer_at_corner_of_four_pixel_image():
     offset = 0.2
     screen_rect = [1, 1, 1, 1]
-    view_rectangles = ([1+offset, 1+offset, 1, 1],  # Shifted down and right
-                       [1-offset, 1-offset, 1, 1])  # Shifted up and left
+    view_rectangles = (
+        [1 + offset, 1 + offset, 1, 1],  # Shifted down and right
+        [1 - offset, 1 - offset, 1, 1])  # Shifted up and left
     for view_rect in view_rectangles:
         new_rect = trim_screen_rect(screen_rect, view_rect, FOUR_PIXELS)
         yield assert_equal, new_rect, screen_rect

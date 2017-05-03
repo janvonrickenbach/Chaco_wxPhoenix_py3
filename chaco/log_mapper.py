@@ -10,11 +10,12 @@ from traits.api import Bool, Float
 #Local relative imports
 from .base_1d_mapper import Base1DMapper
 
-
 LOG_MINIMUM = 0.0
+
 
 class InvalidDataRangeException(Exception):
     pass
+
 
 class LogMapper(Base1DMapper):
     """ Defines a 1-D logarithmic scale mapping from a 1-D region in input
@@ -51,14 +52,15 @@ class LogMapper(Base1DMapper):
         if not self._cache_valid:
             self._compute_scale()
         if self._inter_scale == 0.0:
-            intermediate = data_array*0.0
+            intermediate = data_array * 0.0
         else:
             try:
                 mask = (data_array <= LOG_MINIMUM) | isnan(data_array)
                 if sometrue(mask):
                     data_array = array(data_array, copy=True, ndmin=1)
                     data_array[mask] = self.fill_value
-                intermediate = (log(data_array) - self._inter_offset)/self._inter_scale
+                intermediate = (
+                    log(data_array) - self._inter_offset) / self._inter_scale
             except ValueError:
                 intermediate = zeros(len(data_array))
 
@@ -75,8 +77,8 @@ class LogMapper(Base1DMapper):
         if self._null_screen_range or self._null_data_range:
             return array([self.range.low])
         #First convert to a [0,1] space, then to the data space
-        intermediate = (screen_val-self._screen_offset)/self._screen_scale
-        return exp(self._inter_scale*intermediate + self._inter_offset)
+        intermediate = (screen_val - self._screen_offset) / self._screen_scale
+        return exp(self._inter_scale * intermediate + self._inter_offset)
 
     def map_data_array(self, screen_vals):
         return self.map_data(screen_vals)
@@ -134,12 +136,13 @@ class LogMapper(Base1DMapper):
                 self._inter_scale = log(high)
                 self._inter_offset = 0.0
             else:
-                self._inter_scale = log(high)-log(low)
+                self._inter_scale = log(high) - log(low)
                 self._inter_offset = log(low)
             self._screen_scale = screen_range
             self._screen_offset = self.low_pos
 
         self._cache_valid = True
         return
+
 
 # EOF

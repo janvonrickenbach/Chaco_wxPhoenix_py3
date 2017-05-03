@@ -1,8 +1,6 @@
 """ Defines the LinePlot class.
 """
 
-
-
 # Standard library imports
 import warnings
 
@@ -18,7 +16,6 @@ from traitsui.api import Item, View
 # Local relative imports
 from .base import arg_find_runs, arg_true_runs, reverse_map_1d, intersect_range
 from .base_xy_plot import BaseXYPlot
-
 
 
 class LinePlot(BaseXYPlot):
@@ -68,8 +65,12 @@ class LinePlot(BaseXYPlot):
     render_style = Enum("connectedpoints", "hold", "connectedhold")
 
     # Traits UI View for customizing the plot.
-    traits_view = View(Item("color", style="custom"), "line_width", "line_style",
-                       buttons=["OK", "Cancel"])
+    traits_view = View(
+        Item(
+            "color", style="custom"),
+        "line_width",
+        "line_style",
+        buttons=["OK", "Cancel"])
 
     #------------------------------------------------------------------------
     # Private traits
@@ -83,8 +84,7 @@ class LinePlot(BaseXYPlot):
     # Cached list of non-NaN arrays of (x,y) screen-space points.
     _cached_screen_pts = List
 
-
-    def hittest(self, screen_pt, threshold=7.0, return_distance = False):
+    def hittest(self, screen_pt, threshold=7.0, return_distance=False):
         """
         Tests whether the given screen point is within *threshold* pixels of
         any data points on the line.  If so, then it returns the (x,y) value of
@@ -98,8 +98,8 @@ class LinePlot(BaseXYPlot):
             data_pt = (self.index.get_data()[ndx], self.value.get_data()[ndx])
             if return_distance:
                 scrn_pt = self.map_screen(data_pt)
-                dist = sqrt((screen_pt[0] - scrn_pt[0])**2
-                            + (screen_pt[1] - scrn_pt[1])**2)
+                dist = sqrt((screen_pt[0] - scrn_pt[0])**2 + (screen_pt[1] -
+                                                              scrn_pt[1])**2)
                 return (data_pt[0], data_pt[1], dist)
             else:
                 return data_pt
@@ -109,11 +109,11 @@ class LinePlot(BaseXYPlot):
             # Must check all lines within threshold along the major axis,
             # so determine the bounds of the region of interest in dataspace
             if self.orientation == "h":
-                dmax = self.map_data((screen_pt[0]+threshold, screen_pt[1]))
-                dmin = self.map_data((screen_pt[0]-threshold, screen_pt[1]))
+                dmax = self.map_data((screen_pt[0] + threshold, screen_pt[1]))
+                dmin = self.map_data((screen_pt[0] - threshold, screen_pt[1]))
             else:
-                dmax = self.map_data((screen_pt[0], screen_pt[1]+threshold))
-                dmin = self.map_data((screen_pt[0], screen_pt[1]-threshold))
+                dmax = self.map_data((screen_pt[0], screen_pt[1] + threshold))
+                dmin = self.map_data((screen_pt[0], screen_pt[1] - threshold))
 
             xmin, xmax = self.index.get_bounds()
 
@@ -121,26 +121,33 @@ class LinePlot(BaseXYPlot):
             if dmin < xmin:
                 ndx1 = 0
             elif dmin > xmax:
-                ndx1 = len(self.value.get_data())-1
+                ndx1 = len(self.value.get_data()) - 1
             else:
                 ndx1 = reverse_map_1d(self.index.get_data(), dmin,
                                       self.index.sort_order)
             if dmax < xmin:
                 ndx2 = 0
             elif dmax > xmax:
-                ndx2 = len(self.value.get_data())-1
+                ndx2 = len(self.value.get_data()) - 1
             else:
                 ndx2 = reverse_map_1d(self.index.get_data(), dmax,
                                       self.index.sort_order)
 
-            start_ndx = max(0, min(ndx1-1, ndx2-1,))
-            end_ndx = min(len(self.value.get_data())-1, max(ndx1+1, ndx2+1))
+            start_ndx = max(0, min(
+                ndx1 - 1,
+                ndx2 - 1, ))
+            end_ndx = min(
+                len(self.value.get_data()) - 1, max(ndx1 + 1, ndx2 + 1))
 
             # Compute the distances to all points in the range of interest
-            start = array([ self.index.get_data()[start_ndx:end_ndx],
-                            self.value.get_data()[start_ndx:end_ndx] ])
-            end = array([ self.index.get_data()[start_ndx+1:end_ndx+1],
-                            self.value.get_data()[start_ndx+1:end_ndx+1] ])
+            start = array([
+                self.index.get_data()[start_ndx:end_ndx],
+                self.value.get_data()[start_ndx:end_ndx]
+            ])
+            end = array([
+                self.index.get_data()[start_ndx + 1:end_ndx + 1],
+                self.value.get_data()[start_ndx + 1:end_ndx + 1]
+            ])
 
             # Convert to screen points
             s_start = transpose(self.map_screen(transpose(start)))
@@ -157,8 +164,7 @@ class LinePlot(BaseXYPlot):
             px, py = _t_to_point(t, s_start, s_end)
 
             # Calculate distances
-            dist =  sqrt((px - screen_pt[0])**2 +
-                         (py - screen_pt[1])**2)
+            dist = sqrt((px - screen_pt[0])**2 + (py - screen_pt[1])**2)
 
             # Find the minimum
             n = argmin(dist)
@@ -181,7 +187,8 @@ class LinePlot(BaseXYPlot):
         """
 
         if self.index is None or self.value is None:
-            raise IndexError("cannot index when data source index or value is None")
+            raise IndexError(
+                "cannot index when data source index or value is None")
 
         index_data = self.index.get_data()
         value_data = self.value.get_data()
@@ -205,7 +212,7 @@ class LinePlot(BaseXYPlot):
             y1 = value_data[ndx + 1]
 
         if x1 != x0:
-            slope = float(y1 - y0)/float(x1 - x0)
+            slope = float(y1 - y0) / float(x1 - x0)
             dx = index_value - x0
             yp = y0 + slope * dx
         else:
@@ -238,7 +245,8 @@ class LinePlot(BaseXYPlot):
             value = self.value.get_data()
 
             # Check to see if the data is completely outside the view region
-            for ds, rng in ((self.index, self.index_range), (self.value, self.value_range)):
+            for ds, rng in ((self.index, self.index_range),
+                            (self.value, self.value_range)):
                 low, high = ds.get_bounds()
                 if low > rng.high or high < rng.low:
                     self._cached_data_pts = []
@@ -274,8 +282,10 @@ class LinePlot(BaseXYPlot):
             mask = intersect_range(value, self.value_range.low,
                                    self.value_range.high, mask)
 
-            points = [column_stack([index[start:end], value[start:end]])
-                      for start, end in arg_true_runs(mask)]
+            points = [
+                column_stack([index[start:end], value[start:end]])
+                for start, end in arg_true_runs(mask)
+            ]
 
             self._cached_data_pts = points
             self._cache_valid = True
@@ -289,8 +299,10 @@ class LinePlot(BaseXYPlot):
             else:
                 # TODO: implement other downsampling methods
                 from chaco.downsample.lttb import largest_triangle_three_buckets
-                downsampled = [largest_triangle_three_buckets(p, delta_screen)
-                               for p in self._cached_data_pts]
+                downsampled = [
+                    largest_triangle_three_buckets(p, delta_screen)
+                    for p in self._cached_data_pts
+                ]
 
             self._cached_screen_pts = [self.map_screen(p) for p in downsampled]
             self._screen_cache_valid = True
@@ -306,15 +318,16 @@ class LinePlot(BaseXYPlot):
             gc.clip_to_rect(self.x, self.y, self.width, self.height)
 
             render_method_dict = {
-                    "hold": self._render_hold,
-                    "connectedhold": self._render_connected_hold,
-                    "connectedpoints": self._render_normal
-                    }
-            render = render_method_dict.get(self.render_style, self._render_normal)
+                "hold": self._render_hold,
+                "connectedhold": self._render_connected_hold,
+                "connectedpoints": self._render_normal
+            }
+            render = render_method_dict.get(self.render_style,
+                                            self._render_normal)
 
             if selected_points is not None:
                 gc.set_stroke_color(self.selected_color_)
-                gc.set_line_width(self.line_width+10.0)
+                gc.set_line_width(self.line_width + 10.0)
                 gc.set_line_dash(self.selected_line_style_)
                 render(gc, selected_points, self.orientation)
 
@@ -339,11 +352,11 @@ class LinePlot(BaseXYPlot):
     @classmethod
     def _render_hold(cls, gc, points, orientation):
         for starts in points:
-            x,y = starts.T
+            x, y = starts.T
             if orientation == "h":
-                ends = transpose(array( (x[1:], y[:-1]) ))
+                ends = transpose(array((x[1:], y[:-1])))
             else:
-                ends = transpose(array( (x[:-1], y[1:]) ))
+                ends = transpose(array((x[:-1], y[1:])))
             gc.begin_path()
             gc.line_set(starts[:-1], ends)
             gc.stroke_path()
@@ -352,11 +365,11 @@ class LinePlot(BaseXYPlot):
     @classmethod
     def _render_connected_hold(cls, gc, points, orientation):
         for starts in points:
-            x,y = starts.T
+            x, y = starts.T
             if orientation == "h":
-                ends = transpose(array( (x[1:], y[:-1]) ))
+                ends = transpose(array((x[1:], y[:-1])))
             else:
-                ends = transpose(array( (x[:-1], y[1:]) ))
+                ends = transpose(array((x[:-1], y[1:])))
             gc.begin_path()
             gc.line_set(starts[:-1], ends)
             gc.line_set(ends, starts[1:])
@@ -369,8 +382,8 @@ class LinePlot(BaseXYPlot):
             gc.set_line_width(self.line_width)
             gc.set_line_dash(self.line_style_)
             gc.set_antialias(0)
-            gc.move_to(x, y+height/2)
-            gc.line_to(x+width, y+height/2)
+            gc.move_to(x, y + height / 2)
+            gc.line_to(x + width, y + height / 2)
             gc.stroke_path()
         return
 
@@ -386,9 +399,9 @@ class LinePlot(BaseXYPlot):
         if (pts.shape[0] < 400) or (pts.shape[0] < m.high_pos - m.low_pos):
             return
 
-        pts2 = concatenate((array([[0.0,0.0]]), pts[:-1]))
+        pts2 = concatenate((array([[0.0, 0.0]]), pts[:-1]))
         z = abs(pts - pts2)
-        d = z[:,0] + z[:,1]
+        d = z[:, 0] + z[:, 1]
         #... TODO ...
         return
 
@@ -413,7 +426,7 @@ class LinePlot(BaseXYPlot):
         return
 
     def __getstate__(self):
-        state = super(LinePlot,self).__getstate__()
+        state = super(LinePlot, self).__getstate__()
         for key in ['traits_view']:
             if key in state:
                 del state[key]
@@ -423,8 +436,9 @@ class LinePlot(BaseXYPlot):
     @cached_property
     def _get_effective_color(self):
         alpha = self.color_[-1] if len(self.color_) == 4 else 1
-        c = self.color_[:3] + (alpha * self.alpha,)
+        c = self.color_[:3] + (alpha * self.alpha, )
         return c
+
 
 def _closest_point(target, p1, p2):
     '''Utility function for hittest:
@@ -440,12 +454,12 @@ def _closest_point(target, p1, p2):
         / ((p1[0] - p2[0])*(p1[0] - p2[0]) + (p1[1] - p2[1])*(p1[1] - p2[1]))
     return t
 
+
 def _t_to_point(t, p1, p2):
     '''utility function for hittest for use with _closest_point
     returns the point corresponding to the parameter t
     on the line going between p1 and p2'''
-    return ( p1[0]*(1-t) + p2[0]*t,
-             p1[1]*(1-t) + p2[1]*t )
+    return (p1[0] * (1 - t) + p2[0] * t, p1[1] * (1 - t) + p2[1] * t)
 
 
 # EOF

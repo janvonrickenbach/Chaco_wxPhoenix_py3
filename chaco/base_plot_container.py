@@ -35,7 +35,7 @@ class BasePlotContainer(Container):
     # getters/setters.
     #------------------------------------------------------------------------
 
-    draw_order = Instance(list, args=(DEFAULT_DRAWING_ORDER,))
+    draw_order = Instance(list, args=(DEFAULT_DRAWING_ORDER, ))
     draw_layer = Str("plot")
 
     #------------------------------------------------------------------------
@@ -66,5 +66,6 @@ class BasePlotContainer(Container):
         if new == False:
             raise RuntimeError("The old-style drawing mechanism is no longer " \
                     "supported in Chaco.")
+
 
 # EOF

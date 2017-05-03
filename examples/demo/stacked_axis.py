@@ -22,6 +22,7 @@ from chaco.api import HPlotContainer, \
 from chaco.tools.api import BroadcasterTool, PanTool
 from chaco.api import create_line_plot
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
@@ -40,16 +41,18 @@ def _create_plot_component():
         plot_area.add(renderer)
         #plot_area.padding_left = 20
 
-        axis = PlotAxis(orientation="left", resizable="v",
-                    mapper = renderer.y_mapper,
-                    axis_line_color=color,
-                    tick_color=color,
-                    tick_label_color=color,
-                    title_color=color,
-                    bgcolor="transparent",
-                    title = "jn_%d" % i,
-                    border_visible = True,)
-        axis.bounds = [60,0]
+        axis = PlotAxis(
+            orientation="left",
+            resizable="v",
+            mapper=renderer.y_mapper,
+            axis_line_color=color,
+            tick_color=color,
+            tick_label_color=color,
+            title_color=color,
+            bgcolor="transparent",
+            title="jn_%d" % i,
+            border_visible=True, )
+        axis.bounds = [60, 0]
         axis.padding_left = 10
         axis.padding_right = 10
 
@@ -58,11 +61,16 @@ def _create_plot_component():
         if i == 4:
             # Use the last plot's X mapper to create an X axis and a
             # vertical grid
-            x_axis = PlotAxis(orientation="bottom", component=renderer,
-                        mapper=renderer.x_mapper)
+            x_axis = PlotAxis(
+                orientation="bottom",
+                component=renderer,
+                mapper=renderer.x_mapper)
             renderer.overlays.append(x_axis)
-            grid = PlotGrid(mapper=renderer.x_mapper, orientation="vertical",
-                    line_color="lightgray", line_style="dot")
+            grid = PlotGrid(
+                mapper=renderer.x_mapper,
+                orientation="vertical",
+                line_color="lightgray",
+                line_style="dot")
             renderer.underlays.append(grid)
 
     # Add the plot_area to the horizontal container
@@ -80,10 +88,12 @@ def _create_plot_component():
 
     return container
 
+
 #===============================================================================
 # Attributes to use for the plot view.
-size=(900,500)
-title="Multi-Y plot"
+size = (900, 500)
+title = "Multi-Y plot"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -92,16 +102,18 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title=title,
-                    width=size[0], height=size[1]
-                    )
+        Group(
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title,
+        width=size[0],
+        height=size[1])
 
     def _plot_default(self):
         return _create_plot_component()
+
 
 demo = Demo()
 
@@ -109,4 +121,3 @@ if __name__ == "__main__":
     demo.configure_traits()
 
 #--EOF---
-

@@ -30,10 +30,10 @@ class PanTool(BaseTool):
     constrain_key = Enum(None, "shift", "control", "alt")
 
     # Keys to Pan via keyboard
-    pan_right_key = Instance(KeySpec, args=("Right",))
-    pan_left_key = Instance(KeySpec, args=("Left",))
-    pan_up_key = Instance(KeySpec, args=("Up",))
-    pan_down_key = Instance(KeySpec, args=("Down",))
+    pan_right_key = Instance(KeySpec, args=("Right", ))
+    pan_left_key = Instance(KeySpec, args=("Left", ))
+    pan_up_key = Instance(KeySpec, args=("Up", ))
+    pan_down_key = Instance(KeySpec, args=("Down", ))
 
     # number of pixels the keys should pan
     # disabled if 0.0
@@ -62,7 +62,6 @@ class PanTool(BaseTool):
     # set programmatically.
     _auto_constrain = Bool(False)
 
-
     #------------------------------------------------------------------------
     # Inherited BaseTool traits
     #------------------------------------------------------------------------
@@ -83,20 +82,16 @@ class PanTool(BaseTool):
         """
         if self.pan_keys_step == 0.0:
             return
-        src = self.component.bounds[0]/2, self.component.bounds[1]/2
+        src = self.component.bounds[0] / 2, self.component.bounds[1] / 2
         dest = src
         if self.pan_left_key.match(event):
-            dest = (src[0] - self.pan_keys_step,
-                    src[1])
+            dest = (src[0] - self.pan_keys_step, src[1])
         elif self.pan_right_key.match(event):
-            dest = (src[0] + self.pan_keys_step,
-                    src[1])
+            dest = (src[0] + self.pan_keys_step, src[1])
         elif self.pan_down_key.match(event):
-            dest = (src[0],
-                    src[1] - self.pan_keys_step)
+            dest = (src[0], src[1] - self.pan_keys_step)
         elif self.pan_up_key.match(event):
-            dest = (src[0],
-                    src[1] + self.pan_keys_step)
+            dest = (src[0], src[1] + self.pan_keys_step)
         if src != dest:
             self._original_xy = src
             event.x = dest[0]
@@ -199,9 +194,12 @@ class PanTool(BaseTool):
                 # values.  As a first approximation, we're just going to
                 # use a linear approximation, which works perfectly for
                 # linear mappers (which is used 99% of the time).
-                data = [arr for arr in
-                        (source.get_data() for source in mapper.range.sources)
-                        if arr.size > 0]
+                data = [
+                    arr
+                    for arr in (source.get_data()
+                                for source in mapper.range.sources)
+                    if arr.size > 0
+                ]
                 if domain_min is None:
                     if self.restrict_to_data:
                         domain_min = min([arr.min() for arr in data])
@@ -270,5 +268,6 @@ class PanTool(BaseTool):
             event.window.set_mouse_owner(None)
         event.handled = True
         return
+
 
 # EOF

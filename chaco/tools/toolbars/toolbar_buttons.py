@@ -49,9 +49,8 @@ class ToolbarButton(Button):
 
     def _draw_actual_button(self, gc):
         x_offset = self.x + (self.width - self._image.width()) / 2
-        gc.draw_image(self._image,
-                      (x_offset, self.y + 2, self._image.width(),
-                       self._image.height()))
+        gc.draw_image(self._image, (x_offset, self.y + 2, self._image.width(),
+                                    self._image.height()))
 
         if self.label is not None and len(self.label) > 0:
             gc.set_font(self.label_font)
@@ -140,8 +139,8 @@ class SaveAsButton(ToolbarButton):
             errmsg = ("The filename must have an extension that matches "
                       "a graphics format, such as '.png' or '.tiff'.")
             if str(e.message) != '':
-                errmsg = ("Unknown filename extension: '%s'\n" %
-                          str(e.message)) + errmsg
+                errmsg = ("Unknown filename extension: '%s'\n" % str(e.message)
+                          ) + errmsg
 
             error(None, errmsg, title="Invalid Filename Extension")
 

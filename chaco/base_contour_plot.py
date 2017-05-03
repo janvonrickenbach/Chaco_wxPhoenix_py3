@@ -1,4 +1,3 @@
-
 from numpy import array, isscalar, issubsctype, linspace, number
 
 # Enthought library imports
@@ -62,11 +61,11 @@ class BaseContourPlot(Base2DPlot):
     # a time.)
     _color_map_trait = ColorTrait
 
-
     def __init__(self, *args, **kwargs):
         super(BaseContourPlot, self).__init__(*args, **kwargs)
         if self.color_mapper:
-            self.color_mapper.on_trait_change(self._update_color_mapper, "updated")
+            self.color_mapper.on_trait_change(self._update_color_mapper,
+                                              "updated")
         return
 
     def _update_levels(self):
@@ -106,7 +105,7 @@ class BaseContourPlot(Base2DPlot):
 
         # If we are given a colormap, use it to map all the levels to colors
         elif isinstance(colors, ColorMapper):
-            self._colors =  []
+            self._colors = []
             mapped_colors = self.color_mapper.map_screen(array(self._levels))
             for i in range(numcolors):
                 self._color_map_trait = tuple(mapped_colors[i])
@@ -126,12 +125,11 @@ class BaseContourPlot(Base2DPlot):
                 # repeat colors from the beginning of the list as needed
                 self._colors = []
                 for i in range(len(self._levels)):
-                    self._color_map_trait = colors[i%len(colors)]
+                    self._color_map_trait = colors[i % len(colors)]
                     self._colors.append(self._color_map_trait_)
 
         self._colors_cache_valid = True
         return
-
 
     #------------------------------------------------------------------------
     # Event handlers
@@ -182,7 +180,8 @@ class BaseContourPlot(Base2DPlot):
     def _set_color_mapper(self, color_mapper):
         # Remove the dynamic event handler from the old color mapper
         if self.colors is not None and isinstance(self.colors, ColorMapper):
-            self.colors.on_trait_change(self._update_color_mapper, "updated", remove=True)
+            self.colors.on_trait_change(
+                self._update_color_mapper, "updated", remove=True)
 
             # Check to see if we should copy over the range as well
             if color_mapper is not None:

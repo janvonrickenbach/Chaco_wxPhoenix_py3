@@ -1,8 +1,6 @@
 """ Defines the MultiLinePlot class.
 """
 
-
-
 # Standard library imports
 import warnings
 from math import ceil, floor
@@ -129,20 +127,26 @@ class MultiLinePlot(BaseXYPlot):
     # Normalized amplitude is the value exposed to the user.
     normalized_amplitude = Float(-0.5)
 
-    amplitude_scale = Property(Float, depends_on=['global_min', 'global_max', 'data',
-                                                  'use_global_bounds', 'yindex'])
+    amplitude_scale = Property(
+        Float,
+        depends_on=[
+            'global_min', 'global_max', 'data', 'use_global_bounds', 'yindex'
+        ])
 
-    amplitude = Property(Float, depends_on=['normalized_amplitude',
-                                                'amplitude_scale'])
+    amplitude = Property(
+        Float, depends_on=['normalized_amplitude', 'amplitude_scale'])
 
     #------------------------------------------------------------------------
     # Private traits
     #------------------------------------------------------------------------
 
     # The projected 2D numpy array.
-    _trace_data = Property(Array, depends_on=['index', 'index.data_changed',
-        'value', 'value.data_changed', 'yindex', 'yindex.data_changed',
-        'amplitude', 'scale', 'offset'])
+    _trace_data = Property(
+        Array,
+        depends_on=[
+            'index', 'index.data_changed', 'value', 'value.data_changed',
+            'yindex', 'yindex.data_changed', 'amplitude', 'scale', 'offset'
+        ])
 
     # Cached list of non-NaN arrays of (x,y) data-space points; regardless of
     # self.orientation, this is always stored as (index_pt, value_pt).  This is
@@ -161,18 +165,22 @@ class MultiLinePlot(BaseXYPlot):
         # Minimalist Traits UI View for customizing the plot: only the trace amplitude
         # and line color are exposed.
         view = View(
-                HGroup(
-                    Item('use_global_bounds'),
-                    # Item('normalized_amplitude'),
-                    # Item('normalized_amplitude', editor=RangeEditor()),
-                    Item('normalized_amplitude',
-                        editor=ScrubberEditor(increment=0.2, hover_color=0xFFFFFF, active_color=0xA0CD9E,
-                                              border_color=0x0000FF)),
-                    ),
-                Item("color", label="Trace color", style="simple"),
-                width=480,
-                title="Trace Plot Line Attributes",
-                buttons=["OK", "Cancel"])
+            HGroup(
+                Item('use_global_bounds'),
+                # Item('normalized_amplitude'),
+                # Item('normalized_amplitude', editor=RangeEditor()),
+                Item(
+                    'normalized_amplitude',
+                    editor=ScrubberEditor(
+                        increment=0.2,
+                        hover_color=0xFFFFFF,
+                        active_color=0xA0CD9E,
+                        border_color=0x0000FF)), ),
+            Item(
+                "color", label="Trace color", style="simple"),
+            width=480,
+            title="Trace Plot Line Attributes",
+            buttons=["OK", "Cancel"])
         return view
 
     #------------------------------------------------------------------------
@@ -183,11 +191,10 @@ class MultiLinePlot(BaseXYPlot):
     ## def hittest(self, screen_pt, threshold=7.0):
     ## def interpolate(self, index_value):
 
-
     def get_screen_points(self):
         self._gather_points()
         scrn_pts_list = [[self.map_screen(ary) for ary in line]
-                                for line in self._cached_data_pts]
+                         for line in self._cached_data_pts]
         return scrn_pts_list
 
     #------------------------------------------------------------------------
@@ -243,7 +250,6 @@ class MultiLinePlot(BaseXYPlot):
                                 + self.offset
         return channel_data
 
-
     def _gather_points(self):
         """
         Collects the data points that are within the bounds of the plot and
@@ -269,8 +275,13 @@ class MultiLinePlot(BaseXYPlot):
         if self.fast_clip:
             coord_min = float(coordinates[0])
             coord_max = coordinates[-1]
-            slice_min = max(0,ceil((varray.shape[0]-1)*(self.value_range.low - coord_min)/(coord_max - coord_min)))
-            slice_max = min(varray.shape[0], 1+floor((varray.shape[0]-1)*(self.value_range.high - coord_min)/(coord_max - coord_min)))
+            slice_min = max(0,
+                            ceil((varray.shape[0] - 1) *
+                                 (self.value_range.low - coord_min) /
+                                 (coord_max - coord_min)))
+            slice_max = min(varray.shape[0], 1 + floor(
+                (varray.shape[0] - 1) * (self.value_range.high - coord_min) /
+                (coord_max - coord_min)))
             varray = varray[slice_min:slice_max]
             # FIXME: The y coordinates must also be sliced to match varray.
 
@@ -303,7 +314,7 @@ class MultiLinePlot(BaseXYPlot):
             warnings.warn('Chaco.LinePlot: value.shape[1] %d - len(index) %d = %d\n' \
                           % (varray.shape[1], len(index), size_diff))
             index_max = len(index)
-            varray = varray[:,:index_max]
+            varray = varray[:, :index_max]
         else:
             index_max = varray.shape[1]
             index = index[:index_max]
@@ -332,7 +343,8 @@ class MultiLinePlot(BaseXYPlot):
                 # index data.  If so, then we have to reverse map our current view
                 # into the appropriate index and draw the bracketing points.
                 if runs == []:
-                    data_pt = self.map_data((self.x_mapper.low_pos, self.y_mapper.low_pos))
+                    data_pt = self.map_data(
+                        (self.x_mapper.low_pos, self.y_mapper.low_pos))
                     if self.index.sort_order == "none":
                         indices = argsort(index)
                         sorted_index = take(index, indices)
@@ -351,9 +363,9 @@ class MultiLinePlot(BaseXYPlot):
                         # of the source data
                         continue
 
-
-                    z = transpose(array((sorted_index[ndx:ndx+2],
-                                                   sorted_value[ndx:ndx+2])))
+                    z = transpose(
+                        array((sorted_index[ndx:ndx + 2], sorted_value[ndx:ndx
+                                                                       + 2])))
                     points.append(z)
 
                 else:
@@ -367,8 +379,9 @@ class MultiLinePlot(BaseXYPlot):
                         if end != data_end:
                             end += 1
 
-                        run_data = transpose(array((block_index[start:end],
-                                                    block_value[start:end])))
+                        run_data = transpose(
+                            array((block_index[start:end], block_value[start:
+                                                                       end])))
                         points.append(run_data)
             line_points.append(points)
 
@@ -376,11 +389,9 @@ class MultiLinePlot(BaseXYPlot):
         self._cache_valid = True
         return
 
-
     # See base_xy_plot.py for:
     ## def _downsample(self):
     ## def _downsample_vectorized(self):
-
 
     def _render(self, gc, line_points, selected_points=None):
 
@@ -395,7 +406,7 @@ class MultiLinePlot(BaseXYPlot):
 
             if selected_points is not None:
                 gc.set_stroke_color(self.selected_color_)
-                gc.set_line_width(self.line_width+10.0)
+                gc.set_line_width(self.line_width + 10.0)
                 gc.set_line_dash(self.selected_line_style_)
                 render(gc, selected_points)
 
@@ -411,7 +422,7 @@ class MultiLinePlot(BaseXYPlot):
                 color = color_func(k)
                 # Apply the alpha
                 alpha = color[-1] if len(color) == 4 else 1
-                color = color[:3] + (alpha * self.alpha,)
+                color = color[:3] + (alpha * self.alpha, )
                 gc.set_stroke_color(color)
                 gc.set_line_width(self.line_width)
                 gc.set_line_dash(self.line_style_)
@@ -428,17 +439,15 @@ class MultiLinePlot(BaseXYPlot):
                 gc.stroke_path()
         return
 
-
     def _render_icon(self, gc, x, y, width, height):
         with gc:
             gc.set_stroke_color(self.color_)
             gc.set_line_width(self.line_width)
             gc.set_line_dash(self.line_style_)
             gc.set_antialias(0)
-            gc.move_to(x, y+height/2)
-            gc.line_to(x+width, y+height/2)
+            gc.move_to(x, y + height / 2)
+            gc.line_to(x + width, y + height / 2)
             gc.stroke_path()
-
 
     def _alpha_changed(self):
         self.invalidate_draw()
@@ -467,7 +476,7 @@ class MultiLinePlot(BaseXYPlot):
         return
 
     def __getstate__(self):
-        state = super(MultiLinePlot,self).__getstate__()
+        state = super(MultiLinePlot, self).__getstate__()
         for key in ['traits_view']:
             if key in state:
                 del state[key]

@@ -31,7 +31,7 @@ class ImageInspectorTool(BaseTool):
 
     # Stores the value of self.visible when the mouse leaves the tool,
     # so that it can be restored when the mouse enters again.
-    _old_visible = Enum(None, True, False) #Trait(None, Bool(True))
+    _old_visible = Enum(None, True, False)  #Trait(None, Bool(True))
 
     def normal_key_pressed(self, event):
         if self.inspector_key.match(event):
@@ -102,8 +102,10 @@ class ImageInspectorOverlay(TextBoxOverlay):
 
     def _image_inspector_changed(self, old, new):
         if old:
-            old.on_trait_event(self._new_value_updated, 'new_value', remove=True)
-            old.on_trait_change(self._tool_visible_changed, "visible", remove=True)
+            old.on_trait_event(
+                self._new_value_updated, 'new_value', remove=True)
+            old.on_trait_change(
+                self._tool_visible_changed, "visible", remove=True)
         if new:
             new.on_trait_event(self._new_value_updated, 'new_value')
             new.on_trait_change(self._tool_visible_changed, "visible")
@@ -128,7 +130,8 @@ class ImageInspectorOverlay(TextBoxOverlay):
         if 'indices' in d:
             newstring += '(%d, %d)' % d['indices'] + '\n'
         if 'color_value' in d:
-            newstring += "(%d, %d, %d)" % tuple(map(int,d['color_value'][:3])) + "\n"
+            newstring += "(%d, %d, %d)" % tuple(
+                map(int, d['color_value'][:3])) + "\n"
         if 'data_value' in d:
             newstring += str(d['data_value'])
 

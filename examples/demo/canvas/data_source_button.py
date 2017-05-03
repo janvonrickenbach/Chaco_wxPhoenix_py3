@@ -8,6 +8,7 @@ from chaco.plot_canvas_toolbar import PlotToolbarButton
 
 DEBUG = False
 
+
 class ButtonController(HasTraits):
     """ Tells buttons what to do
 
@@ -105,13 +106,13 @@ class ButtonController(HasTraits):
         if len(self.plot.plots) > 0:
             self.plot.delplot(*list(self.plot.plots.keys()))
 
-        cur_plot = self.plot.plot((b1.plotname+"_y", b2.plotname+"_y"),
-                                  name=self._scatterplot_name,
-                                  type="scatter",
-                                  marker="square",
-                                  color=tuple(choice(COLOR_PALETTE)),
-                                  marker_size=8,
-                                  )
+        cur_plot = self.plot.plot(
+            (b1.plotname + "_y", b2.plotname + "_y"),
+            name=self._scatterplot_name,
+            type="scatter",
+            marker="square",
+            color=tuple(choice(COLOR_PALETTE)),
+            marker_size=8, )
         self.plot.index_axis.title = b1.plotname
         #self.plot.value_axis.title = b2.plotname
         self.plot.title = b1.plotname + " vs. " + b2.plotname
@@ -124,7 +125,6 @@ class ButtonController(HasTraits):
             self.plot.index_range.set_bounds("auto", "auto")
             self.plot.value_range.set_bounds("auto", "auto")
         self.plot_overlay.visible = False
-
 
 
 class DataSourceButton(PlotToolbarButton):
@@ -142,7 +142,7 @@ class DataSourceButton(PlotToolbarButton):
     button_controller = Instance(ButtonController)
 
     # Override inherited trait
-    label_color = (0,0,0,1)
+    label_color = (0, 0, 0, 1)
 
     resizable = ""
 
@@ -202,6 +202,6 @@ class DataSourceButton(PlotToolbarButton):
     def _do_layout(self):
         if self.canvas is not None:
             boff = self.canvas.bounds_offset
-            self.plot_overlay.offset = (boff[0],
-                    boff[1] + self.y - self.container.y + self.height/2)
+            self.plot_overlay.offset = (
+                boff[0], boff[1] + self.y - self.container.y + self.height / 2)
         self.plot_overlay.do_layout()

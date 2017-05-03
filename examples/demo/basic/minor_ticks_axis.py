@@ -13,13 +13,10 @@ class MinorTickDemo(HasTraits):
 
     plot = Instance(Plot)
 
-    view = View(
-        UItem('plot', editor=ComponentEditor()),
-        resizable=True
-    )
+    view = View(UItem('plot', editor=ComponentEditor()), resizable=True)
 
     def _plot_default(self):
-        x = np.linspace(0, 2*np.pi)
+        x = np.linspace(0, 2 * np.pi)
         plotdata = ArrayPlotData(x=x, y=np.sin(x))
         plot = Plot(plotdata)
         plot.plot(('x', 'y'), type='line')
@@ -31,8 +28,7 @@ class MinorTickDemo(HasTraits):
         xminor = MinorPlotAxis(
             orientation='bottom',
             mapper=plot.x_mapper,
-            component=plot,
-        )
+            component=plot, )
         plot.underlays.append(xminor)
 
         # A customized minor plot axis.
@@ -43,8 +39,7 @@ class MinorTickDemo(HasTraits):
             tick_color='red',
             tick_weight=2,
             tick_in=4,
-            tick_out=2,
-        )
+            tick_out=2, )
 
         # To avoid the (heavily customized) minor axis painting over the major
         # axis, we insert it at the front of the underlays array, so that it

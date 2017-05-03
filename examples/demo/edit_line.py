@@ -32,7 +32,6 @@ from chaco.api import add_default_axes, add_default_grids, \
 from chaco.tools.api import PanTool, ZoomTool
 
 
-
 class PointDraggingTool(DragTool):
 
     component = Instance(Component)
@@ -68,14 +67,14 @@ class PointDraggingTool(DragTool):
         plot.invalidate_draw()
         plot.request_redraw()
 
-
     def drag_start(self, event):
         plot = self.component
         ndx = plot.map_index((event.x, event.y), self.threshold)
         if ndx is None:
             return
         self._drag_index = ndx
-        self._orig_value = (plot.index.get_data()[ndx], plot.value.get_data()[ndx])
+        self._orig_value = (plot.index.get_data()[ndx],
+                            plot.value.get_data()[ndx])
 
     def dragging(self, event):
         plot = self.component
@@ -121,7 +120,8 @@ class PointDraggingTool(DragTool):
 
         if hasattr(self.component, 'get_closest_point'):
             # This is on BaseXYPlots
-            return self.component.get_closest_point((x,y), threshold=self.threshold)
+            return self.component.get_closest_point(
+                (x, y), threshold=self.threshold)
 
         return None
 
@@ -131,8 +131,11 @@ class PointDraggingTool(DragTool):
 #===============================================================================
 def _create_plot_component():
 
-    container = OverlayPlotContainer(padding = 50, fill_padding = True,
-                                     bgcolor = "lightgray", use_backbuffer=True)
+    container = OverlayPlotContainer(
+        padding=50,
+        fill_padding=True,
+        bgcolor="lightgray",
+        use_backbuffer=True)
 
     # Create the initial X-series of data
     numpoints = 30
@@ -141,14 +144,16 @@ def _create_plot_component():
     x = linspace(low, high, numpoints)
     y = jn(0, x)
 
-    lineplot = create_line_plot((x,y), color=tuple(COLOR_PALETTE[0]), width=2.0)
+    lineplot = create_line_plot(
+        (x, y), color=tuple(COLOR_PALETTE[0]), width=2.0)
     lineplot.selected_color = "none"
-    scatter = ScatterPlot(index = lineplot.index,
-                       value = lineplot.value,
-                       index_mapper = lineplot.index_mapper,
-                       value_mapper = lineplot.value_mapper,
-                       color = tuple(COLOR_PALETTE[0]),
-                       marker_size = 5)
+    scatter = ScatterPlot(
+        index=lineplot.index,
+        value=lineplot.value,
+        index_mapper=lineplot.index_mapper,
+        value_mapper=lineplot.value_mapper,
+        color=tuple(COLOR_PALETTE[0]),
+        marker_size=5)
     scatter.index.sort_order = "ascending"
 
     scatter.bgcolor = "white"
@@ -170,18 +175,21 @@ def _create_plot_component():
     container.add(scatter)
 
     # Add the title at the top
-    container.overlays.append(PlotLabel("Line Editor",
-                              component=container,
-                              font = "swiss 16",
-                              overlay_position="top"))
+    container.overlays.append(
+        PlotLabel(
+            "Line Editor",
+            component=container,
+            font="swiss 16",
+            overlay_position="top"))
 
     return container
 
 
 #===============================================================================
 # Attributes to use for the plot view.
-size=(800,700)
-title="Simple line plot"
+size = (800, 700)
+title = "Simple line plot"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -189,13 +197,17 @@ title="Simple line plot"
 class Demo(HasTraits):
     plot = Instance(Component)
 
-    traits_view = View(UItem('plot', editor=ComponentEditor()),
-                       width=size[0], height=size[1], resizable=True,
-                       title=title
-                       )
+    traits_view = View(
+        UItem(
+            'plot', editor=ComponentEditor()),
+        width=size[0],
+        height=size[1],
+        resizable=True,
+        title=title)
 
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
+
 
 demo = Demo()
 

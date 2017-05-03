@@ -1,8 +1,6 @@
 """ Defines the ColormappedScatterPlot and ColormappedScatterPlotView classes.
 """
 
-
-
 # Major library imports
 from numpy import argsort, array, concatenate, nonzero, invert, take, \
                   isnan, transpose, newaxis, zeros, ndarray
@@ -22,11 +20,16 @@ from .scatterplot import ScatterPlot, ScatterPlotView
 class ColormappedScatterPlotView(ScatterPlotView):
     """ Traits UI View for customizing a color-mapped scatter plot.
     """
+
     def __init__(self):
         super(ColormappedScatterPlotView, self).__init__()
         vgroup = self.content
-        vgroup.content[0].content.append(Item("fill_alpha", label="Fill alpha",
-                                   editor=RangeEditor(low=0.0, high=1.0)))
+        vgroup.content[0].content.append(
+            Item(
+                "fill_alpha",
+                label="Fill alpha",
+                editor=RangeEditor(
+                    low=0.0, high=1.0)))
         return
 
 
@@ -90,7 +93,7 @@ class ColormappedScatterPlot(ScatterPlot):
         (index, value, color_value) array. The returned array is an Nx2
         array of (x, y) tuples.
         """
-        if len(data_array)>0:
+        if len(data_array) > 0:
             if data_array.shape[1] == 3:
                 data_array = data_array[:, :2]
         return super(ColormappedScatterPlot, self).map_screen(data_array)
@@ -108,10 +111,11 @@ class ColormappedScatterPlot(ScatterPlot):
             # Take into account fill_alpha even if we are rendering with only two values
             old_color = self.color
             self.color = tuple(self.fill_alpha * array(self.color_))
-            super(ColormappedScatterPlot, self)._draw_component(gc, view_bounds, mode)
+            super(ColormappedScatterPlot, self)._draw_component(
+                gc, view_bounds, mode)
             self.color = old_color
         else:
-            colors = self._cached_data_pts[:,2]
+            colors = self._cached_data_pts[:, 2]
             screen_pts = self.map_screen(self._cached_data_pts)
             pts = concatenate((screen_pts, colors[:, newaxis]), axis=1)
             self._render(gc, pts)
@@ -158,7 +162,6 @@ class ColormappedScatterPlot(ScatterPlot):
         else:
             points = transpose(array((index, value)))
 
-
         self._cached_data_pts = points[point_mask]
         self._cached_point_mask = point_mask
 
@@ -175,7 +178,8 @@ class ColormappedScatterPlot(ScatterPlot):
             return super(ColormappedScatterPlot, self)._render(gc, points)
 
         # If the GC doesn't have draw_*_at_points, then use bruteforce
-        if hasattr(gc, 'draw_marker_at_points') or hasattr(gc, 'draw_path_at_points'):
+        if hasattr(gc, 'draw_marker_at_points') or hasattr(
+                gc, 'draw_path_at_points'):
             batch_capable = True
         else:
             batch_capable = False
@@ -191,7 +195,6 @@ class ColormappedScatterPlot(ScatterPlot):
             elif method == 'banded':
                 self._render_banded(gc, points)
         return
-
 
     #------------------------------------------------------------------------
     # Private methods
@@ -214,11 +217,11 @@ class ColormappedScatterPlot(ScatterPlot):
 
         # map the V values in the (x,y,v) self.data array
 
-        color_data = points[:,2]
+        color_data = points[:, 2]
         color_indices = self.color_mapper.map_index(color_data)
 
         if smartmode and self.render_method == 'bruteforce':
-             pass
+            pass
         else:
             # shuffle_indices indicates how to sort the points in self.data
             # so that their color_indices are in order.  We don't really care
@@ -233,8 +236,10 @@ class ColormappedScatterPlot(ScatterPlot):
             # Now we want to determine where the continuous bands are.  We do
             # this by right-shifting the sorted_color_indices array, subtracting
             # it from the original, and looking for all the nonzero points.
-            shifted = right_shift(sorted_color_indices, sorted_color_indices[0])
-            start_indices = concatenate([[0], nonzero(sorted_color_indices - shifted)[0]])
+            shifted = right_shift(sorted_color_indices,
+                                  sorted_color_indices[0])
+            start_indices = concatenate(
+                [[0], nonzero(sorted_color_indices - shifted)[0]])
             end_indices = left_shift(start_indices, len(sorted_color_indices))
 
             # Store the shuffled indices in self._index_bands.  We don't store the
@@ -257,18 +262,23 @@ class ColormappedScatterPlot(ScatterPlot):
         else:
             return "bruteforce"
 
-    def _set_draw_info(self, gc, mode, color, outline_color=None, outline_weight=None):
+    def _set_draw_info(self,
+                       gc,
+                       mode,
+                       color,
+                       outline_color=None,
+                       outline_weight=None):
         """ Sets the stroke color, fill color, and line width on the graphics
         context.
         """
-        color = tuple(color[:3]) + (self.fill_alpha,)
+        color = tuple(color[:3]) + (self.fill_alpha, )
         if mode == STROKE:
             if outline_color is not None:
-                gc.set_stroke_color( color )
+                gc.set_stroke_color(color)
         else:
             if outline_color is not None:
-                gc.set_stroke_color( outline_color )
-            gc.set_fill_color( color )
+                gc.set_stroke_color(outline_color)
+            gc.set_fill_color(color)
         if outline_weight is not None:
             gc.set_line_width(outline_weight)
         return
@@ -280,14 +290,16 @@ class ColormappedScatterPlot(ScatterPlot):
 
         # Grab the XY values corresponding to each color band of points
 
-        xy_points = points[:,0:2]
+        xy_points = points[:, 0:2]
 
         marker = self.marker_
         size = self.marker_size
-        assert isinstance(size, float), "Variable size markers not implemented for banded rendering"
+        assert isinstance(
+            size, float
+        ), "Variable size markers not implemented for banded rendering"
 
         # Set up the GC for drawing
-        gc.set_line_dash( None )
+        gc.set_line_dash(None)
         if marker.draw_mode == STROKE:
             gc.set_line_width(self.line_width)
 
@@ -295,7 +307,8 @@ class ColormappedScatterPlot(ScatterPlot):
 
         cmap = self.color_mapper
 
-        if (hasattr(gc, 'draw_marker_at_points') and self.marker not in ('custom', 'circle', 'diamond')):
+        if (hasattr(gc, 'draw_marker_at_points') and self.marker not in
+            ('custom', 'circle', 'diamond')):
             # This is the fastest method: we use one of the built-in markers.
             color_bands = cmap.color_bands
             # Initial setup of drawing parameters
@@ -305,10 +318,10 @@ class ColormappedScatterPlot(ScatterPlot):
             mode = marker.draw_mode
             for color_index in list(index_bands.keys()):
                 self._set_draw_info(gc, mode, color_bands[color_index])
-                gc.draw_marker_at_points(xy_points[index_bands[color_index]], size, marker.kiva_marker)
+                gc.draw_marker_at_points(xy_points[index_bands[color_index]],
+                                         size, marker.kiva_marker)
 
-
-        elif hasattr( gc, 'draw_path_at_points' ):
+        elif hasattr(gc, 'draw_path_at_points'):
             point_bands = {}
             for color_index, indices in list(self._index_bands.items()):
                 point_bands[color_index] = xy_points[indices]
@@ -329,7 +342,8 @@ class ColormappedScatterPlot(ScatterPlot):
                                     self.outline_color_, self.line_width)
                 gc.draw_path_at_points(xy, path, mode)
         else:
-            raise RuntimeError("Batch drawing requested on non-batch-capable GC.")
+            raise RuntimeError(
+                "Batch drawing requested on non-batch-capable GC.")
         return
 
     def _render_bruteforce(self, gc, points):
@@ -339,7 +353,7 @@ class ColormappedScatterPlot(ScatterPlot):
 
         # Map the colors
         colors = self.color_mapper.map_screen(colors)
-        alphas = (zeros(len(colors))+self.fill_alpha)[:, newaxis]
+        alphas = (zeros(len(colors)) + self.fill_alpha)[:, newaxis]
         colors = concatenate((colors[:, :3], alphas), axis=1)
 
         with gc:
@@ -349,24 +363,28 @@ class ColormappedScatterPlot(ScatterPlot):
 
             marker_cls = self.marker_
             marker_size = self.marker_size
-            if isinstance(marker_size, ndarray) and self._cached_point_mask is not None:
+            if isinstance(marker_size,
+                          ndarray) and self._cached_point_mask is not None:
                 marker_size = marker_size[self._cached_point_mask]
             mode = marker_cls.draw_mode
 
             if marker_cls != "custom":
-                if (hasattr(gc, "draw_marker_at_points") and self.marker not in ('custom', 'circle', 'diamond')):
+                if (hasattr(gc, "draw_marker_at_points") and self.marker not in
+                    ('custom', 'circle', 'diamond')):
                     draw_func = lambda x, y, size: gc.draw_marker_at_points([[x,y]], size, marker_cls.kiva_marker)
 
                 elif hasattr(gc, "draw_path_at_points"):
                     # turn the class into an instance... we should make add_to_path a
                     # class method at some point.
                     m = marker_cls()
+
                     def draw_func(x, y, size):
                         path = gc.get_empty_path()
                         m.add_to_path(path, size)
                         gc.draw_path_at_points([[x, y]], path, mode)
                 else:
                     m = marker_cls()
+
                     def draw_func(x, y, size):
                         gc.translate_ctm(x, y)
                         gc.begin_path()
@@ -388,14 +406,14 @@ class ColormappedScatterPlot(ScatterPlot):
                     gc.set_fill_color(colors[i])
                     gc.draw_path_at_points([[x[i], y[i]]], path, STROKE)
 
-
     #------------------------------------------------------------------------
     # Event handlers
     #------------------------------------------------------------------------
 
     def _color_data_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._either_data_changed, "data_changed", remove=True)
+            old.on_trait_change(
+                self._either_data_changed, "data_changed", remove=True)
         if new is not None:
             new.on_trait_change(self._either_data_changed, "data_changed")
         self._either_data_changed()

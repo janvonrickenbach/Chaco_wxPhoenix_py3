@@ -3,8 +3,6 @@ A 1D scatterplot that draws lines across the renderer at the index values
 
 """
 
-
-
 from numpy import empty
 
 # Enthought library imports
@@ -94,11 +92,12 @@ class LineScatterPlot1D(Base1DPlot):
                     self._render_lines(gc, unselected_lines, self.color_,
                                        self.line_width, self.line_style_)
                 if selected_lines.size > 0:
-                    self._render_lines(gc, selected_lines, self.selected_color_,
-                                       self.selected_line_width, self.selected_line_style_)
+                    self._render_lines(
+                        gc, selected_lines, self.selected_color_,
+                        self.selected_line_width, self.selected_line_style_)
             else:
-                self._render_lines(gc, lines, self.color_,
-                                    self.line_width, self.line_style_)
+                self._render_lines(gc, lines, self.color_, self.line_width,
+                                   self.line_style_)
 
     def _render_lines(self, gc, lines, color, width, dash):
         """ Render a collection of lines with a given style """

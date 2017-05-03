@@ -1,7 +1,6 @@
 """ Defines the LineInspector tool class.
 """
 
-
 # Enthought library imports
 from enable.api import BaseTool, ColorTrait, LineStyle
 from traits.api import Any, Bool, Enum, Float, Str, Trait
@@ -90,7 +89,7 @@ class LineInspector(BaseTool):
                 self._draw_vertical_line(gc, sx)
             elif sy is not None:
                 self._draw_horizontal_line(gc, sy)
-        else:   # self.axis == "value"
+        else:  # self.axis == "value"
             if plot.orientation == "h" and sy is not None:
                 self._draw_horizontal_line(gc, sy)
             elif sx is not None:
@@ -122,8 +121,8 @@ class LineInspector(BaseTool):
                         plot.index.metadata[self.metadata_name] = index_coord
                         plot.value.metadata[self.metadata_name] = value_coord
                     else:
-                        ndx = plot.map_index((event.x, event.y),
-                                             threshold=5.0, index_only=True)
+                        ndx = plot.map_index(
+                            (event.x, event.y), threshold=5.0, index_only=True)
                         if ndx:
                             plot.index.metadata[self.metadata_name] = ndx
                             plot.value.metadata[self.metadata_name] = ndx
@@ -148,11 +147,11 @@ class LineInspector(BaseTool):
                             metadata = old_x_data, y_coord
                     else:
                         if plot.orientation == "h":
-                            x_ndx, y_ndx =  plot.map_index((event.x, event.y),
-                                                           threshold=5.0)
+                            x_ndx, y_ndx = plot.map_index(
+                                (event.x, event.y), threshold=5.0)
                         else:
-                            y_ndx, x_ndx = plot.map_index((event.x, event.y),
-                                                          threshold=5.0)
+                            y_ndx, x_ndx = plot.map_index(
+                                (event.x, event.y), threshold=5.0)
                         if self.axis == "index_x":
                             metadata = x_ndx, old_y_data
                         elif self.axis == "index_y":
@@ -278,7 +277,6 @@ class LineInspector(BaseTool):
             gc.line_to(self.component.x2, sy)
             gc.stroke_path()
         return
-
 
 
 # EOF

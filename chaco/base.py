@@ -6,8 +6,8 @@ Defines basic traits and functions for the data model.
 from math import radians, sqrt
 
 # Major library imports
-from numpy import (array, argsort, concatenate, cos, diff, dot, empty, isfinite,
-                   nonzero, pi, searchsorted, seterr, sin, int8)
+from numpy import (array, argsort, concatenate, cos, diff, dot, empty,
+                   isfinite, nonzero, pi, searchsorted, seterr, sin, int8)
 
 # Enthought library imports
 from traits.api import CArray, Enum, Trait
@@ -28,7 +28,6 @@ ImageTrait = Trait(None, None, CArray(value=empty(0)))
 # An 3D array of numbers of shape (Nx, Ny, Nz)
 CubeTrait = Trait(None, None, CArray(value=empty(0)))
 
-
 # This enumeration lists the fundamental mathematical coordinate types that
 # Chaco supports.
 DimensionTrait = Enum("scalar", "point", "image", "cube")
@@ -36,15 +35,15 @@ DimensionTrait = Enum("scalar", "point", "image", "cube")
 # Linear sort order.
 SortOrderTrait = Enum("ascending", "descending", "none")
 
-
 #----------------------------------------------------------------------------
 # Utility functions
 #----------------------------------------------------------------------------
 
+
 def poly_point(center, r, degrees):
     x = r * cos(degrees) + center[0]
     y = r * sin(degrees) + center[1]
-    return x,y
+    return x, y
 
 
 def n_gon(center, r, nsides, rot_degrees=0):
@@ -58,7 +57,7 @@ def n_gon(center, r, nsides, rot_degrees=0):
         raise ValueError('Must have at least 3 sides in a polygon')
     rotation = radians(rot_degrees)
     theta = (pi * 2) / nsides
-    return [poly_point(center, r, i*theta+rotation) for i in range(nsides)]
+    return [poly_point(center, r, i * theta + rotation) for i in range(nsides)]
 
 
 def bin_search(values, value, ascending):
@@ -127,7 +126,6 @@ def reverse_map_1d(data, pt, sort_order, floor_only=False):
     if ndx == -1:
         raise IndexError("value outside array data range")
 
-
     # Now round the index to the closest matching index.  Do this
     # by determining the width (in value space) of each cell and
     # figuring out which side of the midpoint pt falls into.  Since
@@ -138,7 +136,7 @@ def reverse_map_1d(data, pt, sort_order, floor_only=False):
     if ndx < last:
         if floor_only:
             return ndx
-        delta = 0.5 * (data[ndx+1] - data[ndx])
+        delta = 0.5 * (data[ndx + 1] - data[ndx])
         if ((sort_order == "ascending") and (pt > data[ndx] + delta)) or \
            ((sort_order == "descending") and (pt < data[ndx] + delta)):
             return ndx + 1
@@ -150,16 +148,18 @@ def reverse_map_1d(data, pt, sort_order, floor_only=False):
         # if we hit the last point exactly we still really want the index
         # of the previous point
         if floor_only:
-            return last-1
+            return last - 1
         # If pt happened to match the value of data[last] exactly,
         # we just return it here.
         return last
+
 
 # These are taken from Chaco 1.0's datamapper and subdivision_cells modules.
 # TODO: Write unit tests for these!
 def right_shift(ary, newval):
     "Returns a right-shifted version of *ary* with *newval* inserted on the left."
     return concatenate([[newval], ary[:-1]])
+
 
 def left_shift(ary, newval):
     "Returns a left-shifted version of *ary* with *newval* inserted on the right."
@@ -196,7 +196,7 @@ def find_runs(int_array, order='ascending'):
     return [ [0,0,0], [1,1,1,1], [0,0,0,0] ]
     """
     ranges = arg_find_runs(int_array, order)
-    return [int_array[i:j] for (i,j) in ranges]
+    return [int_array[i:j] for (i, j) in ranges]
 
 
 def arg_find_runs(int_array, order='ascending'):
@@ -233,7 +233,6 @@ def arg_true_runs(bool_array):
         return []
 
 
-
 def point_line_distance(pt, p1, p2):
     """ Returns the perpendicular distance between *pt* and the line segment
     between the points *p1* and *p2*.
@@ -242,7 +241,7 @@ def point_line_distance(pt, p1, p2):
     v2 = array((p2[0] - p1[0], p2[1] - p1[1]))
     diff = v1 - dot(v1, v2) / dot(v2, v2) * v2
 
-    return sqrt(dot(diff,diff))
+    return sqrt(dot(diff, diff))
 
 
 def intersect_range(x, low, high, mask=None):

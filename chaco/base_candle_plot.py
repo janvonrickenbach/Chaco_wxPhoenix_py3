@@ -1,6 +1,3 @@
-
-
-
 # Major library imports
 from numpy import array, column_stack
 
@@ -13,9 +10,11 @@ from .base_xy_plot import BaseXYPlot
 
 # TODO: allow to set the width of the bar
 
+
 def Alias(name):
     return Property(lambda obj: getattr(obj, name),
                     lambda obj, val: setattr(obj, name, val))
+
 
 class BaseCandlePlot(BaseXYPlot):
     """ Represents the base class for candle- and bar-type plots that are
@@ -115,15 +114,21 @@ class BaseCandlePlot(BaseXYPlot):
                 gc.set_line_width(stem_width)
 
                 if min is None:
-                    gc.line_set(stack((bar_vert_center, bar_max)), stack((bar_vert_center, max)))
+                    gc.line_set(
+                        stack((bar_vert_center, bar_max)),
+                        stack((bar_vert_center, max)))
                     if self.end_cap:
                         gc.line_set(stack((left, max)), stack((right, max)))
                 elif max is None:
-                    gc.line_set(stack((bar_vert_center, min)), stack((bar_vert_center, bar_min)))
+                    gc.line_set(
+                        stack((bar_vert_center, min)),
+                        stack((bar_vert_center, bar_min)))
                     if self.end_cap:
                         gc.line_set(stack((left, min)), stack((right, min)))
                 else:
-                    gc.line_set(stack((bar_vert_center, min)), stack((bar_vert_center, max)))
+                    gc.line_set(
+                        stack((bar_vert_center, min)),
+                        stack((bar_vert_center, max)))
                     if self.end_cap:
                         gc.line_set(stack((left, max)), stack((right, max)))
                         gc.line_set(stack((left, min)), stack((right, min)))
@@ -160,8 +165,7 @@ class BaseCandlePlot(BaseXYPlot):
         bar_min = array([y + height / 3])
         bar_max = array([y + height - (height / 3)])
         center = array([y + (height / 2)])
-        self._render(gc, array([x+width/4]), array([x+3*width/4]), min, bar_min, center, bar_max, max)
-
-
-
-
+        self._render(gc,
+                     array([x + width / 4]),
+                     array([x + 3 * width / 4]), min, bar_min, center, bar_max,
+                     max)

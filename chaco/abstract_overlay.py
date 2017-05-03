@@ -61,4 +61,5 @@ class AbstractOverlay(PlotComponent):
         super(AbstractOverlay, self)._request_redraw()
         return
 
+
 # EOF

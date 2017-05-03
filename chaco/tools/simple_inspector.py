@@ -9,6 +9,7 @@ from chaco.image_plot import ImagePlot
 from enable.api import BaseTool, KeySpec
 from traits.api import Bool, Event, Tuple, Enum, Callable
 
+
 class SimpleInspectorTool(BaseTool):
     """ Simple inspector tool for plots
 
@@ -51,7 +52,7 @@ class SimpleInspectorTool(BaseTool):
 
     # Stores the value of self.visible when the mouse leaves the tool,
     # so that it can be restored when the mouse enters again.
-    _old_visible = Enum(None, True, False) #Trait(None, Bool(True))
+    _old_visible = Enum(None, True, False)  #Trait(None, Bool(True))
 
     #########################################################################
     # SimpleInspectorTool API
@@ -79,8 +80,8 @@ class SimpleInspectorTool(BaseTool):
         d = {'index': index, 'value': value, 'x': x, 'y': y}
 
         if isinstance(self.component, ImagePlot):
-            x_ndx, y_ndx = self.component.map_index((event.x, event.y),
-                                                    outside_returns_none=False)
+            x_ndx, y_ndx = self.component.map_index(
+                (event.x, event.y), outside_returns_none=False)
 
             # FIXME: off-by-one error. The size of the index is +1 to the size of
             # the image array
@@ -89,7 +90,7 @@ class SimpleInspectorTool(BaseTool):
             if x_ndx == self.component.value.data.shape[1]:
                 x_ndx += 1
 
-            z =  self.component.value.data[y_ndx, x_ndx]
+            z = self.component.value.data[y_ndx, x_ndx]
             d['z'] = z
             d['color'] = z
 

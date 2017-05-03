@@ -5,9 +5,10 @@ from enable.api import Component
 from enable.kiva_graphics_context import GraphicsContext
 from traits.api import Bool, Instance, Str
 
-
-DEFAULT_DRAWING_ORDER = ["background", "image", "underlay",      "plot",
-                         "selection", "border", "annotation", "overlay"]
+DEFAULT_DRAWING_ORDER = [
+    "background", "image", "underlay", "plot", "selection", "border",
+    "annotation", "overlay"
+]
 
 
 class PlotComponent(Component):
@@ -44,7 +45,7 @@ class PlotComponent(Component):
     #    but need to be rendered on top of everything else in the plot
     # 8. 'overlay': Legends, selection regions, and other tool-drawn visual
     #    elements
-    draw_order = Instance(list, args=(DEFAULT_DRAWING_ORDER,))
+    draw_order = Instance(list, args=(DEFAULT_DRAWING_ORDER, ))
 
     # The default draw layer for Chaco plot components is the "plot" layer
     draw_layer = Str("plot")
@@ -60,5 +61,3 @@ class PlotComponent(Component):
         if new == False:
             raise RuntimeError("The old-style drawing mechanism is no longer " \
                     "supported in Chaco.")
-
-

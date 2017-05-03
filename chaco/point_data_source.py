@@ -25,7 +25,6 @@ class PointDataSource(ArrayDataSource):
 
     """
 
-
     # The dimensionality of the indices into this data source (overrides
     # ArrayDataSource).
     index_dimension = ReadOnly('scalar')
@@ -46,7 +45,6 @@ class PointDataSource(ArrayDataSource):
     # X and Y (i.e., monotonic in both axes), then set **sort_index** to
     # whichever one has the best binary-search performance for hit-testing.
     sort_index = Enum(0, 1)
-
 
     #------------------------------------------------------------------------
     # Private traits
@@ -70,10 +68,12 @@ class PointDataSource(ArrayDataSource):
     # AbstractDataSource interface
     #------------------------------------------------------------------------
 
-    def __init__(self, data = transpose(array([[],[]])), **kw):
+    def __init__(self, data=transpose(array([[], []])), **kw):
         shape = data.shape
         if (len(shape) != 2) or (shape[1] != 2):
-            raise RuntimeError("PointDataSource constructor requires Nx2 array, but got array of shape " + str(shape) + " instead.")
+            raise RuntimeError(
+                "PointDataSource constructor requires Nx2 array, but got array of shape "
+                + str(shape) + " instead.")
         super(PointDataSource, self).__init__(data, **kw)
         return
 
@@ -117,7 +117,7 @@ class PointDataSource(ArrayDataSource):
             raise ValueError("Index must be 0 or 1.")
 
         # This basically reduces to a scalar data search along self.data[index].
-        lowerleft, upperright= self._cached_bounds
+        lowerleft, upperright = self._cached_bounds
         min_val = lowerleft[index]
         max_val = upperright[index]
         val = pt[index]
@@ -132,7 +132,7 @@ class PointDataSource(ArrayDataSource):
             else:
                 return self._max_index
         else:
-            return reverse_map_1d(self._data[:,index], val, self.sort_order)
+            return reverse_map_1d(self._data[:, index], val, self.sort_order)
 
     #------------------------------------------------------------------------
     # Private methods
@@ -144,25 +144,26 @@ class PointDataSource(ArrayDataSource):
         Overrides ArrayDataSource.
         """
         if len(self._data) == 0:
-            self._cached_bounds = ((0.0,0.0), (0.0,0.0))
+            self._cached_bounds = ((0.0, 0.0), (0.0, 0.0))
         elif len(self._data) == 1:
-            x,y = self._data[0]
-            self._cached_bounds = ((x,y), (x,y))
+            x, y = self._data[0]
+            self._cached_bounds = ((x, y), (x, y))
         else:
             # calculate the X and Y values independently
-            x = self._data[:,0]
+            x = self._data[:, 0]
             min_x = min(x)
             max_x = max(x)
-            y = self._data[:,1]
+            y = self._data[:, 1]
             min_y = min(y)
             max_y = max(y)
-            self._cached_bounds = ((min_x,min_y), (max_x,max_y))
+            self._cached_bounds = ((min_x, min_y), (max_x, max_y))
         return
 
     def _get__xdata(self):
-        return ArrayDataSource(self._data[:,0])
+        return ArrayDataSource(self._data[:, 0])
 
     def _get__ydata(self):
-        return ArrayDataSource(self._data[:,1])
+        return ArrayDataSource(self._data[:, 1])
+
 
 # EOF

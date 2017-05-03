@@ -1,8 +1,6 @@
 """ Defines the PolarLineRenderer class.
 """
 
-
-
 # Major library imports
 from numpy import array, cos, pi, sin, transpose
 
@@ -22,13 +20,13 @@ class PolarLineRenderer(AbstractPlotRenderer):
     #------------------------------------------------------------------------
 
     # The color of the origin axis.
-    origin_axis_color_ = (0,0,0,1)
+    origin_axis_color_ = (0, 0, 0, 1)
     # The width of the origin axis.
     origin_axis_width = 2.0
     # The origin axis is visible.
-    origin_axis_visible=True
+    origin_axis_visible = True
     # The grid is visible.
-    grid_visible= True
+    grid_visible = True
     # The orientation of the plot is horizontal; for any other value, it is
     # transposed
     orientation = 'h'
@@ -39,7 +37,7 @@ class PolarLineRenderer(AbstractPlotRenderer):
     # The style of the line.
     line_style = LineStyle("solid")
     # The style of the grid lines.
-    grid_style= LineStyle("dot")
+    grid_style = LineStyle("dot")
 
     def _gather_points(self):
         """
@@ -50,11 +48,11 @@ class PolarLineRenderer(AbstractPlotRenderer):
 
         x = self.index.get_data()
         y = self.value.get_data()
-        rad= min(self.width/2.0,self.height/2.0)
-        sx = x*rad+ self.x + self.width/2.0
-        sy = y*rad+ self.y + self.height/2.0
+        rad = min(self.width / 2.0, self.height / 2.0)
+        sx = x * rad + self.x + self.width / 2.0
+        sy = y * rad + self.y + self.height / 2.0
 
-        points = transpose(array((sx,sy)))
+        points = transpose(array((sx, sy)))
         self._cached_data_pts = points
         self._cache_valid = True
         return
@@ -74,7 +72,7 @@ class PolarLineRenderer(AbstractPlotRenderer):
             gc.set_antialias(True)
             self._draw_default_axes(gc)
             self._draw_default_grid(gc)
-            if len(points)>0:
+            if len(points) > 0:
                 gc.clip_to_rect(self.x, self.y, self.width, self.height)
                 gc.set_stroke_color(self.color_)
                 gc.set_line_width(self.line_width)
@@ -118,10 +116,9 @@ class PolarLineRenderer(AbstractPlotRenderer):
         if self.orientation == 'h':
             x, y = screen_pt
         else:
-            y,x = screen_pt
+            y, x = screen_pt
         return array((self.index_mapper.map_data(x),
                       self.value_mapper.map_data(y)))
-
 
     def _downsample(self):
         return self.map_screen(self._cached_data_pts)
@@ -131,7 +128,6 @@ class PolarLineRenderer(AbstractPlotRenderer):
         """
         # Simple compatibility with new-style rendering loop
         return self._draw_component(*args, **kw)
-
 
     def _draw_component(self, gc, view_bounds=None, mode='normal'):
         """ Renders the component.
@@ -155,22 +151,22 @@ class PolarLineRenderer(AbstractPlotRenderer):
             gc.set_stroke_color(self.origin_axis_color_)
             gc.set_line_width(self.origin_axis_width)
             gc.set_line_dash(self.grid_style_)
-            x_data,y_data= transpose(self._cached_data_pts)
-            x_center=self.x + self.width/2.0
-            y_center=self.y + self.height/2.0
+            x_data, y_data = transpose(self._cached_data_pts)
+            x_center = self.x + self.width / 2.0
+            y_center = self.y + self.height / 2.0
 
             for theta in range(12):
-                    r= min(self.width/2.0,self.height/2.0)
-                    x= r*cos(theta*pi/6) + x_center
-                    y= r*sin(theta*pi/6) + y_center
-                    data_pts= array([[x_center,y_center],[x,y]])
-                    start,end = data_pts
-                    gc.move_to(int(start[0]), int(start[1]))
-                    gc.line_to(int(end[0]), int(end[1]))
-                    gc.stroke_path()
+                r = min(self.width / 2.0, self.height / 2.0)
+                x = r * cos(theta * pi / 6) + x_center
+                y = r * sin(theta * pi / 6) + y_center
+                data_pts = array([[x_center, y_center], [x, y]])
+                start, end = data_pts
+                gc.move_to(int(start[0]), int(start[1]))
+                gc.line_to(int(end[0]), int(end[1]))
+                gc.stroke_path()
         return
 
-    def _draw_default_grid(self,gc):
+    def _draw_default_grid(self, gc):
         if not self.grid_visible:
             return
 
@@ -178,13 +174,13 @@ class PolarLineRenderer(AbstractPlotRenderer):
             gc.set_stroke_color(self.origin_axis_color_)
             gc.set_line_width(self.origin_axis_width)
             gc.set_line_dash(self.grid_style_)
-            x_data,y_data = transpose(self._cached_data_pts)
-            x_center = self.x + self.width/2.0
-            y_center = self.y + self.height/2.0
-            rad = min(self.width/2.0, self.height/2.0)
-            for r_part in range(1,5):
-                r = rad*r_part/4
-                gc.arc(x_center, y_center, r, 0, 2*pi)
+            x_data, y_data = transpose(self._cached_data_pts)
+            x_center = self.x + self.width / 2.0
+            y_center = self.y + self.height / 2.0
+            rad = min(self.width / 2.0, self.height / 2.0)
+            for r_part in range(1, 5):
+                r = rad * r_part / 4
+                gc.arc(x_center, y_center, r, 0, 2 * pi)
                 gc.stroke_path()
 
         return

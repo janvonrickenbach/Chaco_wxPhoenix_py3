@@ -4,7 +4,6 @@ from chaco.ticks import DefaultTickGenerator, MinorTickGenerator, auto_interval
 
 
 class TestDefaultTickGenerator(unittest.TestCase):
-
     def setUp(self):
         self.tick_generator = DefaultTickGenerator()
 
@@ -18,13 +17,12 @@ class TestDefaultTickGenerator(unittest.TestCase):
             data_high=1,
             bounds_low=low,
             bounds_high=high,
-            interval=interval,
-        )
+            interval=interval, )
         expected_num_ticks = (high - low) / interval + 1
         self.assertEqual(len(ticks), expected_num_ticks)
 
-class TestMinorTickGenerator(unittest.TestCase):
 
+class TestMinorTickGenerator(unittest.TestCase):
     def setUp(self):
         self.tick_generator = MinorTickGenerator()
 
@@ -33,54 +31,51 @@ class TestMinorTickGenerator(unittest.TestCase):
         it should return the same results as a DefaultTickGenerator
         """
         self.default_tick_generator = DefaultTickGenerator()
-        
+
         high = 1.0
         low = 0.0
-        
+
         intervals = [0.05, 0.1, 0.2, 0.25, 0.5]
-        
+
         for i in intervals:
             ticksMinor = self.tick_generator.get_ticks(
                 data_low=0,
                 data_high=1,
                 bounds_low=low,
                 bounds_high=high,
-                interval=i,
-            )
+                interval=i, )
             ticksDefault = self.default_tick_generator.get_ticks(
                 data_low=0,
                 data_high=1,
                 bounds_low=low,
                 bounds_high=high,
-                interval=i,
-            )
+                interval=i, )
             self.assertEqual(ticksMinor.tolist(), ticksDefault.tolist())
-    
+
     def test_minor_tick_generator_without_interval(self):
         """A minor tick generator should return more ticks than
         the default tick generator.
         """
         self.default_tick_generator = DefaultTickGenerator()
-        
+
         high = 1.0
         low = 0.0
-        
+
         ticksMinor = self.tick_generator.get_ticks(
             data_low=0,
             data_high=1,
             bounds_low=low,
             bounds_high=high,
-            interval='auto',
-        )
+            interval='auto', )
         ticksDefault = self.default_tick_generator.get_ticks(
             data_low=0,
             data_high=1,
             bounds_low=low,
             bounds_high=high,
-            interval='auto',
-        )
-        
+            interval='auto', )
+
         self.assertGreater(len(ticksMinor), len(ticksDefault))
+
 
 class TestAutoInterval(unittest.TestCase):
     def test_default_auto_interval(self):
@@ -91,7 +86,7 @@ class TestAutoInterval(unittest.TestCase):
         """
         data_low = 0.
         for i in range(30):
-            data_high = 10. ** (i / 10.)
+            data_high = 10.**(i / 10.)
             interval = auto_interval(data_low=data_low, data_high=data_high)
             num_ticks = int((data_high - data_low) / interval)
             self.assertGreaterEqual(num_ticks, 3)
@@ -101,11 +96,12 @@ class TestAutoInterval(unittest.TestCase):
         data_low = 0.
         data_high = 100.
         for max_ticks in range(4, 11):
-            interval = auto_interval(data_low=data_low, data_high=data_high,
-                                     max_ticks=max_ticks)
+            interval = auto_interval(
+                data_low=data_low, data_high=data_high, max_ticks=max_ticks)
             num_ticks = int((data_high - data_low) / interval)
             self.assertGreaterEqual(num_ticks, 3)
             self.assertLessEqual(num_ticks, max_ticks)
+
 
 if __name__ == "__main__":
     unittest.main()

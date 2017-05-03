@@ -8,7 +8,6 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-
 """ Tests for the BetterZoom Chaco tool """
 
 import unittest

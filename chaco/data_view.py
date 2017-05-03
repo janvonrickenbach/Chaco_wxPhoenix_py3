@@ -16,27 +16,29 @@ from .linear_mapper import LinearMapper
 from .log_mapper import LogMapper
 from .plot_containers import OverlayPlotContainer
 
-
 #-----------------------------------------------------------------------------
 # Define new traits to condense the definition of some convenience
 # properties in the Plot class
 #-----------------------------------------------------------------------------
 
+
 def get_mapper(self, attr_name):
     """ Getter function used by OrientedMapperProperty.
     """
-    if (attr_name,self.orientation) in [("x_mapper","h"), ("y_mapper","v")]:
+    if (attr_name, self.orientation) in [("x_mapper", "h"), ("y_mapper", "v")]:
         return self.index_mapper
     else:
         return self.value_mapper
 
+
 def set_mapper(self, attr_name, new):
     """ Setter function used by OrientedMapperProperty.
     """
-    if (attr_name,self.orientation) in [("x_mapper","h"), ("y_mapper","v")]:
+    if (attr_name, self.orientation) in [("x_mapper", "h"), ("y_mapper", "v")]:
         self.index_mapper = new
     else:
         self.value_mapper = new
+
 
 # Property that represents a mapper for an orientation.
 OrientedMapperProperty = Property(get_mapper, set_mapper)
@@ -45,18 +47,22 @@ OrientedMapperProperty = Property(get_mapper, set_mapper)
 def get_axis(self, attr_name):
     """ Getter function used by AxisProperty.
     """
-    if (attr_name,self.orientation) in [("index_axis","h"), ("value_axis","v")]:
+    if (attr_name, self.orientation
+        ) in [("index_axis", "h"), ("value_axis", "v")]:
         return self.x_axis
     else:
         return self.y_axis
 
+
 def set_axis(self, attr_name, new):
     """ Setter function used by AxisProperty.
     """
-    if (attr_name,self.orientation) in [("index_axis","h"), ("value_axis","v")]:
+    if (attr_name, self.orientation
+        ) in [("index_axis", "h"), ("value_axis", "v")]:
         self.x_axis = new
     else:
         self.y_axis = new
+
 
 # Property that represents an axis.
 AxisProperty = Property(get_axis, set_axis)
@@ -65,18 +71,22 @@ AxisProperty = Property(get_axis, set_axis)
 def get_grid(self, attr_name):
     """ Getter function used by GridProperty.
     """
-    if (attr_name,self.orientation) in [("index_grid","v"), ("value_grid","h")]:
+    if (attr_name, self.orientation
+        ) in [("index_grid", "v"), ("value_grid", "h")]:
         return self.y_grid
     else:
         return self.x_grid
 
+
 def set_grid(self, attr_name, new):
     """ Setter function used by GridProperty.
     """
-    if (attr_name,self.orientation) in [("index_grid","v"), ("value_grid","h")]:
+    if (attr_name, self.orientation
+        ) in [("index_grid", "v"), ("value_grid", "h")]:
         self.y_grid = new
     else:
         self.y_grid = new
+
 
 # Property that represents a grid for a particular orientation.
 GridProperty = Property(get_grid, set_grid)
@@ -93,8 +103,8 @@ class DataView(OverlayPlotContainer):
     orientation = Enum("h", "v")
 
     # The default location of the origin  for new plots
-    default_origin = Enum("bottom left", "top left",
-                          "bottom right", "top right")
+    default_origin = Enum("bottom left", "top left", "bottom right",
+                          "top right")
 
     # The origin reported to axes, etc
     origin = Property(depends_on='default_origin')
@@ -226,9 +236,9 @@ class DataView(OverlayPlotContainer):
         sx = self.index_mapper.map_screen(x_ary)
         sy = self.value_mapper.map_screen(y_ary)
         if self.orientation == "h":
-            return transpose(array((sx,sy)))
+            return transpose(array((sx, sy)))
         else:
-            return transpose(array((sy,sx)))
+            return transpose(array((sy, sx)))
 
     def map_data(self, screen_pt):
         """ Maps a screen space point into the 2D data space of this plot.
@@ -274,21 +284,27 @@ class DataView(OverlayPlotContainer):
             grid_color = 'white'
 
         if not self.x_grid and self.auto_grid:
-            self.x_grid = PlotGrid(mapper=self.x_mapper, orientation="vertical",
-                                  line_color=grid_color, line_style="dot",
-                                  component=self)
+            self.x_grid = PlotGrid(
+                mapper=self.x_mapper,
+                orientation="vertical",
+                line_color=grid_color,
+                line_style="dot",
+                component=self)
         if not self.y_grid and self.auto_grid:
-            self.y_grid = PlotGrid(mapper=self.y_mapper, orientation="horizontal",
-                                  line_color=grid_color, line_style="dot",
-                                  component=self)
+            self.y_grid = PlotGrid(
+                mapper=self.y_mapper,
+                orientation="horizontal",
+                line_color=grid_color,
+                line_style="dot",
+                component=self)
 
         if not self.x_axis and self.auto_axis:
-            self.x_axis = PlotAxis(mapper=self.x_mapper, orientation="bottom",
-                                  component=self)
+            self.x_axis = PlotAxis(
+                mapper=self.x_mapper, orientation="bottom", component=self)
 
         if not self.y_axis and self.auto_axis:
-            self.y_axis = PlotAxis(mapper=self.y_mapper, orientation="left",
-                                  component=self)
+            self.y_axis = PlotAxis(
+                mapper=self.y_mapper, orientation="left", component=self)
 
     #-------------------------------------------------------------------------
     # Event handlers
@@ -439,7 +455,6 @@ class DataView(OverlayPlotContainer):
         """ Default trait initializer for the range2d trait """
         return DataRange2D()
 
-
     #------------------------------------------------------------------------
     # Property getters and setters
     #------------------------------------------------------------------------
@@ -459,7 +474,7 @@ class DataView(OverlayPlotContainer):
         self.range2d.y_range = newrange
 
     def _handle_range_changed(self, name, old, new):
-        mapper = getattr(self, name+"_mapper")
+        mapper = getattr(self, name + "_mapper")
         if mapper.range == old:
             mapper.range = new
         if old is not None:
@@ -475,5 +490,3 @@ class DataView(OverlayPlotContainer):
     def _get_origin(self):
         # FIXME:
         return self.default_origin
-
-

@@ -20,6 +20,7 @@ from traitsui.api import Item, Group, View, RangeEditor
 from chaco.api import ArrayPlotData, Plot
 from chaco.tools.api import PanTool, ZoomTool
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
@@ -52,21 +53,24 @@ def _create_plot_component():
 
 
 def _create_scatter_renderer(plot):
-    renderer = plot.plot(("index", "value"),
-                          type="scatter",
-                          marker="circle",
-                          index_sort="ascending",
-                          color="orange",
-                          marker_size=3,
-                          bgcolor="white")[0]
+    renderer = plot.plot(
+        ("index", "value"),
+        type="scatter",
+        marker="circle",
+        index_sort="ascending",
+        color="orange",
+        marker_size=3,
+        bgcolor="white")[0]
 
     return renderer
+
 
 #===============================================================================
 # Attributes to use for the plot view.
 size = (650, 650)
 title = "Basic scatter plot"
-bg_color="lightgray"
+bg_color = "lightgray"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -79,23 +83,27 @@ class Demo(HasTraits):
     alpha = DelegatesTo('scatter_renderer')
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size,
-                                                            bgcolor=bg_color),
-                             show_label=False),
-                        Group(
-                            Item('alpha', editor=RangeEditor(low=0.0, high=1.0)),
-                        ),
-                        orientation = "vertical"),
-                    resizable=True, title=title
-                    )
+        Group(
+            Item(
+                'plot',
+                editor=ComponentEditor(
+                    size=size, bgcolor=bg_color),
+                show_label=False),
+            Group(
+                Item(
+                    'alpha', editor=RangeEditor(
+                        low=0.0, high=1.0)), ),
+            orientation="vertical"),
+        resizable=True,
+        title=title)
 
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
 
     def _scatter_renderer_default(self):
         renderer = _create_scatter_renderer(self.plot)
         return renderer
+
 
 demo = Demo()
 

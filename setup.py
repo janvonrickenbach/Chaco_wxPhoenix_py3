@@ -50,8 +50,9 @@ def git_version():
         env['LANG'] = 'C'
         env['LC_ALL'] = 'C'
         out = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, env=env,
-        ).communicate()[0]
+            cmd,
+            stdout=subprocess.PIPE,
+            env=env, ).communicate()[0]
         return out
 
     try:
@@ -94,7 +95,7 @@ if not is_released:
     # write_version_py(), otherwise the import of _version messes
     # up the build under Python 3.
     fullversion = VERSION
-    chaco_version_path =  os.path.join(
+    chaco_version_path = os.path.join(
         os.path.dirname(__file__), 'chaco', '_version.py')
     if os.path.exists('.git'):
         git_rev, dev_num = git_version()
@@ -106,7 +107,6 @@ if not is_released:
             raise RuntimeError("Unable to read git_revision. Try removing "
                                "chaco/_version.py and the build directory "
                                "before building.")
-
 
         match = re.match(r'.*?\.dev(?P<dev_num>\d+)', fullversion)
         if match is None:
@@ -121,10 +121,12 @@ if not is_released:
         fullversion += '.dev{0}'.format(dev_num)
 
     with open(filename, "wt") as fp:
-        fp.write(template.format(version=VERSION,
-                                 full_version=fullversion,
-                                 git_revision=git_rev,
-                                 is_released=IS_RELEASED))
+        fp.write(
+            template.format(
+                version=VERSION,
+                full_version=fullversion,
+                git_revision=git_rev,
+                is_released=IS_RELEASED))
 
 
 if __name__ == "__main__":
@@ -138,20 +140,17 @@ if __name__ == "__main__":
         'chaco.contour.contour',
         sources=['chaco/contour/cntr.c'],
         include_dirs=[numpy_include_dir],
-        define_macros=[('NUMPY', None)],
-    )
+        define_macros=[('NUMPY', None)], )
 
     cython_speedups = Extension(
         'chaco._cython_speedups',
         sources=['chaco/_cython_speedups.c'],
-        include_dirs=[numpy_include_dir],
-    )
+        include_dirs=[numpy_include_dir], )
 
     downsampling_lttb = Extension(
         'chaco.downsample._lttb',
         sources=['chaco/downsample/_lttb.c'],
-        include_dirs=[numpy_include_dir],
-    )
+        include_dirs=[numpy_include_dir], )
 
     # Commenting this out for now, until we get the module fully tested and
     # working
@@ -163,15 +162,17 @@ if __name__ == "__main__":
     #)
 
     setup(
-        name = 'chaco',
-        version = __version__,
-        author = 'Peter Wang, et. al.',
-        author_email = 'info@enthought.com',
-        maintainer = 'ETS Developers',
-        maintainer_email = 'enthought-dev@enthought.com',
-        url = 'http://docs.enthought.com/chaco',
-        download_url = 'https://github.com/enthought/chaco',
-        classifiers = [c.strip() for c in """\
+        name='chaco',
+        version=__version__,
+        author='Peter Wang, et. al.',
+        author_email='info@enthought.com',
+        maintainer='ETS Developers',
+        maintainer_email='enthought-dev@enthought.com',
+        url='http://docs.enthought.com/chaco',
+        download_url='https://github.com/enthought/chaco',
+        classifiers=[
+            c.strip()
+            for c in """\
             Development Status :: 5 - Production/Stable
             Intended Audience :: Developers
             Intended Audience :: Science/Research
@@ -186,20 +187,21 @@ if __name__ == "__main__":
             Topic :: Scientific/Engineering
             Topic :: Software Development
             Topic :: Software Development :: Libraries
-            """.splitlines() if len(c.strip()) > 0],
+            """.splitlines() if len(c.strip()) > 0
+        ],
         package_data={
-            'chaco': ['tools/toolbars/images/*.png',
-                      'layers/data/*.svg',
-                      'tests/data/PngSuite/*.png']
+            'chaco': [
+                'tools/toolbars/images/*.png', 'layers/data/*.svg',
+                'tests/data/PngSuite/*.png'
+            ]
         },
-        description = 'interactive 2-dimensional plotting',
-        long_description = open('README.rst').read(),
-        ext_modules = [contour, cython_speedups, downsampling_lttb],
-        include_package_data = True,
-        install_requires = __requires__,
-        license = 'BSD',
-        packages = find_packages(),
-        platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-        zip_safe = False,
-        use_2to3=True,
-    )
+        description='interactive 2-dimensional plotting',
+        long_description=open('README.rst').read(),
+        ext_modules=[contour, cython_speedups, downsampling_lttb],
+        include_package_data=True,
+        install_requires=__requires__,
+        license='BSD',
+        packages=find_packages(),
+        platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
+        zip_safe=False,
+        use_2to3=True, )

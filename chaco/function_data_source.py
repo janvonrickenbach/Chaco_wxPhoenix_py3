@@ -46,7 +46,7 @@ class FunctionDataSource(ArrayDataSource):
 
     def set_data(self, *args, **kw):
         raise RuntimeError("Cannot set numerical data on a {0}".format(
-                           self.__class__))
+            self.__class__))
 
     def set_mask(self, mask):
         # This would be REALLY FREAKING SLICK, but it's current unimplemented

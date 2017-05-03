@@ -1,6 +1,3 @@
-
-
-
 import os.path
 import xml.etree.cElementTree as etree
 
@@ -9,6 +6,7 @@ from pyface.timer.timer import Timer
 from traits.api import Instance, Str, Enum, Float, Int
 from enable.savage.svg.document import SVGDocument
 from enable.savage.svg.backends.kiva.renderer import Renderer as KivaRenderer
+
 
 class StatusLayer(AbstractOverlay):
 
@@ -52,8 +50,8 @@ class StatusLayer(AbstractOverlay):
 
         if self.document is None:
             if self.filename == '':
-                self.filename = os.path.join(os.path.dirname(__file__), 'data',
-                                            'Dialog-error.svg')
+                self.filename = os.path.join(
+                    os.path.dirname(__file__), 'data', 'Dialog-error.svg')
             tree = etree.parse(self.filename)
             root = tree.getroot()
             self.document = SVGDocument(root, renderer=KivaRenderer)
@@ -61,7 +59,6 @@ class StatusLayer(AbstractOverlay):
         if hasattr(self.document, 'getSize'):
             self.doc_width = self.document.getSize()[0]
             self.doc_height = self.document.getSize()[1]
-
 
     def overlay(self, other_component, gc, view_bounds=None, mode="normal"):
         """ Draws this component overlaid on another component.
@@ -82,30 +79,27 @@ class StatusLayer(AbstractOverlay):
             # the overlay should be 50% of the width, if the plot is short and wide
             # the overlay should be 50% of the height.
             if gc.height() < gc.width():
-                scale = (plot_height/self.doc_height)*self.scale_factor
+                scale = (plot_height / self.doc_height) * self.scale_factor
             else:
-                scale = (plot_width/self.doc_width)*self.scale_factor
+                scale = (plot_width / self.doc_width) * self.scale_factor
 
-            scale_width = scale*self.doc_width
-            scale_height = scale*self.doc_height
+            scale_width = scale * self.doc_width
+            scale_height = scale * self.doc_height
 
             # Set up the transforms to align the graphic to the desired position
             if self.align == 'ur':
-                gc.translate_ctm(origin_x + (plot_width-scale_width),
-                                origin_y + plot_height)
+                gc.translate_ctm(origin_x + (plot_width - scale_width),
+                                 origin_y + plot_height)
             elif self.align == 'lr':
-                gc.translate_ctm(origin_x + (plot_width-scale_width),
-                                origin_y + scale_height)
+                gc.translate_ctm(origin_x + (plot_width - scale_width),
+                                 origin_y + scale_height)
             elif self.align == 'ul':
-                gc.translate_ctm(origin_x,
-                                origin_y + plot_height)
+                gc.translate_ctm(origin_x, origin_y + plot_height)
             elif self.align == 'll':
-                gc.translate_ctm(origin_x,
-                                origin_y + scale_height)
+                gc.translate_ctm(origin_x, origin_y + scale_height)
             else:
-                gc.translate_ctm(origin_x + (plot_width-scale_width)/2,
-                                 origin_y + (plot_height+scale_height)/2)
-
+                gc.translate_ctm(origin_x + (plot_width - scale_width) / 2,
+                                 origin_y + (plot_height + scale_height) / 2)
 
             # SVG origin is the upper right with y positive down, so
             # we need to flip everything
@@ -118,7 +112,7 @@ class StatusLayer(AbstractOverlay):
         return
 
     def fade_out(self):
-        interval = self.fade_out_time/self.fade_out_steps
+        interval = self.fade_out_time / self.fade_out_steps
         self.timer = Timer(interval, self._fade_out_step)
 
     def _fade_out_step(self):
@@ -136,10 +130,12 @@ class StatusLayer(AbstractOverlay):
             self.alpha -= 0.1
             self.component.request_redraw()
 
+
 class ErrorLayer(StatusLayer):
-    filename = os.path.join(os.path.dirname(__file__), 'data',
-                                            'Dialog-error.svg')
+    filename = os.path.join(
+        os.path.dirname(__file__), 'data', 'Dialog-error.svg')
+
 
 class WarningLayer(StatusLayer):
-    filename = os.path.join(os.path.dirname(__file__), 'data',
-                                            'Dialog-warning.svg')
+    filename = os.path.join(
+        os.path.dirname(__file__), 'data', 'Dialog-warning.svg')

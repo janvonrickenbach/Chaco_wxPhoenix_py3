@@ -6,6 +6,7 @@ from traits.api import Enum
 # Local relative imports
 from .plot_component import PlotComponent
 
+
 class AbstractPlotRenderer(PlotComponent):
     """ This is the minimal interface that all plot renderers must support.
 
@@ -27,7 +28,6 @@ class AbstractPlotRenderer(PlotComponent):
 
     # Overrides the default value inherited from PlotComponent.
     resizable = "hv"
-
 
     def map_screen(self, data_array):
         """ Maps an array of data points to screen space and returns an array

@@ -1,8 +1,6 @@
 """ Makes a copy of the plot in the overlay and adds it to the canvas.
 """
 
-
-
 # Enthought library imports
 from traits.api import Bool, Callable, Enum, Float, Instance, Int, Trait, Tuple
 from enable.api import Container
@@ -50,7 +48,7 @@ class PlotCloneTool(AbstractOverlay, DragTool):
             return
         else:
             if self._offset is not None and (self._offset[0] > 10 or
-                    self._offset[1] > 10):
+                                             self._offset[1] > 10):
                 with gc:
                     gc.clear_clip_path()
                     gc.translate_ctm(*self._offset)
@@ -66,8 +64,9 @@ class PlotCloneTool(AbstractOverlay, DragTool):
         """
         self._offset = (event.x - self.mouse_down_position[0],
                         event.y - self.mouse_down_position[1])
-        self._offset_from_plot = (self.mouse_down_position[0] - self.component.x,
-                                  self.mouse_down_position[1] - self.component.y)
+        self._offset_from_plot = (
+            self.mouse_down_position[0] - self.component.x,
+            self.mouse_down_position[1] - self.component.y)
         self.visible = True
         event.handled = True
 
@@ -117,7 +116,7 @@ class MPPlotCloneTool(PlotCloneTool):
                                           event.net_transform())
             else:
                 event.window.set_mouse_owner(self, event.net_transform())
-            self.mouse_down_position = (event.x,event.y)
+            self.mouse_down_position = (event.x, event.y)
             self.event_state = "dragging"
             event.handled = True
         PlotCloneTool.drag_start(self, event)

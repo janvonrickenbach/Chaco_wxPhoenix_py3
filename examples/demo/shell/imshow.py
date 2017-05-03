@@ -7,8 +7,8 @@ from traits.util.resource import find_resource
 from chaco.shell import imread, imshow, title, show
 
 # Get the image file using the find_resource module
-image_path = os.path.join('examples','basic','capitol.jpg')
-alt_path = os.path.join('..','basic','capitol.jpg')
+image_path = os.path.join('examples', 'basic', 'capitol.jpg')
+alt_path = os.path.join('..', 'basic', 'capitol.jpg')
 image_file = find_resource('Chaco', image_path, alt_path=alt_path)
 
 # Check to see if the image was found

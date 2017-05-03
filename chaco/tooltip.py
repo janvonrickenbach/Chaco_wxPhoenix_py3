@@ -1,8 +1,6 @@
 """ Defines the ToolTip class.
 """
 
-
-
 from numpy import array
 
 # Enthought library imports
@@ -10,7 +8,6 @@ from enable.api import black_color_trait, white_color_trait
 from enable.font_metrics_provider import font_metrics_provider
 from kiva.trait_defs.kiva_font_trait import KivaFont
 from traits.api import Any, Bool, List, Int, Float, on_trait_change
-
 
 # Local imports
 from .abstract_overlay import AbstractOverlay
@@ -95,12 +92,11 @@ class ToolTip(AbstractOverlay):
             for i, label in enumerate(self._cached_labels):
                 label_height = self._cached_line_sizes[i][1]
                 y -= label_height
-                gc.translate_ctm(0,y)
+                gc.translate_ctm(0, y)
                 label.draw(gc)
-                gc.translate_ctm(0,-y)
+                gc.translate_ctm(0, -y)
                 y -= self.line_spacing
         return
-
 
     def _do_layout(self):
         """Computes the size of the tooltip, and creates the label objects
@@ -111,14 +107,16 @@ class ToolTip(AbstractOverlay):
         if not self._text_props_valid:
             self._recompute_text()
 
-        outer_bounds = [self._max_line_width + 2*self.border_padding + self.hpadding,
-                             self._total_line_height + 2*self.border_padding + self.vpadding]
+        outer_bounds = [
+            self._max_line_width + 2 * self.border_padding + self.hpadding,
+            self._total_line_height + 2 * self.border_padding + self.vpadding
+        ]
 
         self.outer_bounds = outer_bounds
 
         if self.auto_adjust and self.component is not None:
             new_pos = list(self.outer_position)
-            for dimindex in (0,1):
+            for dimindex in (0, 1):
                 pos = self.position[dimindex]
                 extent = outer_bounds[dimindex]
                 c_min = self.component.position[dimindex]
@@ -141,16 +139,22 @@ class ToolTip(AbstractOverlay):
         self._layout_needed = False
 
     def _recompute_text(self):
-        labels = [Label(text=line, font=self.font, margin=0,
-                        bgcolor='transparent', border_width=0,
-                        color=self.text_color, rotate_angle=self.rotate_angle)
-                    for line in self.lines]
+        labels = [
+            Label(
+                text=line,
+                font=self.font,
+                margin=0,
+                bgcolor='transparent',
+                border_width=0,
+                color=self.text_color,
+                rotate_angle=self.rotate_angle) for line in self.lines
+        ]
         dummy_gc = self._font_metrics_provider
-        line_sizes = array([label.get_width_height(dummy_gc)
-                            for label in labels])
+        line_sizes = array(
+            [label.get_width_height(dummy_gc) for label in labels])
         self._cached_labels = labels
         self._cached_line_sizes = line_sizes
-        self._max_line_width = max(line_sizes[:,0])
+        self._max_line_width = max(line_sizes[:, 0])
         self._total_line_height = sum(line_sizes[:,1]) + \
                                   len(line_sizes-1)*self.line_spacing
         self._layout_needed = True

@@ -38,24 +38,23 @@ from chaco.api \
     import ArrayPlotData, Plot, PlotGraphicsContext, LinePlot
 from chaco.example_support import COLOR_PALETTE
 
-
 #-- Constants -----------------------------------------------------------------
 DPI = 72.0
-
 
 #------------------------------------------------------------------------------
 #  File templates:
 #     In a real application, these templates should be their own files,
 #     and a real templating engine (ex. Mako) would make things more flexible.
 #------------------------------------------------------------------------------
-html_template_keys = {'filename1' : 'plot_hover_coords.png',
-                      'filename2' : 'plot_hover2_coords.png',
-                      'file1_src' : 'plot_hover_coords.png',
-                      'file2_src' : 'plot_hover2_coords.png',
-                      'hover_coords' :'src="hover_coords.js">',
-                      'data1' :'src="plot_hover_coords_png_hover_data.js">',
-                      'data2' :'src="plot_hover2_coords_png_hover_data.js">' }
-
+html_template_keys = {
+    'filename1': 'plot_hover_coords.png',
+    'filename2': 'plot_hover2_coords.png',
+    'file1_src': 'plot_hover_coords.png',
+    'file2_src': 'plot_hover2_coords.png',
+    'hover_coords': 'src="hover_coords.js">',
+    'data1': 'src="plot_hover_coords_png_hover_data.js">',
+    'data2': 'src="plot_hover2_coords_png_hover_data.js">'
+}
 
 # Turns into index.html.
 html_template = """
@@ -104,7 +103,6 @@ html_template = """
 </html>
 """
 
-
 # Turns into plot_hover_coords_png_hover_data.js
 javascript_data_template = """
 // Create a new "CursorData" object
@@ -122,7 +120,6 @@ GlobalCursorData["%(array_id)s"] = obj
 // Store all the data in the array
 obj.data = Array( %(data_s)s );
 """
-
 
 # Turns into hover_coords.js.  Absolutely no string substitution is done.
 hover_coords_js_file = """
@@ -356,10 +353,10 @@ function HideHovers(event, boxElementID, lineElementID) {
 }
 """
 
-
 #------------------------------------------------------------------------------
 #  Data generation functions for *_hover_data.js files.
 #------------------------------------------------------------------------------
+
 
 def get_pixel_data(segment, renderer, screen_width):
     """
@@ -375,13 +372,13 @@ def get_pixel_data(segment, renderer, screen_width):
     if len(screen_points) == 0:
         return array([])
 
-    s_index = screen_points[:,0].astype(int)
-    d_value = segment[:,1]
+    s_index = screen_points[:, 0].astype(int)
+    d_value = segment[:, 1]
     if len(s_index) != len(d_value):
         raise ValueError('Data-to-screen mapping not 1-to-1.')
     indices = searchsorted(s_index, arange(0, screen_width))
     indices[where(indices == 0)] = 1
-    return d_value[indices-1]
+    return d_value[indices - 1]
 
 
 def write_hover_coords(container, array_id, script_filename=None):
@@ -427,7 +424,8 @@ def write_hover_coords(container, array_id, script_filename=None):
         if not isinstance(renderer, LinePlot):
             data_points = [data_points]
         for segment in data_points:
-            segment_data.append(get_pixel_data(segment, renderer, screen_width))
+            segment_data.append(
+                get_pixel_data(segment, renderer, screen_width))
         colors.append(renderer.color_)
 
     if len(segment_data) > 0:
@@ -443,25 +441,26 @@ def write_hover_coords(container, array_id, script_filename=None):
         else:
             alpha = 1
         r, g, b = [int(component * alpha * 255) for component in color[:3]]
-        colstrings.append('"#%02x%02x%02x"' % (r,g,b))
-    colors = ",".join(colstrings);
+        colstrings.append('"#%02x%02x%02x"' % (r, g, b))
+    colors = ",".join(colstrings)
 
     line_template = ",".join(['"%1.2f"'] * pixel_data.shape[1])
     data_s = ''
     for row in pixel_data[:-1]:
-        data_s += '[' + line_template % tuple(row) +  '],'
+        data_s += '[' + line_template % tuple(row) + '],'
     if len(pixel_data) > 0:
         data_s += '[' + line_template % tuple(row) + ']'
 
-    template_keys = dict(height = container.height,
-                         padding_top = container.padding_top,
-                         padding_left = container.padding_left,
-                         padding_bottom = container.padding_bottom,
-                         border_width = container.border_width,
-                         array_id = array_id,
-                         pixel_data = pixel_data,
-                         colors = colors,
-                         data_s = data_s)
+    template_keys = dict(
+        height=container.height,
+        padding_top=container.padding_top,
+        padding_left=container.padding_left,
+        padding_bottom=container.padding_bottom,
+        border_width=container.border_width,
+        array_id=array_id,
+        pixel_data=pixel_data,
+        colors=colors,
+        data_s=data_s)
 
     # Write out and return the result.
     output = javascript_data_template % template_keys
@@ -487,10 +486,13 @@ def create_plot(num_plots=8, type='line'):
     x = linspace(low, high, numpoints)
     pd = ArrayPlotData(index=x)
     p = Plot(pd, bgcolor="white", padding=50, border_visible=True)
-    for i in range(1,num_plots+2):
-        pd.set_data("y" + str(i), jn(i,x))
-        p.plot(("index", "y" + str(i)), color=tuple(COLOR_PALETTE[i]),
-               width = 2.0 * dpi_scale, type=type)
+    for i in range(1, num_plots + 2):
+        pd.set_data("y" + str(i), jn(i, x))
+        p.plot(
+            ("index", "y" + str(i)),
+            color=tuple(COLOR_PALETTE[i]),
+            width=2.0 * dpi_scale,
+            type=type)
     p.x_grid.visible = True
     p.x_grid.line_width *= dpi_scale
     p.y_grid.visible = True
@@ -499,7 +501,7 @@ def create_plot(num_plots=8, type='line'):
     return p
 
 
-def draw_plot(filename, size=(800,600), num_plots=8, type='line', key=''):
+def draw_plot(filename, size=(800, 600), num_plots=8, type='line', key=''):
     """ Save the plot, and generate the hover_data file. """
     container = create_plot(num_plots, type)
     container.outer_bounds = list(size)
@@ -521,8 +523,8 @@ def make_palettized_png_str(gc):
     format = gc.format()[:-2].upper()
     if format != "RGBA":
         gc = gc.convert_pixel_format("rgba32")
-    img = Image.fromstring("RGBA",
-                           (gc.width(), gc.height()), gc.bmp_array.tostring())
+    img = Image.fromstring("RGBA", (gc.width(), gc.height()),
+                           gc.bmp_array.tostring())
     img2 = img.convert("P")
     output_buf = io.StringIO()
     img2.save(output_buf, 'png')
@@ -552,14 +554,16 @@ def main(embedded=False):
     if embedded:
         html_template_keys['file1_src'] = None
         html_template_keys['file2_src'] = None
-    file1_strs = draw_plot(html_template_keys['file1_src'],
-                           size=(800, 600),
-                           key=html_template_keys['filename1'])
-    file2_strs = draw_plot(html_template_keys['file2_src'],
-                           size=(600, 400),
-                           num_plots = 4,
-                           type='scatter',
-                           key=html_template_keys['filename2'])
+    file1_strs = draw_plot(
+        html_template_keys['file1_src'],
+        size=(800, 600),
+        key=html_template_keys['filename1'])
+    file2_strs = draw_plot(
+        html_template_keys['file2_src'],
+        size=(600, 400),
+        num_plots=4,
+        type='scatter',
+        key=html_template_keys['filename2'])
 
     # 3. Choose the correct src type for the HTML file if embedded.
     if embedded:
@@ -585,6 +589,7 @@ def main(embedded=False):
         raise
     return
 
+
 #===============================================================================
 # # Demo class that is used by the demo.py application.
 #===============================================================================
@@ -600,8 +605,8 @@ def main(embedded=False):
 from traits.api import HasTraits
 from traitsui.api import UI, Handler
 
-class Demo(HasTraits):
 
+class Demo(HasTraits):
     def configure_traits(self, *args, **kws):
         main(embedded=True)
         return True
@@ -609,6 +614,7 @@ class Demo(HasTraits):
     def edit_traits(self, *args, **kws):
         main(embedded=True)
         return UI(handler=Handler())
+
 
 popup = Demo()
 

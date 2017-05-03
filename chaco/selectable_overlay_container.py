@@ -1,8 +1,6 @@
 """ Defines the SelectableOverlayPlotContainer class.
 """
 
-
-
 from numpy import array, float64
 
 # Enthought library imports
@@ -11,6 +9,7 @@ from enable.api import ColorTrait
 
 # Local imports
 from .plot_containers import OverlayPlotContainer
+
 
 class SelectableOverlayPlotContainer(OverlayPlotContainer):
     """
@@ -65,8 +64,7 @@ class SelectableOverlayPlotContainer(OverlayPlotContainer):
                 gc.set_fill_color(self.selection_fill_color_)
                 gc.set_stroke_color(self.selection_border_color_)
                 gc.set_alpha(self.selection_alpha)
-                gc.rect(lowerleft[0], lowerleft[1], upperright[0], upperright[1])
+                gc.rect(lowerleft[0], lowerleft[1], upperright[0],
+                        upperright[1])
                 gc.draw_path()
         return
-
-

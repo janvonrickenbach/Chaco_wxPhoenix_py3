@@ -33,6 +33,7 @@ def bounded_nanargmin(arr):
     else:
         return 0
 
+
 def bounded_nanargmax(arr):
     """ Find the index of the maximum value, ignoring NaNs.
 
@@ -51,6 +52,7 @@ def bounded_nanargmax(arr):
         return max
     else:
         return -1
+
 
 class ArrayDataSource(AbstractDataSource):
     """ A data source representing a single, continuous array of numerical data.
@@ -76,7 +78,6 @@ class ArrayDataSource(AbstractDataSource):
     # one that's used everywhere.
     sort_order = SortOrderTrait
 
-
     #------------------------------------------------------------------------
     # Private traits
     #------------------------------------------------------------------------
@@ -100,7 +101,6 @@ class ArrayDataSource(AbstractDataSource):
     # typechecks numpy.int64 on 64-bit Windows systems.
     _max_index = Any
 
-
     #------------------------------------------------------------------------
     # Public methods
     #------------------------------------------------------------------------
@@ -121,22 +121,22 @@ class ArrayDataSource(AbstractDataSource):
             The sort order of the data
         """
         try:
-            ndl=len(newdata)
-            if ndl>0:
-                do_assign=True
+            ndl = len(newdata)
+            if ndl > 0:
+                do_assign = True
             else:
-                do_assign=False
+                do_assign = False
         except:
-            do_assign=False
-        if do_assign:# not (newdata is None):
+            do_assign = False
+        if do_assign:  # not (newdata is None):
             self._data = array(newdata)
         try:
-            editor=sort_order.editor
+            editor = sort_order.editor
         except:
-            sort_is_none=True
+            sort_is_none = True
         else:
-            sort_is_none=False
-        if not sort_is_none: #sort_order is not None:
+            sort_is_none = False
+        if not sort_is_none:  #sort_order is not None:
             self.sort_order = sort_order
         self._compute_bounds()
         self.data_changed = True
@@ -242,7 +242,6 @@ class ArrayDataSource(AbstractDataSource):
         else:
             return reverse_map_1d(self._data, pt, self.sort_order)
 
-
     #------------------------------------------------------------------------
     # Private methods
     #------------------------------------------------------------------------
@@ -301,7 +300,7 @@ class ArrayDataSource(AbstractDataSource):
                     self._cached_bounds = (0.0, 0.0)
 
             self._cached_bounds = (data[self._min_index],
-                               data[self._max_index])
+                                   data[self._max_index])
         return
 
     #------------------------------------------------------------------------

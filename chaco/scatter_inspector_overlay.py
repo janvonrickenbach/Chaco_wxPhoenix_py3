@@ -1,6 +1,3 @@
-
-
-
 # Major library imports
 from numpy import array, asarray
 
@@ -11,6 +8,7 @@ from traits.api import Float, Int, Str, Trait
 # Local, relative imports
 from .abstract_overlay import AbstractOverlay
 from .scatterplot import render_markers
+
 
 class ScatterInspectorOverlay(AbstractOverlay):
     """
@@ -51,7 +49,8 @@ class ScatterInspectorOverlay(AbstractOverlay):
         if not plot or not plot.index or not getattr(plot, "value", True):
             return
 
-        for inspect_type in (self.hover_metadata_name, self.selection_metadata_name):
+        for inspect_type in (self.hover_metadata_name,
+                             self.selection_metadata_name):
             if inspect_type in plot.index.metadata:
                 #if hasattr(plot,"value") and not inspect_type in plot.value.metadata:
                 #    continue
@@ -73,8 +72,8 @@ class ScatterInspectorOverlay(AbstractOverlay):
 
                     if hasattr(plot, "value"):
                         value_data = plot.value.get_data()
-                        screen_pts = plot.map_screen(array([index_data[index],
-                                                            value_data[value]]).T)
+                        screen_pts = plot.map_screen(
+                            array([index_data[index], value_data[value]]).T)
                     else:
                         screen_pts = plot.map_screen(index_data[index])
 
@@ -106,7 +105,7 @@ class ScatterInspectorOverlay(AbstractOverlay):
             else:
                 valname = attr
 
-            tmp = getattr(self, prefix+sep+valname)
+            tmp = getattr(self, prefix + sep + valname)
             if tmp is not None:
                 kwargs[attr] = tmp
             else:
@@ -120,7 +119,6 @@ class ScatterInspectorOverlay(AbstractOverlay):
         with gc:
             gc.clip_to_rect(plot.x, plot.y, plot.width, plot.height)
             render_markers(gc, screen_pts, **kwargs)
-
 
     def _draw_overlay(self, gc, view_bounds=None, mode="normal"):
         self.overlay(self.component, gc, view_bounds, mode)
@@ -136,14 +134,13 @@ class ScatterInspectorOverlay(AbstractOverlay):
                     continue
                 new.on_trait_change(self._ds_changed, dsname)
                 if getattr(new, dsname):
-                    self._ds_changed(new, dsname, None, getattr(new,dsname))
+                    self._ds_changed(new, dsname, None, getattr(new, dsname))
         return
 
     def _ds_changed(self, object, name, old, new):
         if old:
-            old.on_trait_change(self.metadata_changed, 'metadata_changed', remove=True)
+            old.on_trait_change(
+                self.metadata_changed, 'metadata_changed', remove=True)
         if new:
             new.on_trait_change(self.metadata_changed, 'metadata_changed')
         return
-
-

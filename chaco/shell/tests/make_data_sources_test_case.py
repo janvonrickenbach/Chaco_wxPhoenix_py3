@@ -1,12 +1,11 @@
-
 import unittest
 
 import numpy as np
 from numpy.testing.utils import assert_almost_equal
 from chaco.shell.plot_maker import make_data_sources
 
-class MakeDataSourcesTestCase(unittest.TestCase):
 
+class MakeDataSourcesTestCase(unittest.TestCase):
     def test_1D_single(self):
         session = None
         ary = np.array([3.0, 2.1, 1.3, 1.8, 5.7])
@@ -17,7 +16,7 @@ class MakeDataSourcesTestCase(unittest.TestCase):
 
     def test_1d_multiple(self):
         session = None
-        index = np.arange(-np.pi, np.pi, np.pi/30.0)
+        index = np.arange(-np.pi, np.pi, np.pi / 30.0)
         s = np.sin(index)
         c = np.cos(index)
         t = np.tan(index)

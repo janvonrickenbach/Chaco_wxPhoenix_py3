@@ -9,7 +9,6 @@ from chaco.api import (ArrayDataSource, ColormappedScatterPlot, DataRange1D,
 
 
 class TestColormappedScatterplot(unittest.TestCase):
-
     def setUp(self):
         self.index = ArrayDataSource(arange(10))
         self.value = ArrayDataSource(arange(10))
@@ -35,8 +34,7 @@ class TestColormappedScatterplot(unittest.TestCase):
             value_mapper=self.value_mapper,
             color_data=self.color_data,
             marker_size=self.size_data,
-            color_mapper=self.color_mapper,
-        )
+            color_mapper=self.color_mapper, )
         self.scatterplot.outer_bounds = [50, 50]
         self.gc = PlotGraphicsContext((50, 50))
 

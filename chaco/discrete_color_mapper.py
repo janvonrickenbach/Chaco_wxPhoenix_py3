@@ -1,4 +1,3 @@
-
 from numpy import asarray, floor, ones
 
 from traits.api import Array, Str, on_trait_change
@@ -33,7 +32,7 @@ class DiscreteColorMapper(AbstractColormap):
         palette = asarray(palette, dtype=float)
         # ignore range passed in and use fixed range instead
         traits.pop('range', None)
-        range = DataRange1D(low=-0.5, high=len(palette)-0.5)
+        range = DataRange1D(low=-0.5, high=len(palette) - 0.5)
         return cls(palette=palette, range=range, **traits)
 
     @classmethod
@@ -41,7 +40,7 @@ class DiscreteColorMapper(AbstractColormap):
         """ Creates a discrete color mapper from a palette array. """
         from chaco.data_range_1d import DataRange1D
         traits.pop('range', None)
-        range = DataRange1D(low=-0.5, high=steps-0.5)
+        range = DataRange1D(low=-0.5, high=steps - 0.5)
         # create the colormapper and sample from it
         colormapper = colormap(range, steps=steps)
         palette = colormapper.color_bands
@@ -54,7 +53,7 @@ class DiscreteColorMapper(AbstractColormap):
     def map_index(self, data):
         """ Maps an array of data to an array of indexes into the palette """
         index = asarray(data).round()
-        index = index.clip(0, len(self.palette)-1).astype(int, copy=False)
+        index = index.clip(0, len(self.palette) - 1).astype(int, copy=False)
         return index
 
     def map_uint8(self, data):
@@ -79,7 +78,7 @@ class DiscreteColorMapper(AbstractColormap):
             palette = self.palette[:, :3]
         palette = palette.clip(0.0, 1.0)
 
-        uint8_palette = floor(palette*256).clip(0, 255).astype('uint8')
+        uint8_palette = floor(palette * 256).clip(0, 255).astype('uint8')
 
         self._palette = palette
         self._uint8_palette = uint8_palette

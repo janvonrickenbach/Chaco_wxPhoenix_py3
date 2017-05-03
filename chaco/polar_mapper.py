@@ -12,6 +12,7 @@ from traits.api import Bool, Float
 # Local relative imports
 from .abstract_mapper import AbstractMapper
 
+
 ###############################################################
 # same as linear mapper at the moment... to be modified later #
 ###############################################################
@@ -28,8 +29,7 @@ class PolarMapper(AbstractMapper):
     # Private traits
     #------------------------------------------------------------------------
 
-
-    _scale = Float(1.0)   # number of screen space units per data space unit
+    _scale = Float(1.0)  # number of screen space units per data space unit
     _null_screen_range = Bool(False)
     _null_data_range = Bool(False)
 

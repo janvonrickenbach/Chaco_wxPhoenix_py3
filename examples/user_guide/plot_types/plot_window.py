@@ -5,6 +5,7 @@ from traits.api import HasTraits, Instance
 from traits.has_traits import on_trait_change
 from traitsui.api import Item, View
 
+
 class PlotWindow(HasTraits):
 
     plot = Instance(PlotComponent)
@@ -13,9 +14,8 @@ class PlotWindow(HasTraits):
     @on_trait_change('plot')
     def _update_container(self):
         self.container = DataView(
-            padding=(80,20,20,60),  # make some space for axis labels
-            border_visible=False
-        )
+            padding=(80, 20, 20, 60),  # make some space for axis labels
+            border_visible=False)
 
         self.container.add(self.plot)
         self.container.aspect_ratio = self.plot.aspect_ratio
@@ -23,9 +23,9 @@ class PlotWindow(HasTraits):
         # remove axes etc
         self.container.underlays = []
 
-
-
-    traits_view = View(Item('container',
-                            editor=ComponentEditor(),
-                            show_label=False),
-                       width=600, height=400, resizable=True)
+    traits_view = View(
+        Item(
+            'container', editor=ComponentEditor(), show_label=False),
+        width=600,
+        height=400,
+        resizable=True)

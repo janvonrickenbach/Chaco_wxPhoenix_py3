@@ -1,6 +1,7 @@
 """ Defines the Serializable mix-in class.
 """
 
+
 class Serializable(object):
     """
     Mix-in class to help serialization.  Serializes just the attributes in
@@ -23,7 +24,7 @@ class Serializable(object):
     #
     # This is a double-underscore variable so that Python's attribute name
     # will shield base class
-#    __pickle_parents = None
+    #    __pickle_parents = None
 
     def _get_pickle_parents(self):
         """
@@ -76,38 +77,37 @@ class Serializable(object):
     # Private methods
     #------------------------------------------------------------------------
 
-#    def __getstate__(self):
-#        #idstring = self.__class__.__name__ + " id=" + str(id(self))
-#        # Give the object a chance to tidy up before saving
-#        self._pre_save()
-#
-#        # Get the attributes that this class needs to serialize.  We do this by
-#        # marching up the list of parent classes in _pickle_parents and getting
-#        # their lists of _pickles.
-#        all_pickles = Set()
-#        pickle_parents = self._get_pickle_parents()
-#        for parent_class in pickle_parents:
-#            all_pickles.update(parent_class._pickles)
-#
-#        if self._pickles is not None:
-#            all_pickles.update(self._pickles)
-#
-#        state = {}
-#        for attrib in all_pickles:
-#            state[attrib] = getattr(self, attrib)
-#
-#        print '<<<<<<<<<<<<<', self
-#        for key,value in state.items():
-#            print key, type(value)
-#        print '>>>>>>>>>>>>>'
-#
-#        return state
+    #    def __getstate__(self):
+    #        #idstring = self.__class__.__name__ + " id=" + str(id(self))
+    #        # Give the object a chance to tidy up before saving
+    #        self._pre_save()
+    #
+    #        # Get the attributes that this class needs to serialize.  We do this by
+    #        # marching up the list of parent classes in _pickle_parents and getting
+    #        # their lists of _pickles.
+    #        all_pickles = Set()
+    #        pickle_parents = self._get_pickle_parents()
+    #        for parent_class in pickle_parents:
+    #            all_pickles.update(parent_class._pickles)
+    #
+    #        if self._pickles is not None:
+    #            all_pickles.update(self._pickles)
+    #
+    #        state = {}
+    #        for attrib in all_pickles:
+    #            state[attrib] = getattr(self, attrib)
+    #
+    #        print '<<<<<<<<<<<<<', self
+    #        for key,value in state.items():
+    #            print key, type(value)
+    #        print '>>>>>>>>>>>>>'
+    #
+    #        return state
 
     #~ def __setstate__(self, state):
-        #~ idstring = self.__class__.__name__ + " id=" + str(id(self))
-        #~ self._do_setstate(state)
-        #~ self._post_load()
-        #~ return
+    #~ idstring = self.__class__.__name__ + " id=" + str(id(self))
+    #~ self._do_setstate(state)
+    #~ self._post_load()
+    #~ return
 
-
-# EOF
+    # EOF

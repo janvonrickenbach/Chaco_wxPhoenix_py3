@@ -40,7 +40,6 @@ class MultiArrayDataSource(AbstractDataSource):
     # one that's used everywhere.
     sort_order = SortOrderTrait
 
-
     #------------------------------------------------------------------------
     # Private traits
     #------------------------------------------------------------------------
@@ -68,7 +67,7 @@ class MultiArrayDataSource(AbstractDataSource):
         self.data_changed = True
         return
 
-    def get_data(self, axes = None, remove_nans=False):
+    def get_data(self, axes=None, remove_nans=False):
         """get_data() -> data_array
 
         If called with no arguments, this method returns a data array.
@@ -138,8 +137,7 @@ class MultiArrayDataSource(AbstractDataSource):
 
         return size
 
-
-    def get_bounds(self, value = None, index = None):
+    def get_bounds(self, value=None, index=None):
         """get_bounds() -> tuple(min, max)
 
         Returns a tuple (min, max) of the bounding values for the data source.
@@ -206,9 +204,9 @@ class MultiArrayDataSource(AbstractDataSource):
         """
         if len(value.shape) == 1:
             if self.index_dimension == 0:
-                value = value[:,newaxis]
+                value = value[:, newaxis]
             else:
-                value = value[newaxis,:]
+                value = value[newaxis, :]
 
         if len(value.shape) != 2:
             msg = 'Input is %d dimensional, but it must be 1 or 2' \
@@ -216,5 +214,6 @@ class MultiArrayDataSource(AbstractDataSource):
             raise ValueError(msg)
 
         self._data = value
+
 
 # EOF

@@ -11,6 +11,7 @@ class Comment(object):
     """ A comment block.
     """
     is_comment = True
+
     def __init__(self, start_lineno, end_lineno, text):
         # int : The first line number in the block. 1-indexed.
         self.start_lineno = start_lineno
@@ -36,13 +37,14 @@ class Comment(object):
 
     def __repr__(self):
         return '%s(%r, %r, %r)' % (self.__class__.__name__, self.start_lineno,
-            self.end_lineno, self.text)
+                                   self.end_lineno, self.text)
 
 
 class NonComment(object):
     """ A non-comment block of code.
     """
     is_comment = False
+
     def __init__(self, start_lineno, end_lineno):
         self.start_lineno = start_lineno
         self.end_lineno = end_lineno
@@ -57,12 +59,13 @@ class NonComment(object):
 
     def __repr__(self):
         return '%s(%r, %r)' % (self.__class__.__name__, self.start_lineno,
-            self.end_lineno)
+                               self.end_lineno)
 
 
 class CommentBlocker(object):
     """ Pull out contiguous comment blocks.
     """
+
     def __init__(self):
         # Start with a dummy.
         self.current_block = NonComment(0, 0)
@@ -84,7 +87,7 @@ class CommentBlocker(object):
         """ Process a single token.
         """
         block = self.current_block
-        if (block.is_comment) and block.NLs < 2 :
+        if (block.is_comment) and block.NLs < 2:
             if kind in (tokenize.COMMENT, tokenize.NL):
                 block.add(string, start, end, line)
             else:
@@ -162,6 +165,7 @@ def get_class_traits(klass):
         if isinstance(node, compiler.ast.Assign):
             name = node.nodes[0].name
             rhs = unparse(node.expr).strip()
-            doc = strip_comment_marker(cb.search_for_comment(node.lineno, default=''))
+            doc = strip_comment_marker(
+                cb.search_for_comment(
+                    node.lineno, default=''))
             yield name, rhs, doc
-

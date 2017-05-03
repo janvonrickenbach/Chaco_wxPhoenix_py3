@@ -13,7 +13,6 @@ from itertools import chain
 from numpy import sort, isfinite
 from numpy.random import random
 
-
 # Enthought library imports
 from enable.api import ComponentEditor
 from traits.api import Any, Bool, BaseFloat, HasTraits
@@ -22,6 +21,7 @@ from traitsui.api import Item, HGroup, VGroup, View
 # Chaco imports
 from chaco.api import ArrayPlotData, Plot
 from chaco.tools.api import PanTool, ZoomTool
+
 
 class AspectRatio(BaseFloat):
     "A new Trait for defining aspect ratios"
@@ -46,26 +46,31 @@ class MyPlot(HasTraits):
     fixed_x = Bool(False)
     fixed_y = Bool(False)
     traits_view = View(
-                    VGroup(
-                        HGroup(
-                            Item("screen_enabled", label="Screen"),
-                            Item("screen_aspect", label="aspect ratio (w/h)")
-                            ),
-                        HGroup(
-                            Item("fixed_x", label="Data X fixed"),
-                            Item("fixed_y", label="Data Y fixed")
-                            ),
-                        Item("plot", editor=ComponentEditor(size=(100,100)),
-                             show_label=False)
-                        ),
-                    width=600, height=600, resizable=True,
-                    title="Aspect Ratio Example")
-
+        VGroup(
+            HGroup(
+                Item(
+                    "screen_enabled", label="Screen"),
+                Item(
+                    "screen_aspect", label="aspect ratio (w/h)")),
+            HGroup(
+                Item(
+                    "fixed_x", label="Data X fixed"),
+                Item(
+                    "fixed_y", label="Data Y fixed")),
+            Item(
+                "plot",
+                editor=ComponentEditor(size=(100, 100)),
+                show_label=False)),
+        width=600,
+        height=600,
+        resizable=True,
+        title="Aspect Ratio Example")
 
     def __init__(self, *args, **kw):
         HasTraits.__init__(self, *args, **kw)
         numpoints = 200
-        plotdata = ArrayPlotData(x=sort(random(numpoints)), y=random(numpoints))
+        plotdata = ArrayPlotData(
+            x=sort(random(numpoints)), y=random(numpoints))
         plot = Plot(plotdata)
         plot.plot(("x", "y"), type="scatter")
         plot.tools.append(PanTool(plot))
@@ -96,6 +101,7 @@ class MyPlot(HasTraits):
         for renderer in chain(*list(self.plot.plots.values())):
             renderer.value_mapper.stretch_data = not self.fixed_y
         self.plot.request_redraw()
+
 
 #===============================================================================
 # # Create the demo object to be used by the demo.py application.

@@ -43,12 +43,10 @@ from .filled_line_plot import FilledLinePlot
 from .quiverplot import QuiverPlot
 from .jitterplot import JitterPlot
 
-
-
-
 #-----------------------------------------------------------------------------
 # The Plot class
 #-----------------------------------------------------------------------------
+
 
 class Plot(DataView):
     """ Represents a correlated set of data, renderers, and axes in a single
@@ -99,8 +97,10 @@ class Plot(DataView):
     # List of colors to cycle through when auto-coloring is requested. Picked
     # and ordered to be red-green color-blind friendly, though should not
     # be an issue for blue-yellow.
-    auto_colors = List(["green", "lightgreen", "blue", "lightblue", "red",
-                        "pink", "darkgray", "silver"])
+    auto_colors = List([
+        "green", "lightgreen", "blue", "lightblue", "red", "pink", "darkgray",
+        "silver"
+    ])
 
     # index into auto_colors list
     _auto_color_idx = Int(-1)
@@ -110,22 +110,24 @@ class Plot(DataView):
     # Mapping of renderer type string to renderer class
     # This can be overriden to customize what renderer type the Plot
     # will instantiate for its various plotting methods.
-    renderer_map = Dict(dict(line = LinePlot,
-                             bar = BarPlot,
-                             scatter = ScatterPlot,
-                             polygon = PolygonPlot,
-                             filled_line = FilledLinePlot,
-                             cmap_scatter = ColormappedScatterPlot,
-                             img_plot = ImagePlot,
-                             cmap_img_plot = CMapImagePlot,
-                             contour_line_plot = ContourLinePlot,
-                             contour_poly_plot = ContourPolyPlot,
-                             candle = CandlePlot,
-                             quiver = QuiverPlot,
-                             scatter_1d = ScatterPlot1D,
-                             textplot_1d = TextPlot1D,
-                             line_scatter_1d = LineScatterPlot1D,
-                             jitterplot = JitterPlot))
+    renderer_map = Dict(
+        dict(
+            line=LinePlot,
+            bar=BarPlot,
+            scatter=ScatterPlot,
+            polygon=PolygonPlot,
+            filled_line=FilledLinePlot,
+            cmap_scatter=ColormappedScatterPlot,
+            img_plot=ImagePlot,
+            cmap_img_plot=CMapImagePlot,
+            contour_line_plot=ContourLinePlot,
+            contour_poly_plot=ContourPolyPlot,
+            candle=CandlePlot,
+            quiver=QuiverPlot,
+            scatter_1d=ScatterPlot1D,
+            textplot_1d=TextPlot1D,
+            line_scatter_1d=LineScatterPlot1D,
+            jitterplot=JitterPlot))
 
     #------------------------------------------------------------------------
     # Annotations and decorations
@@ -177,22 +179,34 @@ class Plot(DataView):
                                   "of type " + str(type(data)))
 
         if not self._title:
-            self._title = PlotLabel(font="swiss 16", visible=False,
-                                   overlay_position="top", component=self)
+            self._title = PlotLabel(
+                font="swiss 16",
+                visible=False,
+                overlay_position="top",
+                component=self)
         if title is not None:
             self.title = title
 
         if not self.legend:
-            self.legend = Legend(visible=False, align="ur", error_icon="blank",
-                                 padding=10, component=self)
+            self.legend = Legend(
+                visible=False,
+                align="ur",
+                error_icon="blank",
+                padding=10,
+                component=self)
 
         # ensure that we only get displayed once by new_window()
         self._plot_ui_info = None
 
         return
 
-    def add_xy_plot(self, index_name, value_name, renderer_factory, name=None,
-        origin=None, **kwds):
+    def add_xy_plot(self,
+                    index_name,
+                    value_name,
+                    renderer_factory,
+                    name=None,
+                    origin=None,
+                    **kwds):
         """ Add a BaseXYPlot renderer subclass to this Plot.
 
         Parameters
@@ -231,21 +245,26 @@ class Plot(DataView):
             vmap = LogMapper(range=self.value_range)
 
         renderer = renderer_factory(
-            index = index,
-            value = value,
-            index_mapper = imap,
-            value_mapper = vmap,
-            orientation = self.orientation,
-            origin = origin,
-            **kwds
-        )
+            index=index,
+            value=value,
+            index_mapper=imap,
+            value_mapper=vmap,
+            orientation=self.orientation,
+            origin=origin,
+            **kwds)
         self.add(renderer)
         self.plots[name] = [renderer]
         self.invalidate_and_redraw()
         return self.plots[name]
 
-    def plot(self, data, type="line", name=None, index_scale="linear",
-             value_scale="linear", origin=None, **styles):
+    def plot(self,
+             data,
+             type="line",
+             name=None,
+             index_scale="linear",
+             value_scale="linear",
+             origin=None,
+             **styles):
         """ Adds a new sub-plot using the given data and plot style.
 
         Parameters
@@ -302,7 +321,7 @@ class Plot(DataView):
             return
 
         if isinstance(data, str):
-            data = (data,)
+            data = (data, )
 
         self.index_scale = index_scale
         self.value_scale = value_scale
@@ -321,8 +340,8 @@ class Plot(DataView):
                     # Create the default index based on the length of the first
                     # data series
                     value = self._get_or_create_datasource(data[0])
-                    self.default_index = ArrayDataSource(arange(len(value.get_data())),
-                                                         sort_order="none")
+                    self.default_index = ArrayDataSource(
+                        arange(len(value.get_data())), sort_order="none")
                     self.index_range.add(self.default_index)
                 index = self.default_index
             else:
@@ -344,47 +363,55 @@ class Plot(DataView):
                     if styles.get("color") == "auto":
                         self._auto_color_idx = \
                             (self._auto_color_idx + 1) % len(self.auto_colors)
-                        styles["color"] = self.auto_colors[self._auto_color_idx]
+                        styles["color"] = self.auto_colors[
+                            self._auto_color_idx]
                 elif plot_type in ("polygon", "filled_line"):
                     cls = self.renderer_map[plot_type]
                     # handle auto-coloring request
                     if styles.get("edge_color") == "auto":
                         self._auto_edge_color_idx = \
                             (self._auto_edge_color_idx + 1) % len(self.auto_colors)
-                        styles["edge_color"] = self.auto_colors[self._auto_edge_color_idx]
+                        styles["edge_color"] = self.auto_colors[
+                            self._auto_edge_color_idx]
                     if styles.get("face_color") == "auto":
                         self._auto_face_color_idx = \
                             (self._auto_face_color_idx + 1) % len(self.auto_colors)
-                        styles["face_color"] = self.auto_colors[self._auto_face_color_idx]
+                        styles["face_color"] = self.auto_colors[
+                            self._auto_face_color_idx]
                 elif plot_type == 'bar':
                     cls = self.renderer_map[plot_type]
                     # handle auto-coloring request
                     if styles.get("color") == "auto":
                         self._auto_color_idx = \
                             (self._auto_color_idx + 1) % len(self.auto_colors)
-                        styles["fill_color"] = self.auto_colors[self._auto_color_idx]
+                        styles["fill_color"] = self.auto_colors[
+                            self._auto_color_idx]
                 else:
                     raise ValueError("Unhandled plot type: " + plot_type)
 
                 if self.index_scale == "linear":
-                    imap = LinearMapper(range=self.index_range,
-                                stretch_data=self.index_mapper.stretch_data)
+                    imap = LinearMapper(
+                        range=self.index_range,
+                        stretch_data=self.index_mapper.stretch_data)
                 else:
-                    imap = LogMapper(range=self.index_range,
-                                stretch_data=self.index_mapper.stretch_data)
+                    imap = LogMapper(
+                        range=self.index_range,
+                        stretch_data=self.index_mapper.stretch_data)
                 if self.value_scale == "linear":
-                    vmap = LinearMapper(range=self.value_range,
-                                stretch_data=self.value_mapper.stretch_data)
+                    vmap = LinearMapper(
+                        range=self.value_range,
+                        stretch_data=self.value_mapper.stretch_data)
                 else:
-                    vmap = LogMapper(range=self.value_range,
-                                stretch_data=self.value_mapper.stretch_data)
+                    vmap = LogMapper(
+                        range=self.value_range,
+                        stretch_data=self.value_mapper.stretch_data)
 
                 plot = cls(index=index,
                            value=value,
                            index_mapper=imap,
                            value_mapper=vmap,
                            orientation=self.orientation,
-                           origin = origin,
+                           origin=origin,
                            **styles)
 
                 self.add(plot)
@@ -394,7 +421,8 @@ class Plot(DataView):
                 # For bar plots, compute the ranges from the data to make the
                 # plot look clean.
 
-                def custom_index_func(data_low, data_high, margin, tight_bounds):
+                def custom_index_func(data_low, data_high, margin,
+                                      tight_bounds):
                     """ Compute custom bounds of the plot along index (in
                     data space).
                     """
@@ -406,12 +434,13 @@ class Plot(DataView):
                 if self.index_range.bounds_func is None:
                     self.index_range.bounds_func = custom_index_func
 
-                def custom_value_func(data_low, data_high, margin, tight_bounds):
+                def custom_value_func(data_low, data_high, margin,
+                                      tight_bounds):
                     """ Compute custom bounds of the plot along value (in
                     data space).
                     """
-                    plot_low = data_low - (data_high-data_low)*0.1
-                    plot_high = data_high + (data_high-data_low)*0.1
+                    plot_low = data_low - (data_high - data_low) * 0.1
+                    plot_high = data_high + (data_high - data_low) * 0.1
                     return plot_low, plot_high
 
                 if self.value_range.bounds_func is None:
@@ -426,7 +455,9 @@ class Plot(DataView):
 
         elif plot_type == "cmap_scatter":
             if len(data) != 3:
-                raise ValueError("Colormapped scatter plots require (index, value, color) data")
+                raise ValueError(
+                    "Colormapped scatter plots require (index, value, color) data"
+                )
             else:
                 index = self._get_or_create_datasource(data[0])
                 if self.default_index is None:
@@ -455,20 +486,25 @@ class Plot(DataView):
                     color_range.add(color)
                     self.color_mapper = colormap(color_range)
                 else:
-                    raise ValueError("Unexpected colormap %r in plot()." % colormap)
+                    raise ValueError("Unexpected colormap %r in plot()." %
+                                     colormap)
 
                 if self.index_scale == "linear":
-                    imap = LinearMapper(range=self.index_range,
-                                stretch_data=self.index_mapper.stretch_data)
+                    imap = LinearMapper(
+                        range=self.index_range,
+                        stretch_data=self.index_mapper.stretch_data)
                 else:
-                    imap = LogMapper(range=self.index_range,
-                                stretch_data=self.index_mapper.stretch_data)
+                    imap = LogMapper(
+                        range=self.index_range,
+                        stretch_data=self.index_mapper.stretch_data)
                 if self.value_scale == "linear":
-                    vmap = LinearMapper(range=self.value_range,
-                                stretch_data=self.value_mapper.stretch_data)
+                    vmap = LinearMapper(
+                        range=self.value_range,
+                        stretch_data=self.value_mapper.stretch_data)
                 else:
-                    vmap = LogMapper(range=self.value_range,
-                                stretch_data=self.value_mapper.stretch_data)
+                    vmap = LogMapper(
+                        range=self.value_range,
+                        stretch_data=self.value_mapper.stretch_data)
 
                 cls = self.renderer_map["cmap_scatter"]
                 plot = cls(index=index,
@@ -488,9 +524,14 @@ class Plot(DataView):
 
         return self.plots[name]
 
-
-    def img_plot(self, data, name=None, colormap=None,
-                 xbounds=None, ybounds=None, origin=None, hide_grids=True,
+    def img_plot(self,
+                 data,
+                 name=None,
+                 colormap=None,
+                 xbounds=None,
+                 ybounds=None,
+                 origin=None,
+                 hide_grids=True,
                  **styles):
         """ Adds image plots to this Plot object.
 
@@ -533,7 +574,7 @@ class Plot(DataView):
         value = self._get_or_create_datasource(data)
         array_data = value.get_data()
         if len(array_data.shape) == 3:
-            if array_data.shape[2] not in (3,4):
+            if array_data.shape[2] not in (3, 4):
                 raise ValueError("Image plots require color depth of 3 or 4.")
             cls = self.renderer_map["img_plot"]
             kwargs = dict(**styles)
@@ -551,12 +592,27 @@ class Plot(DataView):
             self.color_mapper = colormap
             cls = self.renderer_map["cmap_img_plot"]
             kwargs = dict(value_mapper=colormap, **styles)
-        return self._create_2d_plot(cls, name, origin, xbounds, ybounds, value,
-                                    hide_grids, cell_plot=True, **kwargs)
+        return self._create_2d_plot(
+            cls,
+            name,
+            origin,
+            xbounds,
+            ybounds,
+            value,
+            hide_grids,
+            cell_plot=True,
+            **kwargs)
 
-
-    def contour_plot(self, data, type="line", name=None, poly_cmap=None,
-                     xbounds=None, ybounds=None, origin=None, hide_grids=True, **styles):
+    def contour_plot(self,
+                     data,
+                     type="line",
+                     name=None,
+                     poly_cmap=None,
+                     xbounds=None,
+                     ybounds=None,
+                     origin=None,
+                     hide_grids=True,
+                     **styles):
         """ Adds contour plots to this Plot object.
 
         Parameters
@@ -620,9 +676,16 @@ class Plot(DataView):
         else:
             raise ValueError("Unhandled contour plot type: " + type)
 
-        return self._create_2d_plot(cls, name, origin, xbounds, ybounds, value,
-                                    hide_grids, cell_plot=False, **kwargs)
-
+        return self._create_2d_plot(
+            cls,
+            name,
+            origin,
+            xbounds,
+            ybounds,
+            value,
+            hide_grids,
+            cell_plot=False,
+            **kwargs)
 
     def _process_2d_bounds(self, bounds, array_data, axis, cell_plot):
         """Transform an arbitrary bounds definition into a linspace.
@@ -680,17 +743,24 @@ class Plot(DataView):
                 raise ValueError(msg)
             else:
                 if axis == 0:
-                    bounds = bounds[:,0]
+                    bounds = bounds[:, 0]
                 else:
-                    bounds = bounds[0,:]
+                    bounds = bounds[0, :]
                 return bounds
 
         raise ValueError("bounds must be None, a tuple, an array, "
                          "or a PlotData name")
 
-
-    def _create_2d_plot(self, cls, name, origin, xbounds, ybounds, value_ds,
-                        hide_grids, cell_plot=False, **kwargs):
+    def _create_2d_plot(self,
+                        cls,
+                        name,
+                        origin,
+                        xbounds,
+                        ybounds,
+                        value_ds,
+                        hide_grids,
+                        cell_plot=False,
+                        **kwargs):
         if name is None:
             name = self._make_new_plot_name()
         if origin is None:
@@ -712,9 +782,10 @@ class Plot(DataView):
         # Create the index and add its datasources to the appropriate ranges
         index = GridDataSource(xs, ys, sort_order=('ascending', 'ascending'))
         self.range2d.add(index)
-        mapper = GridMapper(range=self.range2d,
-                            stretch_data_x=self.x_mapper.stretch_data,
-                            stretch_data_y=self.y_mapper.stretch_data)
+        mapper = GridMapper(
+            range=self.range2d,
+            stretch_data_x=self.x_mapper.stretch_data,
+            stretch_data_y=self.y_mapper.stretch_data)
 
         plot = cls(index=index,
                    value=value_ds,
@@ -731,8 +802,11 @@ class Plot(DataView):
         self.plots[name] = [plot]
         return self.plots[name]
 
-
-    def candle_plot(self, data, name=None, value_scale="linear", origin=None,
+    def candle_plot(self,
+                    data,
+                    name=None,
+                    value_scale="linear",
+                    origin=None,
                     **styles):
         """ Adds a new sub-plot using the given data and plot style.
 
@@ -804,13 +878,15 @@ class Plot(DataView):
 
         # Create the datasources
         if len(data) == 3:
-            index, bar_min, bar_max = list(map(self._get_or_create_datasource, data))
+            index, bar_min, bar_max = list(
+                map(self._get_or_create_datasource, data))
             self.value_range.add(bar_min, bar_max)
             center = None
             min = None
             max = None
         elif len(data) == 4:
-            index, bar_min, center, bar_max = list(map(self._get_or_create_datasource, data))
+            index, bar_min, center, bar_max = list(
+                map(self._get_or_create_datasource, data))
             self.value_range.add(bar_min, center, bar_max)
             min = None
             max = None
@@ -831,36 +907,39 @@ class Plot(DataView):
             styles["color"] = self.auto_colors[self._auto_color_idx]
 
         if self.index_scale == "linear":
-            imap = LinearMapper(range=self.index_range,
-                        stretch_data=self.index_mapper.stretch_data)
+            imap = LinearMapper(
+                range=self.index_range,
+                stretch_data=self.index_mapper.stretch_data)
         else:
-            imap = LogMapper(range=self.index_range,
-                        stretch_data=self.index_mapper.stretch_data)
+            imap = LogMapper(
+                range=self.index_range,
+                stretch_data=self.index_mapper.stretch_data)
         if self.value_scale == "linear":
-            vmap = LinearMapper(range=self.value_range,
-                        stretch_data=self.value_mapper.stretch_data)
+            vmap = LinearMapper(
+                range=self.value_range,
+                stretch_data=self.value_mapper.stretch_data)
         else:
-            vmap = LogMapper(range=self.value_range,
-                        stretch_data=self.value_mapper.stretch_data)
+            vmap = LogMapper(
+                range=self.value_range,
+                stretch_data=self.value_mapper.stretch_data)
 
         cls = self.renderer_map["candle"]
-        plot = cls(index = index,
-                          min_values = min,
-                          bar_min = bar_min,
-                          center_values = center,
-                          bar_max = bar_max,
-                          max_values = max,
-                          index_mapper = imap,
-                          value_mapper = vmap,
-                          orientation = self.orientation,
-                          origin = self.origin,
-                          **styles)
+        plot = cls(index=index,
+                   min_values=min,
+                   bar_min=bar_min,
+                   center_values=center,
+                   bar_max=bar_max,
+                   max_values=max,
+                   index_mapper=imap,
+                   value_mapper=vmap,
+                   orientation=self.orientation,
+                   origin=self.origin,
+                   **styles)
         self.add(plot)
         self.plots[name] = [plot]
         return [plot]
 
-    def quiverplot(self, data, name=None, origin=None,
-                    **styles):
+    def quiverplot(self, data, name=None, origin=None, **styles):
         """ Adds a new sub-plot using the given data and plot style.
 
         Parameters
@@ -905,27 +984,34 @@ class Plot(DataView):
         self.index_range.add(index)
         self.value_range.add(value)
 
-        imap = LinearMapper(range=self.index_range,
-                            stretch_data=self.index_mapper.stretch_data)
-        vmap = LinearMapper(range=self.value_range,
-                            stretch_data=self.value_mapper.stretch_data)
+        imap = LinearMapper(
+            range=self.index_range,
+            stretch_data=self.index_mapper.stretch_data)
+        vmap = LinearMapper(
+            range=self.value_range,
+            stretch_data=self.value_mapper.stretch_data)
 
         cls = self.renderer_map["quiver"]
-        plot = cls(index = index,
-                   value = value,
-                   vectors = vectors,
-                   index_mapper = imap,
-                   value_mapper = vmap,
-                   name = name,
-                   origin = origin,
-                   **styles
-                   )
+        plot = cls(index=index,
+                   value=value,
+                   vectors=vectors,
+                   index_mapper=imap,
+                   value_mapper=vmap,
+                   name=name,
+                   origin=origin,
+                   **styles)
         self.add(plot)
         self.plots[name] = [plot]
         return [plot]
 
-    def plot_1d(self, data, type='scatter_1d', name=None, orientation=None,
-                direction=None, scale="linear", **styles):
+    def plot_1d(self,
+                data,
+                type='scatter_1d',
+                name=None,
+                orientation=None,
+                direction=None,
+                scale="linear",
+                **styles):
         """ Adds a new sub-plot using the given data and plot style.
 
         Parameters
@@ -960,7 +1046,7 @@ class Plot(DataView):
             return
 
         if isinstance(data, str):
-            data = (data,)
+            data = (data, )
 
         # TODO: support lists of plot types
         plot_type = type
@@ -1007,31 +1093,35 @@ class Plot(DataView):
                 index_range.add(index)
 
                 if scale == "linear":
-                    imap = LinearMapper(range=index_range,
-                                        stretch_data=index_mapper.stretch_data)
+                    imap = LinearMapper(
+                        range=index_range,
+                        stretch_data=index_mapper.stretch_data)
                 else:
-                    imap = LogMapper(range=index_range,
-                                    stretch_data=index_mapper.stretch_data)
+                    imap = LogMapper(
+                        range=index_range,
+                        stretch_data=index_mapper.stretch_data)
 
                 cls = self.renderer_map[plot_type]
                 plot = cls(index=index,
-                            index_mapper=imap,
-                            orientation=orientation,
-                            direction=direction,
-                            **styles)
+                           index_mapper=imap,
+                           orientation=orientation,
+                           direction=direction,
+                           **styles)
                 plots.append(plot)
                 self.add(plot)
-        elif plot_type in ("textplot_1d",):
+        elif plot_type in ("textplot_1d", ):
             # simple positional plots with a single associated value
             for source in data[1:]:
                 value = self._get_or_create_datasource(source)
 
                 if scale == "linear":
-                    imap = LinearMapper(range=index_range,
-                                        stretch_data=index_mapper.stretch_data)
+                    imap = LinearMapper(
+                        range=index_range,
+                        stretch_data=index_mapper.stretch_data)
                 else:
-                    imap = LogMapper(range=index_range,
-                                    stretch_data=index_mapper.stretch_data)
+                    imap = LogMapper(
+                        range=index_range,
+                        stretch_data=index_mapper.stretch_data)
                 cls = self.renderer_map[plot_type]
                 plot = cls(index=index,
                            index_mapper=imap,
@@ -1045,7 +1135,6 @@ class Plot(DataView):
         self.plots[name] = plots
         return plots
 
-
     def delplot(self, *names):
         """ Removes the named sub-plots. """
 
@@ -1055,7 +1144,8 @@ class Plot(DataView):
         # Remove all the renderers from us (container) and create a set of the
         # datasources that we might have to remove from the ranges
         deleted_sources = set()
-        for renderer in itertools.chain(*[self.plots.pop(name) for name in names]):
+        for renderer in itertools.chain(
+                * [self.plots.pop(name) for name in names]):
             self.remove(renderer)
             deleted_sources.add(renderer.index)
             deleted_sources.add(renderer.value)
@@ -1063,8 +1153,8 @@ class Plot(DataView):
         # Cull the candidate list of sources to remove by checking the other plots
         sources_in_use = set()
         for p in itertools.chain(*list(self.plots.values())):
-                sources_in_use.add(p.index)
-                sources_in_use.add(p.value)
+            sources_in_use.add(p.index)
+            sources_in_use.add(p.value)
 
         unused_sources = deleted_sources - sources_in_use - set([None])
 
@@ -1085,14 +1175,16 @@ class Plot(DataView):
         """ Convenience function to sets the named plots to be invisible.  Their
         renderers are not removed, and they are still in the list of plots.
         """
-        for renderer in itertools.chain(*[self.plots[name] for name in names]):
+        for renderer in itertools.chain(
+                * [self.plots[name] for name in names]):
             renderer.visible = False
         return
 
     def showplot(self, *names):
         """ Convenience function to sets the named plots to be visible.
         """
-        for renderer in itertools.chain(*[self.plots[name] for name in names]):
+        for renderer in itertools.chain(
+                * [self.plots[name] for name in names]):
             renderer.visible = True
         return
 
@@ -1112,8 +1204,6 @@ class Plot(DataView):
     #------------------------------------------------------------------------
     # Private methods
     #------------------------------------------------------------------------
-
-
 
     def _make_new_plot_name(self):
         """ Returns a string that is not already used as a plot title.
@@ -1144,7 +1234,7 @@ class Plot(DataView):
                     ds = ArrayDataSource(data, sort_order="none")
                 elif len(data.shape) == 2:
                     ds = ImageData(data=data, value_depth=1)
-                elif len(data.shape) == 3 and data.shape[2] in (3,4):
+                elif len(data.shape) == 3 and data.shape[2] in (3, 4):
                     ds = ImageData(data=data, value_depth=int(data.shape[2]))
                 else:
                     raise ValueError("Unhandled array shape in creating new "
@@ -1171,8 +1261,8 @@ class Plot(DataView):
 
     def _data_changed(self, old, new):
         if old:
-            old.on_trait_change(self._data_update_handler, "data_changed",
-                                remove=True)
+            old.on_trait_change(
+                self._data_update_handler, "data_changed", remove=True)
         if new:
             new.on_trait_change(self._data_update_handler, "data_changed")
 
@@ -1202,26 +1292,30 @@ class Plot(DataView):
         if new == old: return
         if not self.range2d: return
         if self.index_scale == "linear":
-            imap = LinearMapper(range=self.index_range,
-                                screen_bounds=self.index_mapper.screen_bounds,
-                                stretch_data=self.index_mapper.stretch_data)
+            imap = LinearMapper(
+                range=self.index_range,
+                screen_bounds=self.index_mapper.screen_bounds,
+                stretch_data=self.index_mapper.stretch_data)
         else:
-            imap = LogMapper(range=self.index_range,
-                             screen_bounds=self.index_mapper.screen_bounds,
-                             stretch_data=self.index_mapper.stretch_data)
+            imap = LogMapper(
+                range=self.index_range,
+                screen_bounds=self.index_mapper.screen_bounds,
+                stretch_data=self.index_mapper.stretch_data)
         self.index_mapper = imap
         for key in self.plots:
             for plot in self.plots[key]:
                 if not isinstance(plot, BaseXYPlot):
                     raise ValueError("log scale only supported on XY plots")
                 if self.index_scale == "linear":
-                    imap = LinearMapper(range=plot.index_range,
-                                screen_bounds=plot.index_mapper.screen_bounds,
-                                stretch_data=self.index_mapper.stretch_data)
+                    imap = LinearMapper(
+                        range=plot.index_range,
+                        screen_bounds=plot.index_mapper.screen_bounds,
+                        stretch_data=self.index_mapper.stretch_data)
                 else:
-                    imap = LogMapper(range=plot.index_range,
-                                screen_bounds=plot.index_mapper.screen_bounds,
-                                stretch_data=self.index_mapper.stretch_data)
+                    imap = LogMapper(
+                        range=plot.index_range,
+                        screen_bounds=plot.index_mapper.screen_bounds,
+                        stretch_data=self.index_mapper.stretch_data)
                 plot.index_mapper = imap
 
     def _value_scale_changed(self, old, new):
@@ -1229,26 +1323,30 @@ class Plot(DataView):
         if new == old: return
         if not self.range2d: return
         if self.value_scale == "linear":
-            vmap = LinearMapper(range=self.value_range,
-                                screen_bounds=self.value_mapper.screen_bounds,
-                                stretch_data=self.value_mapper.stretch_data)
+            vmap = LinearMapper(
+                range=self.value_range,
+                screen_bounds=self.value_mapper.screen_bounds,
+                stretch_data=self.value_mapper.stretch_data)
         else:
-            vmap = LogMapper(range=self.value_range,
-                             screen_bounds=self.value_mapper.screen_bounds,
-                                stretch_data=self.value_mapper.stretch_data)
+            vmap = LogMapper(
+                range=self.value_range,
+                screen_bounds=self.value_mapper.screen_bounds,
+                stretch_data=self.value_mapper.stretch_data)
         self.value_mapper = vmap
         for key in self.plots:
             for plot in self.plots[key]:
                 if not isinstance(plot, BaseXYPlot):
                     raise ValueError("log scale only supported on XY plots")
                 if self.value_scale == "linear":
-                    vmap = LinearMapper(range=plot.value_range,
-                                screen_bounds=plot.value_mapper.screen_bounds,
-                                stretch_data=self.value_mapper.stretch_data)
+                    vmap = LinearMapper(
+                        range=plot.value_range,
+                        screen_bounds=plot.value_mapper.screen_bounds,
+                        stretch_data=self.value_mapper.stretch_data)
                 else:
-                    vmap = LogMapper(range=plot.value_range,
-                                screen_bounds=plot.value_mapper.screen_bounds,
-                                stretch_data=self.value_mapper.stretch_data)
+                    vmap = LogMapper(
+                        range=plot.value_range,
+                        screen_bounds=plot.value_mapper.screen_bounds,
+                        stretch_data=self.value_mapper.stretch_data)
                 plot.value_mapper = vmap
 
     def __title_changed(self, old, new):
@@ -1264,7 +1362,7 @@ class Plot(DataView):
 
         Primarily changes how the list of renderers is looked up.
         """
-        mapper = getattr(self, name+"_mapper")
+        mapper = getattr(self, name + "_mapper")
         if mapper.range == old:
             mapper.range = new
         if old is not None:

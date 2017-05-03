@@ -1,7 +1,6 @@
 """ Defines the RangeSelectionOverlay class.
 """
 
-
 # Major library imports
 from numpy import arange, array
 
@@ -65,27 +64,28 @@ class RangeSelectionOverlay(AbstractOverlay):
         Overrides AbstractOverlay.
         """
         axis_ndx = self.axis_index
-        lower_left = [0,0]
-        upper_right = [0,0]
+        lower_left = [0, 0]
+        upper_right = [0, 0]
 
         # Draw the selection
         coords = self._get_selection_screencoords()
         for coord in coords:
             start, end = coord
             lower_left[axis_ndx] = start
-            lower_left[1-axis_ndx] = component.position[1-axis_ndx]
+            lower_left[1 - axis_ndx] = component.position[1 - axis_ndx]
             upper_right[axis_ndx] = end - start
-            upper_right[1-axis_ndx] = component.bounds[1-axis_ndx]
+            upper_right[1 - axis_ndx] = component.bounds[1 - axis_ndx]
 
             with gc:
-                gc.clip_to_rect(component.x, component.y, component.width, component.height)
+                gc.clip_to_rect(component.x, component.y, component.width,
+                                component.height)
                 gc.set_alpha(self.alpha)
                 gc.set_fill_color(self.fill_color_)
                 gc.set_stroke_color(self.border_color_)
                 gc.set_line_width(self.border_width)
                 gc.set_line_dash(self.border_style_)
-                gc.draw_rect((lower_left[0], lower_left[1],
-                             upper_right[0], upper_right[1]))
+                gc.draw_rect((lower_left[0], lower_left[1], upper_right[0],
+                              upper_right[1]))
 
     #------------------------------------------------------------------------
     # Private methods
@@ -111,12 +111,12 @@ class RangeSelectionOverlay(AbstractOverlay):
                 return []
         # All other metadata is interpreted as a mask on dataspace
         else:
-            ar = arange(0,len(selection), 1)
+            ar = arange(0, len(selection), 1)
             runs = arg_find_runs(ar[selection])
             coords = []
             for inds in runs:
                 start = ds._data[ar[selection][inds[0]]]
-                end = ds._data[ar[selection][inds[1]-1]]
+                end = ds._data[ar[selection][inds[1] - 1]]
                 coords.append(self.mapper.map_screen(array((start, end))))
             return coords
 
@@ -132,7 +132,7 @@ class RangeSelectionOverlay(AbstractOverlay):
                 return 0
             else:
                 return 1
-        else:   # self.axis == "value"
+        else:  # self.axis == "value"
             if self.plot.orientation == "h":
                 return 1
             else:
@@ -158,10 +158,11 @@ class RangeSelectionOverlay(AbstractOverlay):
 
         datasource = getattr(self.plot, self.axis)
         if old:
-            datasource.on_trait_change(self._metadata_change_handler, "metadata_changed",
-                                        remove=True)
+            datasource.on_trait_change(
+                self._metadata_change_handler, "metadata_changed", remove=True)
         if new:
-            datasource.on_trait_change(self._metadata_change_handler, "metadata_changed")
+            datasource.on_trait_change(self._metadata_change_handler,
+                                       "metadata_changed")
         return
 
     def _metadata_change_handler(self, event):
@@ -197,5 +198,6 @@ class RangeSelectionOverlay(AbstractOverlay):
     @cached_property
     def _get_axis_index(self):
         return self._determine_axis()
+
 
 # EOF

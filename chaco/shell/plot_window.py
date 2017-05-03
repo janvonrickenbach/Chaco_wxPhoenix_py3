@@ -9,6 +9,7 @@ from traits.etsconfig.api import ETSConfig
 if ETSConfig.toolkit == "wx":
 
     import wx
+
     class PlotWindow(wx.Frame):
         """ A window for holding top-level plot containers.
 
@@ -16,11 +17,15 @@ if ETSConfig.toolkit == "wx":
         window, which mostly pass through to underlying WX calls.
         """
 
-        def __init__(self, is_image=False, bgcolor="white",
-                     image_default_origin="top left", *args, **kw):
+        def __init__(self,
+                     is_image=False,
+                     bgcolor="white",
+                     image_default_origin="top left",
+                     *args,
+                     **kw):
 
-            kw.setdefault("size", (600,600))
-            wx.Frame.__init__(self, None, *args, **kw )
+            kw.setdefault("size", (600, 600))
+            wx.Frame.__init__(self, None, *args, **kw)
 
             # Some defaults which should be overridden by preferences.
             self.bgcolor = bgcolor
@@ -35,7 +40,6 @@ if ETSConfig.toolkit == "wx":
             # The PlotSession of which we are a part.  We need to know this in order
             # to notify it of our being closed, etc.
             self.session = None
-
 
             # Create the Enable Window object, and store a reference to it.
             # (This will be handy later.)  The Window requires a WX parent object
@@ -100,8 +104,7 @@ if ETSConfig.toolkit == "wx":
                 padding=50,
                 fill_padding=True,
                 bgcolor=self.bgcolor,
-                use_backbuffer=True,
-            )
+                use_backbuffer=True, )
             return plot
 
         def _create_top_img_container(self):
@@ -110,10 +113,8 @@ if ETSConfig.toolkit == "wx":
                 fill_padding=True,
                 bgcolor=self.bgcolor,
                 use_backbuffer=True,
-                default_origin=self.image_default_origin,
-            )
+                default_origin=self.image_default_origin, )
             return plot
-
 
         def _on_window_close(self, event):
             if self.session:
@@ -134,13 +135,17 @@ elif ETSConfig.toolkit == "qt4":
         window, which mostly pass through to underlying Qt calls.
         """
 
-        def __init__(self, is_image=False, bgcolor="white",
-                     image_default_origin="top left", *args, **kw):
+        def __init__(self,
+                     is_image=False,
+                     bgcolor="white",
+                     image_default_origin="top left",
+                     *args,
+                     **kw):
 
             if 'size' in kw and isinstance(kw['size'], tuple):
                 # Convert to a QSize.
                 kw['size'] = QtCore.QSize(*kw['size'])
-            super(PlotWindow, self).__init__(None, *args, **kw )
+            super(PlotWindow, self).__init__(None, *args, **kw)
 
             # Some defaults which should be overridden by preferences.
             self.bgcolor = bgcolor
@@ -166,7 +171,7 @@ elif ETSConfig.toolkit == "qt4":
             layout.addWidget(self.plot_window.control)
             self.setLayout(layout)
 
-            size = kw.get("size", QtCore.QSize(600,600))
+            size = kw.get("size", QtCore.QSize(600, 600))
             self.set_size(size.width(), size.height())
 
             self.show()
@@ -216,8 +221,7 @@ elif ETSConfig.toolkit == "qt4":
                 padding=50,
                 fill_padding=True,
                 bgcolor=self.bgcolor,
-                use_backbuffer=True,
-            )
+                use_backbuffer=True, )
             return plot
 
         def _create_top_img_container(self):
@@ -226,8 +230,7 @@ elif ETSConfig.toolkit == "qt4":
                 fill_padding=True,
                 bgcolor=self.bgcolor,
                 use_backbuffer=True,
-                default_origin=self.image_default_origin,
-            )
+                default_origin=self.image_default_origin, )
             return plot
 
         def closeEvent(self, event):
@@ -241,9 +244,9 @@ elif ETSConfig.toolkit == "qt4":
 else:
 
     class PlotWindow(object):
-
         def __init__(self, *args, **kwargs):
             raise NotImplmentedError(
                 'PlotWindow not implemented for `null` toolkit')
+
 
 # EOF

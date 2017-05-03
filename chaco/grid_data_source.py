@@ -33,7 +33,7 @@ class GridDataSource(AbstractDataSource):
     # The sort order of the data (overrides AbstractDataSource). There is no
     # overall sort order on 2-D data, but for gridded 2-D data, each axis can
     # have a sort order.
-    sort_order =Tuple(SortOrderTrait, SortOrderTrait)
+    sort_order = Tuple(SortOrderTrait, SortOrderTrait)
 
     #------------------------------------------------------------------------
     # Private traits
@@ -49,13 +49,15 @@ class GridDataSource(AbstractDataSource):
     # (overrides ArrayDataSource). ((min_x, max_x), (min_y, max_y))
     _cached_bounds = Tuple
 
-
     #------------------------------------------------------------------------
     # Public methods
     #------------------------------------------------------------------------
 
-    def __init__(self, xdata=array([]), ydata=array([]),
-                       sort_order=("none","none"), **kwargs):
+    def __init__(self,
+                 xdata=array([]),
+                 ydata=array([]),
+                 sort_order=("none", "none"),
+                 **kwargs):
         super(GridDataSource, self).__init__(**kwargs)
         self.set_data(xdata, ydata, sort_order)
 
@@ -78,7 +80,6 @@ class GridDataSource(AbstractDataSource):
             self._ydata.set_data(ydata)
         self._compute_bounds()
         self.data_changed = True
-
 
     #------------------------------------------------------------------------
     # AbstractDataSource interface
@@ -118,7 +119,6 @@ class GridDataSource(AbstractDataSource):
             self._compute_bounds()
         return self._cached_bounds
 
-
     #------------------------------------------------------------------------
     # Private methods
     #------------------------------------------------------------------------
@@ -147,8 +147,3 @@ class GridDataSource(AbstractDataSource):
 
     def _metadata_items_changed(self, event):
         self.metadata_changed = True
-
-
-
-
-

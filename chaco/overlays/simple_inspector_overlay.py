@@ -14,6 +14,7 @@ from traits.api import Any, List, Callable, Enum, Bool
 
 from .text_grid_overlay import TextGridOverlay
 
+
 def basic_formatter(key, decimals):
     """Create a basic '<key>: <value>' formatting function
 
@@ -35,9 +36,12 @@ def basic_formatter(key, decimals):
         A factory function that takes a dictionary and returns a string.
     """
     format_string = '%s: %%(%s).%df' % (key, key, decimals)
+
     def format(**kwargs):
         return format_string % kwargs
+
     return format
+
 
 def datetime_formatter(key, time_format='%Y/%m/%d %H:%M:%S'):
     """Create a datetime formatting function
@@ -61,10 +65,13 @@ def datetime_formatter(key, time_format='%Y/%m/%d %H:%M:%S'):
         A factory function that takes a dictionary and returns a string.
     """
     import datetime
+
     def format(**kwargs):
         dt = datetime.datetime.fromtimestamp(kwargs[key])
-        return key+': '+dt.strftime(time_format)
+        return key + ': ' + dt.strftime(time_format)
+
     return format
+
 
 def time_formatter(key):
     """Create a time formatting function
@@ -86,6 +93,7 @@ def time_formatter(key):
         A factory function that takes a dictionary and returns a string.
     """
     return datetime_formatter(key, time_format='%H:%M:%S')
+
 
 def date_formatter(key):
     """Create a date formatting function
@@ -167,8 +175,9 @@ class SimpleInspectorOverlay(TextGridOverlay):
 
         d = event
         text = []
-        self.text_grid.string_array = array([[formatter(**d) for formatter in row]
-            for row in self.field_formatters])
+        self.text_grid.string_array = array(
+            [[formatter(**d) for formatter in row]
+             for row in self.field_formatters])
 
         self.text_grid.request_redraw()
 
@@ -178,8 +187,10 @@ class SimpleInspectorOverlay(TextGridOverlay):
 
     def _inspector_changed(self, old, new):
         if old:
-            old.on_trait_event(self._new_value_updated, 'new_value', remove=True)
-            old.on_trait_change(self._tool_visible_changed, "visible", remove=True)
+            old.on_trait_event(
+                self._new_value_updated, 'new_value', remove=True)
+            old.on_trait_change(
+                self._tool_visible_changed, "visible", remove=True)
         if new:
             new.on_trait_event(self._new_value_updated, 'new_value')
             new.on_trait_change(self._tool_visible_changed, "visible")
@@ -189,4 +200,3 @@ class SimpleInspectorOverlay(TextGridOverlay):
         self.visibility = self.inspector.visible
         if self.visibility != "auto":
             self.visible = self.visibility
-

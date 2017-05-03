@@ -13,8 +13,7 @@ class DrawScatterplotCase(unittest.TestCase):
         size = (50, 50)
         scatterplot = create_scatter_plot(
             data=[list(range(10)), list(range(10))],
-            border_visible=False,
-        )
+            border_visible=False, )
         scatterplot.outer_bounds = list(size)
         gc = PlotGraphicsContext(size)
         gc.render_component(scatterplot)
@@ -27,8 +26,7 @@ class DrawScatterplotCase(unittest.TestCase):
         scatterplot = create_scatter_plot(
             data=[list(range(10)), list(range(10))],
             marker="circle",
-            border_visible=False,
-        )
+            border_visible=False, )
         scatterplot.outer_bounds = list(size)
         gc = PlotGraphicsContext(size)
         gc.render_component(scatterplot)
@@ -49,8 +47,7 @@ class DrawScatterplotCase(unittest.TestCase):
         scatterplot = create_scatter_plot(
             data=[list(range(10)), list(range(10))],
             marker='custom',
-            border_visible=False,
-        )
+            border_visible=False, )
         scatterplot.custom_symbol = path
         scatterplot.outer_bounds = list(size)
         gc = PlotGraphicsContext(size)
@@ -65,8 +62,7 @@ class DrawScatterplotCase(unittest.TestCase):
             data=[list(range(10)), list(range(10))],
             marker="circle",
             border_visible=False,
-            marker_size=list(range(1, 11)),
-        )
+            marker_size=list(range(1, 11)), )
         scatterplot.outer_bounds = list(size)
         gc = PlotGraphicsContext(size)
         gc.render_component(scatterplot)

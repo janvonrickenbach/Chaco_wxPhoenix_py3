@@ -1,5 +1,3 @@
-
-
 import numpy
 
 from chaco.abstract_overlay import AbstractOverlay
@@ -9,6 +7,7 @@ from traits.util.deprecated import deprecated
 
 from .better_zoom import BetterZoom
 from .tool_states import SelectedZoomState
+
 
 class BetterSelectingZoom(AbstractOverlay, BetterZoom):
     """ Zooming tool which allows the user to draw a box which defines the
@@ -39,7 +38,6 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
     # the tool to actually take effect.
     minimum_screen_delta = Int(10)
 
-
     #-------------------------------------------------------------------------
     # deprecated interaction controls, used for API compatability with
     # SimpleZoom
@@ -50,15 +48,14 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
 
     # The key press to enter zoom mode, if **always_on** is False.  Has no effect
     # if **always_on** is True.
-    enter_zoom_key = Instance(KeySpec, args=("z",))
+    enter_zoom_key = Instance(KeySpec, args=("z", ))
 
     # The key press to leave zoom mode, if **always_on** is False.  Has no effect
     # if **always_on** is True.
-    exit_zoom_key = Instance(KeySpec, args=("z",))
+    exit_zoom_key = Instance(KeySpec, args=("z", ))
 
     # Disable the tool after the zoom is completed?
     disable_on_complete = Property()
-
 
     #-------------------------------------------------------------------------
     # Appearance properties (for Box mode)
@@ -212,11 +209,13 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
                 if drawn_aspect > self.aspect_ratio:
                     # Drawn box is wider, so use its height to compute the
                     # restricted width
-                    x2 = x1 + height * self.aspect_ratio * (1 if x2 > x1 else -1)
+                    x2 = x1 + height * self.aspect_ratio * (1
+                                                            if x2 > x1 else -1)
                 else:
                     # Drawn box is taller, so use its width to compute the
                     # restricted height
-                    y2 = y1 + width / self.aspect_ratio * (1 if y2 > y1 else -1)
+                    y2 = y1 + width / self.aspect_ratio * (1
+                                                           if y2 > y1 else -1)
             self._screen_end = (x2, y2)
         else:
             self._screen_end = (event.x, event.y)
@@ -337,7 +336,8 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
             event.handled = True
             return
 
-        low, high = self._map_coordinate_box(self._screen_start, self._screen_end)
+        low, high = self._map_coordinate_box(self._screen_start,
+                                             self._screen_end)
 
         x_range = self._get_x_mapper().range
         y_range = self._get_y_mapper().range
@@ -387,10 +387,11 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
                 gc.set_antialias(0)
                 gc.set_line_width(self.border_size)
                 gc.set_stroke_color(self.border_color_)
-                gc.clip_to_rect(component.x, component.y, component.width, component.height)
+                gc.clip_to_rect(component.x, component.y, component.width,
+                                component.height)
                 x, y = self._screen_start
                 x2, y2 = self._screen_end
-                rect = (x, y, x2-x+1, y2-y+1)
+                rect = (x, y, x2 - x + 1, y2 - y + 1)
                 if self.color != "transparent":
                     color = self._get_fill_color()
                     gc.set_fill_color(color)
@@ -404,20 +405,23 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
         """ Draws the overlay as a range.
         """
         axis_ndx = self._determine_axis()
-        lower_left = [0,0]
-        upper_right = [0,0]
+        lower_left = [0, 0]
+        upper_right = [0, 0]
         lower_left[axis_ndx] = self._screen_start[axis_ndx]
-        lower_left[1-axis_ndx] = self.component.position[1-axis_ndx]
-        upper_right[axis_ndx] = self._screen_end[axis_ndx] - self._screen_start[axis_ndx]
-        upper_right[1-axis_ndx] = self.component.bounds[1-axis_ndx]
+        lower_left[1 - axis_ndx] = self.component.position[1 - axis_ndx]
+        upper_right[axis_ndx] = self._screen_end[
+            axis_ndx] - self._screen_start[axis_ndx]
+        upper_right[1 - axis_ndx] = self.component.bounds[1 - axis_ndx]
 
         with gc:
             gc.set_antialias(0)
             color = self._get_fill_color()
             gc.set_fill_color(color)
             gc.set_stroke_color(self.border_color_)
-            gc.clip_to_rect(component.x, component.y, component.width, component.height)
-            gc.draw_rect((lower_left[0], lower_left[1], upper_right[0], upper_right[1]))
+            gc.clip_to_rect(component.x, component.y, component.width,
+                            component.height)
+            gc.draw_rect(
+                (lower_left[0], lower_left[1], upper_right[0], upper_right[1]))
 
         return
 
@@ -453,8 +457,8 @@ class BetterSelectingZoom(AbstractOverlay, BetterZoom):
         """ Given start and end points in screen space, returns corresponding
         low and high points in data space.
         """
-        low = [0,0]
-        high = [0,0]
+        low = [0, 0]
+        high = [0, 0]
         for axis_index, mapper in [(0, self.component.x_mapper), \
                                    (1, self.component.y_mapper)]:
             # Ignore missing axis mappers (ColorBar instances only have one).

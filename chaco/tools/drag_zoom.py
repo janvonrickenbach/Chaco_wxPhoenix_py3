@@ -88,8 +88,8 @@ class DragZoom(DragTool, BetterZoom):
             zoom_y = self._calc_zoom(self._prev_y, event.y)
 
         # invert the zoom so scrolling up zooms in
-        zoom_x = 1.0/zoom_x
-        zoom_y = 1.0/zoom_y
+        zoom_x = 1.0 / zoom_x
+        zoom_y = 1.0 / zoom_y
 
         self.zoom_in_x(zoom_x)
         self.zoom_in_y(zoom_y)
@@ -99,8 +99,9 @@ class DragZoom(DragTool, BetterZoom):
     def drag_start(self, event, capture_mouse=True):
         self._original_xy = (event.x, event.y)
         c = self.component
-        self._orig_screen_bounds = ((c.x,c.y), (c.x2,c.y2))
-        self._original_data = (c.x_mapper.map_data(event.x), c.y_mapper.map_data(event.y))
+        self._orig_screen_bounds = ((c.x, c.y), (c.x2, c.y2))
+        self._original_data = (c.x_mapper.map_data(event.x),
+                               c.y_mapper.map_data(event.y))
         self._prev_x = event.x
         self._prev_y = event.y
         if capture_mouse:
@@ -122,4 +123,4 @@ class DragZoom(DragTool, BetterZoom):
         """
         # We express the built-in zoom scaling as 0.05/10 to indicate a scaling
         # of 5% every 10 pixels, per the docstring for the 'speed' trait.
-        return 1.0 - self.speed * (clicked - original) * (0.05/10)
+        return 1.0 - self.speed * (clicked - original) * (0.05 / 10)

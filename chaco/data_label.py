@@ -14,20 +14,26 @@ from enable.api import ColorTrait, MarkerTrait
 from .scatterplot import render_markers
 from .tooltip import ToolTip
 
-
 # Specifies the position of a label relative to its target.  This can
 # be one of the text strings indicated, or a tuple or list of floats
 # representing the (x_offset, y_offset) in screen space of the label's
 # lower left corner.
 LabelPositionTrait = Trait("top right",
-                           Enum("bottom", "left", "right", "top",
-                                "top right", "top left",
-                                "bottom left", "bottom right"),
+                           Enum("bottom", "left", "right", "top", "top right",
+                                "top left", "bottom left", "bottom right"),
                            Tuple, List)
 
 
-def draw_arrow(gc, pt1, pt2, color, arrowhead_size=10.0, offset1=0,
-               offset2=0, arrow=None, minlen=0, maxlen=inf):
+def draw_arrow(gc,
+               pt1,
+               pt2,
+               color,
+               arrowhead_size=10.0,
+               offset1=0,
+               offset2=0,
+               arrow=None,
+               minlen=0,
+               maxlen=inf):
     """ Renders an arrow from *pt1* to *pt2*.  If gc is None, then just returns
     the arrow object.
 
@@ -229,7 +235,7 @@ class DataLabel(ToolTip):
 
     # Draw an arrow from the label to the data point?  Only
     # used if **data_point** is not None.
-    arrow_visible = Bool(True)   # FIXME: replace with some sort of ArrowStyle
+    arrow_visible = Bool(True)  # FIXME: replace with some sort of ArrowStyle
 
     # The length of the arrowhead, in screen points (e.g., pixels).
     arrow_size = Float(10)
@@ -281,7 +287,7 @@ class DataLabel(ToolTip):
         "bottom center": "top center",
         "left center": "right center",
         "right center": "left center"
-        }
+    }
 
     _root_positions = {
         "bottom right": ("x2", "y"),
@@ -292,7 +298,7 @@ class DataLabel(ToolTip):
         "bottom center": ("xmid", "y"),
         "left center": ("x", "ymid"),
         "right center": ("x2", "ymid"),
-        }
+    }
 
     def overlay(self, component, gc, view_bounds=None, mode="normal"):
         """ Draws the tooltip overlaid on another component.
@@ -307,18 +313,17 @@ class DataLabel(ToolTip):
         self.do_layout()
 
         if self.label_style == 'box':
-            self._render_box(component, gc, view_bounds=view_bounds,
-                             mode=mode)
+            self._render_box(component, gc, view_bounds=view_bounds, mode=mode)
         else:
-            self._render_bubble(component, gc, view_bounds=view_bounds,
-                                mode=mode)
+            self._render_bubble(
+                component, gc, view_bounds=view_bounds, mode=mode)
 
         # draw the marker
         if self.marker_visible:
-            render_markers(gc, [self._screen_coords],
-                           self.marker, self.marker_size,
-                           self.marker_color_, self.marker_line_width,
-                           self.marker_line_color_, self.custom_symbol)
+            render_markers(gc, [self._screen_coords], self.marker,
+                           self.marker_size, self.marker_color_,
+                           self.marker_line_width, self.marker_line_color_,
+                           self.custom_symbol)
 
         if self.clip_to_plot:
             gc.restore_state()
@@ -335,26 +340,30 @@ class DataLabel(ToolTip):
                     else:
                         arrow_root = self.arrow_root
                     pos = self._position_root_map.get(arrow_root, "DUMMY")
-                    ox, oy = self._root_positions.get(pos,
-                                        (self.x + self.width / 2,
-                                         self.y + self.height / 2))
+                    ox, oy = self._root_positions.get(pos, (
+                        self.x + self.width / 2, self.y + self.height / 2))
 
                 if type(ox) == str:
                     ox = getattr(self, ox)
                     oy = getattr(self, oy)
-                self._cached_arrow = draw_arrow(gc, (ox, oy),
-                                            self._screen_coords,
-                                            self.arrow_color_,
-                                            arrowhead_size=self.arrow_size,
-                                            offset1=3,
-                                            offset2=self.marker_size + 3,
-                                            minlen=self.arrow_min_length,
-                                            maxlen=self.arrow_max_length)
+                self._cached_arrow = draw_arrow(
+                    gc, (ox, oy),
+                    self._screen_coords,
+                    self.arrow_color_,
+                    arrowhead_size=self.arrow_size,
+                    offset1=3,
+                    offset2=self.marker_size + 3,
+                    minlen=self.arrow_min_length,
+                    maxlen=self.arrow_max_length)
             else:
-                draw_arrow(gc, None, None, self.arrow_color_,
-                           arrow=self._cached_arrow,
-                           minlen=self.arrow_min_length,
-                           maxlen=self.arrow_max_length)
+                draw_arrow(
+                    gc,
+                    None,
+                    None,
+                    self.arrow_color_,
+                    arrow=self._cached_arrow,
+                    minlen=self.arrow_min_length,
+                    maxlen=self.arrow_max_length)
 
         # layout and render the label itself
         ToolTip.overlay(self, component, gc, view_bounds, mode)
@@ -378,8 +387,7 @@ class DataLabel(ToolTip):
             #        better name).
             max_gap_width = 10
             gap_width = min(max_gap_width,
-                            abs(x2 - x - 2 * r),
-                            abs(y2 - y - 2 * r))
+                            abs(x2 - x - 2 * r), abs(y2 - y - 2 * r))
             region = find_region(px, py, x, y, x2, y2)
 
             # Figure out where the "arrow" connects to the "bubble".
@@ -517,8 +525,12 @@ class DataLabel(ToolTip):
         pt = self.data_point
         if pt is not None:
             if self.show_label_coords:
-                self.lines = [self.label_text,
-                              self.label_format % {"x": pt[0], "y": pt[1]}]
+                self.lines = [
+                    self.label_text, self.label_format % {
+                        "x": pt[0],
+                        "y": pt[1]
+                    }
+                ]
             else:
                 self.lines = [self.label_text]
 
@@ -526,17 +538,17 @@ class DataLabel(ToolTip):
         for comp, attach in ((old, False), (new, True)):
             if comp is not None:
                 if hasattr(comp, 'index_mapper'):
-                    self._modify_mapper_listeners(comp.index_mapper,
-                                                  attach=attach)
+                    self._modify_mapper_listeners(
+                        comp.index_mapper, attach=attach)
                 if hasattr(comp, 'value_mapper'):
-                    self._modify_mapper_listeners(comp.value_mapper,
-                                                  attach=attach)
+                    self._modify_mapper_listeners(
+                        comp.value_mapper, attach=attach)
         return
 
     def _modify_mapper_listeners(self, mapper, attach=True):
         if mapper is not None:
-            mapper.on_trait_change(self._handle_mapper, 'updated',
-                                   remove=not attach)
+            mapper.on_trait_change(
+                self._handle_mapper, 'updated', remove=not attach)
         return
 
     def _handle_mapper(self):
@@ -544,14 +556,14 @@ class DataLabel(ToolTip):
         # 'updated' event.
         self._layout_needed = True
 
-    @on_trait_change("arrow_size,arrow_root,arrow_min_length," +
-                     "arrow_max_length")
+    @on_trait_change(
+        "arrow_size,arrow_root,arrow_min_length," + "arrow_max_length")
     def _invalidate_arrow(self):
         self._cached_arrow = None
         self._layout_needed = True
 
-    @on_trait_change("label_position,position,position_items,bounds," +
-                     "bounds_items")
+    @on_trait_change(
+        "label_position,position,position_items,bounds," + "bounds_items")
     def _invalidate_layout(self):
         self._layout_needed = True
 

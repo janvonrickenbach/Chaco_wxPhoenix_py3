@@ -10,6 +10,7 @@ from .abstract_overlay import AbstractOverlay
 from .colormapped_scatterplot import ColormappedScatterPlot
 from functools import reduce
 
+
 class ColormappedSelectionOverlay(AbstractOverlay):
     """
     Overlays and changes a ColormappedScatterPlot to fade its non-selected
@@ -76,7 +77,7 @@ class ColormappedSelectionOverlay(AbstractOverlay):
 
         elif self.selection_type == 'mask':
             mask = reduce(logical_and, datasource.metadata["selection_masks"])
-            if sum(mask)<2:
+            if sum(mask) < 2:
                 return
 
         datasource.set_mask(mask)
@@ -91,7 +92,6 @@ class ColormappedSelectionOverlay(AbstractOverlay):
         plot.line_width = self.selected_outline_width
         plot._draw_plot(gc, view_bounds, mode)
 
-
         # Restore the plot's previous color settings and data mask.
         plot.fill_alpha = self.fade_alpha
         plot.outline_color = fade_outline_color
@@ -101,21 +101,26 @@ class ColormappedSelectionOverlay(AbstractOverlay):
 
     def _component_changed(self, old, new):
         if old:
-            old.on_trait_change(self.datasource_change_handler, "color_data", remove=True)
+            old.on_trait_change(
+                self.datasource_change_handler, "color_data", remove=True)
         if new:
             new.on_trait_change(self.datasource_change_handler, "color_data")
             self._old_alpha = new.fill_alpha
             self._old_outline_color = new.outline_color
             self._old_line_width = new.line_width
-            self.datasource_change_handler(new, "color_data", None, new.color_data)
+            self.datasource_change_handler(new, "color_data", None,
+                                           new.color_data)
         return
 
     def datasource_change_handler(self, obj, name, old, new):
         if old:
-            old.on_trait_change(self.selection_change_handler, "metadata_changed", remove=True)
+            old.on_trait_change(
+                self.selection_change_handler, "metadata_changed", remove=True)
         if new:
-            new.on_trait_change(self.selection_change_handler, "metadata_changed")
-            self.selection_change_handler(new, "metadata_changed", None, new.metadata)
+            new.on_trait_change(self.selection_change_handler,
+                                "metadata_changed")
+            self.selection_change_handler(new, "metadata_changed", None,
+                                          new.metadata)
         return
 
     def selection_change_handler(self, obj, name, old, new):

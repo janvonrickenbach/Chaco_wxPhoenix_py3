@@ -10,16 +10,15 @@ from traits.testing.unittest_tools import unittest
 from chaco.shell import plot, title, ytitle
 
 
-@unittest.skipIf(
-    ETSConfig.toolkit=='null', "Skip on 'null' toolkit")
+@unittest.skipIf(ETSConfig.toolkit == 'null', "Skip on 'null' toolkit")
 class InteractiveTestCase(unittest.TestCase):
-
     def test_script(self):
-        x = linspace(-2*pi, 2*pi, 100)
+        x = linspace(-2 * pi, 2 * pi, 100)
         y = sin(x)
         plot(x, y, "r-")
         title("First plot")
         ytitle("sin(x)")
+
 
 if __name__ == "__main__":
     unittest.main()

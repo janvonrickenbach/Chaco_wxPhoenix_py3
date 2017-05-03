@@ -1,8 +1,6 @@
 """ Defines the PolygonPlot class.
 """
 
-
-
 # Major library imports
 import numpy as np
 
@@ -15,6 +13,7 @@ from traits.api import Enum, Float, Tuple, Property, cached_property, \
 
 # Local imports.
 from .base_xy_plot import BaseXYPlot
+
 
 class PolygonPlot(BaseXYPlot):
     """ Plots a polygon in dataspace.
@@ -51,12 +50,12 @@ class PolygonPlot(BaseXYPlot):
 
     # Override the hittest_type trait inherited from BaseXYPlot
     hittest_type = Enum("poly", "point", "line")
-    
+
     # The RGBA tuple for rendering edges.  It is always a tuple of length 4.
     # It has the same RGB values as edge_color_, and its alpha value is the
     # alpha value of self.edge_color multiplied by self.alpha. 
     effective_edge_color = Property(Tuple, depends_on=['edge_color', 'alpha'])
-    
+
     # The RGBA tuple for rendering the face.  It is always a tuple of length 4.
     # It has the same RGB values as face_color_, and its alpha value is the
     # alpha value of self.face_color multiplied by self.alpha.   
@@ -84,11 +83,10 @@ class PolygonPlot(BaseXYPlot):
             self._cache_valid = True
             return
 
-        points = np.transpose(np.array((index,value)))
+        points = np.transpose(np.array((index, value)))
         self._cached_data_pts = points
 
         self._cache_valid = True
-
 
     def _render(self, gc, points):
         """ Renders an Nx2 array of screen-space points as a polygon.
@@ -104,7 +102,6 @@ class PolygonPlot(BaseXYPlot):
             gc.close_path()
             gc.draw_path()
 
-
     def _render_icon(self, gc, x, y, width, height):
         """ Renders a representation of this plot as an icon into the box
         defined by the parameters.
@@ -117,7 +114,7 @@ class PolygonPlot(BaseXYPlot):
             gc.set_fill_color(self.effective_face_color)
             if hasattr(self, 'line_style_'):
                 gc.set_line_dash(self.line_style_)
-            gc.draw_rect((x,y,width,height))
+            gc.draw_rect((x, y, width, height))
         return
 
     def hittest(self, screen_pt, threshold=7.0, return_distance=False):
@@ -129,12 +126,13 @@ class PolygonPlot(BaseXYPlot):
         point is inside the polygon, and False otherwise.
         """
         if self.hittest_type in ("line", "point"):
-            return BaseXYPlot.hittest(self, screen_pt, threshold, return_distance)
+            return BaseXYPlot.hittest(self, screen_pt, threshold,
+                                      return_distance)
 
         data_pt = self.map_data(screen_pt, all_values=True)
         index = self.index.get_data()
         value = self.value.get_data()
-        poly = np.vstack((index,value)).T
+        poly = np.vstack((index, value)).T
         if points_in_polygon([data_pt], poly)[0] == 1:
             return True
         else:
@@ -159,7 +157,7 @@ class PolygonPlot(BaseXYPlot):
             edge_alpha = self.edge_color_[-1]
         else:
             edge_alpha = 1.0
-        c = self.edge_color_[:3] + (edge_alpha * self.alpha,)
+        c = self.edge_color_[:3] + (edge_alpha * self.alpha, )
         return c
 
     @cached_property
@@ -168,5 +166,5 @@ class PolygonPlot(BaseXYPlot):
             face_alpha = self.face_color_[-1]
         else:
             face_alpha = 1.0
-        c = self.face_color_[:3] + (face_alpha * self.alpha,)
+        c = self.face_color_[:3] + (face_alpha * self.alpha, )
         return c

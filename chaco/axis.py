@@ -1,8 +1,6 @@
 """ Defines the PlotAxis class, and associated validator and UI.
 """
 
-
-
 # Major library import
 from numpy import array, around, absolute, cos, dot, float64, inf, pi, \
                   sqrt, sin, transpose
@@ -22,7 +20,8 @@ from .log_mapper import LogMapper
 
 
 def DEFAULT_TICK_FORMATTER(val):
-    return ("%f"%val).rstrip("0").rstrip(".")
+    return ("%f" % val).rstrip("0").rstrip(".")
+
 
 class PlotAxis(AbstractOverlay):
     """
@@ -41,7 +40,7 @@ class PlotAxis(AbstractOverlay):
     origin = Enum("bottom left", "top left", "bottom right", "top right")
 
     # The text of the axis title.
-    title = Trait('', Str, Unicode) #May want to add PlotLabel option
+    title = Trait('', Str, Unicode)  #May want to add PlotLabel option
 
     # The font of the title.
     title_font = KivaFont('modern 12')
@@ -148,7 +147,7 @@ class PlotAxis(AbstractOverlay):
     # Cached position calculations
 
     _tick_list = List  # These are caches of their respective positions
-    _tick_positions = Any #List
+    _tick_positions = Any  #List
     _tick_label_list = Any
     _tick_label_positions = Any
     _tick_label_bounding_boxes = List
@@ -163,10 +162,8 @@ class PlotAxis(AbstractOverlay):
     _axis_pixel_vector = Array
     _end_axis_point = Array
 
-
     ticklabel_cache = List
     _cache_valid = Bool(False)
-
 
     #------------------------------------------------------------------------
     # Public methods
@@ -195,7 +192,6 @@ class PlotAxis(AbstractOverlay):
         """
         from .axis_view import AxisView
         return AxisView
-
 
     #------------------------------------------------------------------------
     # PlotComponent and AbstractOverlay interface
@@ -230,7 +226,11 @@ class PlotAxis(AbstractOverlay):
         self._draw_component(gc, view_bounds, mode)
         return
 
-    def _draw_component(self, gc, view_bounds=None, mode='normal', component=None):
+    def _draw_component(self,
+                        gc,
+                        view_bounds=None,
+                        mode='normal',
+                        component=None):
         """ Draws the component.
 
         This method is preserved for backwards compatibility. Overrides
@@ -254,7 +254,8 @@ class PlotAxis(AbstractOverlay):
             gc.set_font(self.tick_label_font)
 
             if self.axis_line_visible:
-                self._draw_axis_line(gc, self._origin_point, self._end_axis_point)
+                self._draw_axis_line(gc, self._origin_point,
+                                     self._end_axis_point)
             if self.title:
                 self._draw_title(gc)
 
@@ -263,7 +264,6 @@ class PlotAxis(AbstractOverlay):
 
         self._cache_valid = True
         return
-
 
     #------------------------------------------------------------------------
     # Private draw routines
@@ -306,35 +306,37 @@ class PlotAxis(AbstractOverlay):
             gc.stroke_path()
         return
 
-
     def _draw_title(self, gc, label=None, axis_offset=None):
         """ Draws the title for the axis.
         """
         if label is None:
-            title_label = Label(text=self.title,
-                                font=self.title_font,
-                                color=self.title_color,
-                                rotate_angle=self.title_angle)
+            title_label = Label(
+                text=self.title,
+                font=self.title_font,
+                color=self.title_color,
+                rotate_angle=self.title_angle)
         else:
             title_label = label
 
         # get the _rotated_ bounding box of the label
         tl_bounds = array(title_label.get_bounding_box(gc), float64)
-        text_center_to_corner = -tl_bounds/2.0
+        text_center_to_corner = -tl_bounds / 2.0
         # which axis are we moving away from the axis line along?
         axis_index = self._major_axis.argmin()
 
         if self.title_spacing != 'auto':
             axis_offset = self.title_spacing
 
-        if (self.title_spacing) and (axis_offset is None ):
+        if (self.title_spacing) and (axis_offset is None):
             if not self.ticklabel_cache:
                 axis_offset = 25
             else:
-                axis_offset = max([l._bounding_box[axis_index] for l in self.ticklabel_cache]) * 1.3
+                axis_offset = max([
+                    l._bounding_box[axis_index] for l in self.ticklabel_cache
+                ]) * 1.3
 
-        offset = (self._origin_point+self._end_axis_point)/2
-        axis_dist = self.tick_out + tl_bounds[axis_index]/2.0 + axis_offset
+        offset = (self._origin_point + self._end_axis_point) / 2
+        axis_dist = self.tick_out + tl_bounds[axis_index] / 2.0 + axis_offset
         offset -= self._inside_vector * axis_dist
         offset += text_center_to_corner
 
@@ -342,7 +344,6 @@ class PlotAxis(AbstractOverlay):
         title_label.draw(gc)
         gc.translate_ctm(*(-offset))
         return
-
 
     def _draw_ticks(self, gc):
         """ Draws the tick marks for the axis.
@@ -353,8 +354,8 @@ class PlotAxis(AbstractOverlay):
         gc.set_line_width(self.tick_weight)
         gc.set_antialias(False)
         gc.begin_path()
-        tick_in_vector = self._inside_vector*self.tick_in
-        tick_out_vector = self._inside_vector*self.tick_out
+        tick_in_vector = self._inside_vector * self.tick_in
+        tick_out_vector = self._inside_vector * self.tick_out
         for tick_pos in self._tick_positions:
             gc.move_to(*(tick_pos + tick_in_vector))
             gc.line_to(*(tick_pos - tick_out_vector))
@@ -383,24 +384,25 @@ class PlotAxis(AbstractOverlay):
             #horizontal/vertical axes.  More work could be done on this.
 
             base_position = self._tick_label_positions[i].copy()
-            axis_dist = self.tick_label_offset + tl_bounds[axis_index]/2.0
+            axis_dist = self.tick_label_offset + tl_bounds[axis_index] / 2.0
             base_position -= inside_vector * axis_dist
-            base_position -= tl_bounds/2.0
+            base_position -= tl_bounds / 2.0
 
             if self.tick_label_alignment == 'corner':
                 if self.orientation in ("top", "bottom"):
-                    base_position[0] += tl_bounds[0]/2.0
+                    base_position[0] += tl_bounds[0] / 2.0
                 elif self.orientation == "left":
-                    base_position[1] -= tl_bounds[1]/2.0
+                    base_position[1] -= tl_bounds[1] / 2.0
                 elif self.orientation == "right":
-                    base_position[1] += tl_bounds[1]/2.0
+                    base_position[1] += tl_bounds[1] / 2.0
 
             if self.ensure_labels_bounded:
                 bound_idx = self._major_axis.argmax()
                 if i == 0:
-                    base_position[bound_idx] = max(base_position[bound_idx],
-                                                   self._origin_point[bound_idx])
-                elif i == len(self._tick_label_positions)-1:
+                    base_position[bound_idx] = max(
+                        base_position[bound_idx],
+                        self._origin_point[bound_idx])
+                elif i == len(self._tick_label_positions) - 1:
                     base_position[bound_idx] = min(base_position[bound_idx],
                                                    self._end_axis_point[bound_idx] - \
                                                    tl_bounds[bound_idx])
@@ -410,7 +412,6 @@ class PlotAxis(AbstractOverlay):
             ticklabel.draw(gc)
             gc.translate_ctm(*(-tlpos))
         return
-
 
     #------------------------------------------------------------------------
     # Private methods for computing positions and layout
@@ -431,14 +432,15 @@ class PlotAxis(AbstractOverlay):
             self._reset_cache()
             self._cache_valid = True
             return
-
+        # the following 6 lines are required to compensate for an upstream  
+        # bug that interchanges low and high
         datalow = self.mapper.range.low
         datahigh = self.mapper.range.high
-        #if datalow>datahigh:
-            #datalow=self.mapper.range.high
-            #datahigh = self.mapper.range.low
-            #self.mapper.range.low = datalow
-            #self.mapper.range.high=datahigh
+        if datalow > datahigh:
+            datalow = self.mapper.range.high
+            datahigh = self.mapper.range.low
+            self.mapper.range.low = datalow
+            self.mapper.range.high = datahigh
         screenhigh = self.mapper.high_pos
         screenlow = self.mapper.low_pos
 
@@ -466,15 +468,17 @@ class PlotAxis(AbstractOverlay):
             return
 
         if datalow > datahigh:
-            raise RuntimeError("DataRange low is greater than high; unable to compute axis ticks.")
+            raise RuntimeError(
+                "DataRange low is greater than high; unable to compute axis ticks."
+            )
 
         if not self.tick_generator:
             return
 
         if hasattr(self.tick_generator, "get_ticks_and_labels"):
             # generate ticks and labels simultaneously
-            tmp = self.tick_generator.get_ticks_and_labels(datalow, datahigh,
-                                                screenlow, screenhigh)
+            tmp = self.tick_generator.get_ticks_and_labels(
+                datalow, datahigh, screenlow, screenhigh)
             if len(tmp) == 0:
                 tick_list = []
                 labels = []
@@ -492,11 +496,16 @@ class PlotAxis(AbstractOverlay):
             if self.small_haxis_style:
                 tick_list = array([datalow, datahigh])
             else:
-                tick_list = array(self.tick_generator.get_ticks(datalow, datahigh,
-                                                                datalow, datahigh,
-                                                                self.tick_interval,
-                                                                use_endpoints=False,
-                                                                scale=scale), float64)
+                tick_list = array(
+                    self.tick_generator.get_ticks(
+                        datalow,
+                        datahigh,
+                        datalow,
+                        datahigh,
+                        self.tick_interval,
+                        use_endpoints=False,
+                        scale=scale),
+                    float64)
 
         mapped_tick_positions = (array(self.mapper.map_screen(tick_list))-screenlow) / \
                                             (screenhigh-screenlow)
@@ -505,7 +514,6 @@ class PlotAxis(AbstractOverlay):
         self._tick_label_list = tick_list
         self._tick_label_positions = self._tick_positions
         return
-
 
     def _compute_labels(self, gc):
         """Generates the labels for tick marks.
@@ -517,19 +525,24 @@ class PlotAxis(AbstractOverlay):
             return
 
         formatter = self.tick_label_formatter
+
         def build_label(val):
             tickstring = formatter(val) if formatter is not None else str(val)
-            return Label(text=tickstring,
-                         font=self.tick_label_font,
-                         color=self.tick_label_color,
-                         rotate_angle=self.tick_label_rotate_angle,
-                         margin=self.tick_label_margin)
+            return Label(
+                text=tickstring,
+                font=self.tick_label_font,
+                color=self.tick_label_color,
+                rotate_angle=self.tick_label_rotate_angle,
+                margin=self.tick_label_margin)
 
-        self.ticklabel_cache = [build_label(val) for val in self._tick_label_list]
-        self._tick_label_bounding_boxes = [array(ticklabel.get_bounding_box(gc), float)
-                                               for ticklabel in self.ticklabel_cache]
+        self.ticklabel_cache = [
+            build_label(val) for val in self._tick_label_list
+        ]
+        self._tick_label_bounding_boxes = [
+            array(ticklabel.get_bounding_box(gc), float)
+            for ticklabel in self.ticklabel_cache
+        ]
         return
-
 
     def _calculate_geometry(self):
         origin = self.origin
@@ -540,13 +553,14 @@ class PlotAxis(AbstractOverlay):
             self._major_axis_size = self.bounds[0]
             self._minor_axis_size = self.bounds[1]
             self._major_axis = array([1., 0.])
-            self._title_orientation = array([0.,1.])
+            self._title_orientation = array([0., 1.])
             self.title_angle = 0.0
             if self.orientation == 'top':
                 self._origin_point = array(self.position)
-                self._inside_vector = array([0.,-1.])
-            else: #self.oriention == 'bottom'
-                self._origin_point = array(self.position) + array([0., self.bounds[1]])
+                self._inside_vector = array([0., -1.])
+            else:  #self.oriention == 'bottom'
+                self._origin_point = array(self.position) + array(
+                    [0., self.bounds[1]])
                 self._inside_vector = array([0., 1.])
             if "right" in origin:
                 screenlow, screenhigh = screenhigh, screenlow
@@ -557,10 +571,11 @@ class PlotAxis(AbstractOverlay):
             self._major_axis = array([0., 1.])
             self._title_orientation = array([-1., 0])
             if self.orientation == 'left':
-                self._origin_point = array(self.position) + array([self.bounds[0], 0.])
+                self._origin_point = array(self.position) + array(
+                    [self.bounds[0], 0.])
                 self._inside_vector = array([1., 0.])
                 self.title_angle = 90.0
-            else: #self.orientation == 'right'
+            else:  #self.orientation == 'right'
                 self._origin_point = array(self.position)
                 self._inside_vector = array([-1., 0.])
                 self.title_angle = 270.0
@@ -568,14 +583,15 @@ class PlotAxis(AbstractOverlay):
                 screenlow, screenhigh = screenhigh, screenlow
 
         if self.ensure_ticks_bounded:
-            self._origin_point -= self._inside_vector*self.tick_in
+            self._origin_point -= self._inside_vector * self.tick_in
 
-        self._end_axis_point = abs(screenhigh-screenlow)*self._major_axis + self._origin_point
+        self._end_axis_point = abs(
+            screenhigh - screenlow) * self._major_axis + self._origin_point
         self._axis_vector = self._end_axis_point - self._origin_point
         # This is the vector that represents one unit of data space in terms of screen space.
-        self._axis_pixel_vector = self._axis_vector/sqrt(dot(self._axis_vector,self._axis_vector))
+        self._axis_pixel_vector = self._axis_vector / sqrt(
+            dot(self._axis_vector, self._axis_vector))
         return
-
 
     def _calculate_geometry_overlay(self, overlay_component=None):
         if overlay_component is None:
@@ -589,13 +605,15 @@ class PlotAxis(AbstractOverlay):
             self._major_axis_size = overlay_component.bounds[0]
             self._minor_axis_size = overlay_component.bounds[1]
             self._major_axis = array([1., 0.])
-            self._title_orientation = array([0.,1.])
+            self._title_orientation = array([0., 1.])
             self.title_angle = 0.0
             if self.orientation == 'top':
-                self._origin_point = array([overlay_component.x, overlay_component.y2])
+                self._origin_point = array(
+                    [overlay_component.x, overlay_component.y2])
                 self._inside_vector = array([0.0, -1.0])
             else:
-                self._origin_point = array([overlay_component.x, overlay_component.y])
+                self._origin_point = array(
+                    [overlay_component.x, overlay_component.y])
                 self._inside_vector = array([0.0, 1.0])
             if "right" in component_origin:
                 screenlow, screenhigh = screenhigh, screenlow
@@ -606,25 +624,28 @@ class PlotAxis(AbstractOverlay):
             self._major_axis = array([0., 1.])
             self._title_orientation = array([-1., 0])
             if self.orientation == 'left':
-                self._origin_point = array([overlay_component.x, overlay_component.y])
+                self._origin_point = array(
+                    [overlay_component.x, overlay_component.y])
                 self._inside_vector = array([1.0, 0.0])
                 self.title_angle = 90.0
             else:
-                self._origin_point = array([overlay_component.x2, overlay_component.y])
+                self._origin_point = array(
+                    [overlay_component.x2, overlay_component.y])
                 self._inside_vector = array([-1.0, 0.0])
                 self.title_angle = 270.0
             if "top" in component_origin:
                 screenlow, screenhigh = screenhigh, screenlow
 
         if self.ensure_ticks_bounded:
-            self._origin_point -= self._inside_vector*self.tick_in
+            self._origin_point -= self._inside_vector * self.tick_in
 
-        self._end_axis_point = abs(screenhigh-screenlow)*self._major_axis + self._origin_point
+        self._end_axis_point = abs(
+            screenhigh - screenlow) * self._major_axis + self._origin_point
         self._axis_vector = self._end_axis_point - self._origin_point
         # This is the vector that represents one unit of data space in terms of screen space.
-        self._axis_pixel_vector = self._axis_vector/sqrt(dot(self._axis_vector,self._axis_vector))
+        self._axis_pixel_vector = self._axis_vector / sqrt(
+            dot(self._axis_vector, self._axis_vector))
         return
-
 
     #------------------------------------------------------------------------
     # Event handlers
@@ -697,8 +718,10 @@ class PlotAxis(AbstractOverlay):
 
         # Try to pick the most appropriate mapper for our orientation
         # and what information we can glean from our component.
-        attrmap = { "left": ("ymapper", "y_mapper", "value_mapper"),
-                    "bottom": ("xmapper", "x_mapper", "index_mapper"), }
+        attrmap = {
+            "left": ("ymapper", "y_mapper", "value_mapper"),
+            "bottom": ("xmapper", "x_mapper", "index_mapper"),
+        }
         attrmap["right"] = attrmap["left"]
         attrmap["top"] = attrmap["bottom"]
 
@@ -712,7 +735,6 @@ class PlotAxis(AbstractOverlay):
         # Keep our origin in sync with the component
         self.origin = getattr(component, 'origin', 'bottom left')
         return
-
 
     #------------------------------------------------------------------------
     # The following event handlers just invalidate our previously computed
@@ -768,26 +790,15 @@ class PlotAxis(AbstractOverlay):
 
     def __getstate__(self):
         dont_pickle = [
-            '_tick_list',
-            '_tick_positions',
-            '_tick_label_list',
-            '_tick_label_positions',
-            '_tick_label_bounding_boxes',
-            '_major_axis_size',
-            '_minor_axis_size',
-            '_major_axis',
-            '_title_orientation',
-            '_title_angle',
-            '_origin_point',
-            '_inside_vector',
-            '_axis_vector',
-            '_axis_pixel_vector',
-            '_end_axis_point',
-            '_ticklabel_cache',
-            '_cache_valid'
-           ]
+            '_tick_list', '_tick_positions', '_tick_label_list',
+            '_tick_label_positions', '_tick_label_bounding_boxes',
+            '_major_axis_size', '_minor_axis_size', '_major_axis',
+            '_title_orientation', '_title_angle', '_origin_point',
+            '_inside_vector', '_axis_vector', '_axis_pixel_vector',
+            '_end_axis_point', '_ticklabel_cache', '_cache_valid'
+        ]
 
-        state = super(PlotAxis,self).__getstate__()
+        state = super(PlotAxis, self).__getstate__()
         for key in dont_pickle:
             if key in state:
                 del state[key]
@@ -795,18 +806,19 @@ class PlotAxis(AbstractOverlay):
         return state
 
     def __setstate__(self, state):
-        super(PlotAxis,self).__setstate__(state)
+        super(PlotAxis, self).__setstate__(state)
         self._mapper_changed(None, self.mapper)
         self._reset_cache()
         self._cache_valid = False
         return
+
 
 class MinorPlotAxis(PlotAxis):
     """
     The MinorPlotAxis is a PlotAxis which draws ticks with a smaller interval,
     smaller tick sizes, and no tick labels.
     """
-    
+
     def __init__(self, *args, **kwargs):
         super(MinorPlotAxis, self).__init__(*args, **kwargs)
 
@@ -815,10 +827,11 @@ class MinorPlotAxis(PlotAxis):
         if 'tick_label_formatter' not in kwargs:
             self.tick_label_formatter = lambda x: ''
         if 'tick_in' not in kwargs:
-            self.tick_in  = 2
+            self.tick_in = 2
         if 'tick_out' not in kwargs:
             self.tick_out = 2
         if 'axis_line_visible' not in kwargs:
             self.axis_line_visible = False
+
 
 # EOF ########################################################################

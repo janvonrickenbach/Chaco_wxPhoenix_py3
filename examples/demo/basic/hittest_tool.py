@@ -26,9 +26,9 @@ class HittestTool(BaseTool, AbstractOverlay):
     '''
     # A reference to the lineplot the tool acts on
     line_plot = Any()
-    
+
     # Whether to draw the overlay
-    visible=True
+    visible = True
 
     # The point to draw on the plot, or None if no point
     pt = Any()
@@ -38,26 +38,28 @@ class HittestTool(BaseTool, AbstractOverlay):
 
     def normal_mouse_move(self, event):
         # Compute the nearest point and draw it whenever the mouse moves
-        x,y = event.x, event.y
+        x, y = event.x, event.y
 
         if self.line_plot.orientation == "h":
-            x,y = self.component.map_data((x,y))
+            x, y = self.component.map_data((x, y))
         else:
-            x,y = self.component.map_data((y,x))
+            x, y = self.component.map_data((y, x))
 
-        x,y = self.line_plot.map_screen((x,y))
-        self.pt = self.line_plot.hittest((x,y), threshold=self.threshold)
+        x, y = self.line_plot.map_screen((x, y))
+        self.pt = self.line_plot.hittest((x, y), threshold=self.threshold)
         self.request_redraw()
 
     def overlay(self, plot, gc, view_bounds=None, mode="normal"):
         # If we have a point, draw it to the screen as a small square
         if self.pt is not None:
-            x,y = plot.map_screen(self.pt)
-            gc.draw_rect((int(x)-2, int(y)-2, 4, 4))
+            x, y = plot.map_screen(self.pt)
+            gc.draw_rect((int(x) - 2, int(y) - 2, 4, 4))
+
 
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
+
 
 def _create_plot_component():
     # make 10 random points
@@ -79,11 +81,13 @@ def _create_plot_component():
 
     return plot
 
+
 #===============================================================================
 # Attributes to use for the plot view.
 #===============================================================================
-size = (800,600)
-title="LinePlot Hittest Demo"
+size = (800, 600)
+title = "LinePlot Hittest Demo"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -92,13 +96,14 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-        UItem("plot", editor=ComponentEditor(size=size)),
+        UItem(
+            "plot", editor=ComponentEditor(size=size)),
         resizable=True,
-        title=title
-    )
+        title=title)
 
     def _plot_default(self):
         return _create_plot_component()
+
 
 demo = Demo()
 

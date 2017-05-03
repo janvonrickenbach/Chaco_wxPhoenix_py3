@@ -14,7 +14,6 @@ TODO:
 
 """
 
-
 # Major library imports
 import numpy
 
@@ -40,7 +39,8 @@ def CursorTool(component, *args, **kwds):
     elif isinstance(component, Base2DPlot):
         return CursorTool2D(component, *args, **kwds)
     else:
-        raise NotImplementedError("cursors available for BaseXYPlot and Base2DPlot only")
+        raise NotImplementedError(
+            "cursors available for BaseXYPlot and Base2DPlot only")
 
 
 class BaseCursorTool(LineInspector, DragTool):
@@ -85,7 +85,7 @@ class BaseCursorTool(LineInspector, DragTool):
 
         marker = self.marker
         marker_size = self.marker_size
-        points = [(sx,sy)]
+        points = [(sx, sy)]
 
         with gc:
             gc.set_fill_color(self.color_)
@@ -97,7 +97,7 @@ class BaseCursorTool(LineInspector, DragTool):
                 and (gc.draw_marker_at_points(points,
                                               marker_size,
                                               marker.kiva_marker) != 0):
-                    pass
+                pass
 
             # The second fastest method - draw the path into a compiled path, then
             # draw the compiled path at each point
@@ -115,7 +115,7 @@ class BaseCursorTool(LineInspector, DragTool):
             else:
                 if not marker.antialias:
                     gc.set_antialias(False)
-                for sx,sy in points:
+                for sx, sy in points:
                     with gc:
                         gc.translate_ctm(sx, sy)
                         # Kiva GCs have a path-drawing interface
@@ -146,7 +146,6 @@ class CursorTool1D(BaseCursorTool):
     #The current index-value of the cursor
     current_index = Int(0)
 
-
     #if true, draws a line parallel to the index-axis
     #through the cursor intersection point
     show_value_line = Bool(True)
@@ -160,7 +159,7 @@ class CursorTool1D(BaseCursorTool):
         ndx = self.current_index
         x = plot.index.get_data()[ndx]
         y = plot.value.get_data()[ndx]
-        return x,y
+        return x, y
 
     def _set_current_position(self, traitname, args):
         plot = self.component
@@ -202,14 +201,14 @@ class CursorTool1D(BaseCursorTool):
         if plot is not None:
             orientation = plot.orientation
             sx, sy = plot.map_screen(self.current_position)
-            if orientation=='h' and numpy.abs(sx-x) <= self.threshold:
+            if orientation == 'h' and numpy.abs(sx - x) <= self.threshold:
                 return True
-            elif orientation=='v' and numpy.abs(sy-y) <= self.threshold:
+            elif orientation == 'v' and numpy.abs(sy - y) <= self.threshold:
                 return True
         return False
 
     def dragging(self, event):
-        x,y = event.x, event.y
+        x, y = event.x, event.y
         plot = self.component
         ndx = plot.map_index((x, y), threshold=0.0, index_only=True)
         if ndx is None:
@@ -222,7 +221,7 @@ class CursorTool2D(BaseCursorTool):
     _dragV = Bool(False)
     _dragH = Bool(False)
 
-    current_index = Tuple(0,0)
+    current_index = Tuple(0, 0)
 
     def _current_index_changed(self):
         self.component.request_redraw()
@@ -234,7 +233,7 @@ class CursorTool2D(BaseCursorTool):
         xdata, ydata = plot.index.get_data()
         x = xdata.get_data()[ndx]
         y = ydata.get_data()[ndy]
-        return x,y
+        return x, y
 
     def _set_current_position(self, traitname, args):
         plot = self.component
@@ -250,15 +249,15 @@ class CursorTool2D(BaseCursorTool):
             orientation = plot.orientation
             sx, sy = plot.map_screen([self.current_position])[0]
             self._dragV = self._dragH = False
-            if orientation=='h':
-                if numpy.abs(sx-x) <= self.threshold:
+            if orientation == 'h':
+                if numpy.abs(sx - x) <= self.threshold:
                     self._dragH = True
-                if numpy.abs(sy-y) <= self.threshold:
+                if numpy.abs(sy - y) <= self.threshold:
                     self._dragV = True
             else:
-                if numpy.abs(sx-x) <= self.threshold:
+                if numpy.abs(sx - x) <= self.threshold:
                     self._dragV = True
-                if numpy.abs(sy-y) <= self.threshold:
+                if numpy.abs(sy - y) <= self.threshold:
                     self._dragH = True
             return self._dragV or self._dragH
         return False
@@ -292,7 +291,7 @@ class CursorTool2D(BaseCursorTool):
             self._draw_marker(gc, sx, sy)
 
     def dragging(self, event):
-        x,y = event.x, event.y
+        x, y = event.x, event.y
         plot = self.component
         ndx = plot.map_index((x, y), threshold=0.0, index_only=True)
         if ndx is None:

@@ -7,7 +7,6 @@ from chaco.api import DiscreteColorMapper
 
 
 class DiscreteColormapTestCase(unittest.TestCase):
-
     def setUp(self):
         gray_data = empty(shape=(5, 3))
         gray_data[:] = array([0.0, 0.25, 0.5, 0.75, 1.0]).reshape(5, 1)
@@ -57,7 +56,7 @@ class DiscreteColormapTestCase(unittest.TestCase):
         a = array([0, 2, 3])
         b = self.colormap.map_index(a)
 
-        self.assertEqual(b.shape, (3,))
+        self.assertEqual(b.shape, (3, ))
         self.assertEqual(b.dtype, int)
         assert_array_equal(b, array([0, 2, 3]))
 
@@ -114,11 +113,14 @@ class DiscreteColormapTestCase(unittest.TestCase):
 
         def colormap_function(range, **traits):
             """ Typical colormap generator """
-            _gray_data =  {'red':   [(0., 0, 0), (1., 1.0, 1.0)],
-                           'green': [(0., 0, 0), (1., 1.0, 1.0)],
-                           'blue':  [(0., 0, 0), (1., 1.0, 1.0)]}
-            return ColorMapper.from_segment_map(_gray_data, range=range,
-                                                **traits)
+            _gray_data = {
+                'red': [(0., 0, 0), (1., 1.0, 1.0)],
+                'green': [(0., 0, 0), (1., 1.0, 1.0)],
+                'blue': [(0., 0, 0), (1., 1.0, 1.0)]
+            }
+            return ColorMapper.from_segment_map(
+                _gray_data, range=range, **traits)
+
         self.colormap = DiscreteColorMapper.from_colormap(
             colormap_function, steps=5)
 
@@ -131,6 +133,7 @@ class DiscreteColormapTestCase(unittest.TestCase):
         self.assertEqual(b.shape, (3, 4))
         for i in range(4):
             assert_array_almost_equal(b[:, i], array([0.0, 0.5, 0.75]))
+
 
 if __name__ == '__main__':
     import nose

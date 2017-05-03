@@ -54,7 +54,6 @@ class AbstractDataRange(HasTraits):
                 kwargs['sources'] = list(sources)
         super(AbstractDataRange, self).__init__(**kwargs)
 
-
     #------------------------------------------------------------------------
     # Abstract methods that subclasses must implement
     #------------------------------------------------------------------------
@@ -118,4 +117,3 @@ class AbstractDataRange(HasTraits):
         This method is called only if one of the bounds settings is "auto".
         """
         raise NotImplementedError
-

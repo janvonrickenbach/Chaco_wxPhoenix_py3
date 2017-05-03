@@ -18,9 +18,11 @@ import os
 
 # The docset build will use slightly different formatting rules
 
+
 def get_build_docset():
     flag = os.environ.get('BUILD_DOCSET', '')
     return flag.lower() not in ("0", "no", "")
+
 
 BUILD_DOCSET = get_build_docset()
 
@@ -54,7 +56,7 @@ copyright = '2008-2016, Enthought, Inc.'
 d = {}
 execfile(os.path.join('..', '..', 'chaco', '_version.py'), d)
 release = d['version']
-version = '.'.join(release.split('.',2)[:2])
+version = '.'.join(release.split('.', 2)[:2])
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -87,15 +89,12 @@ today_fmt = '%B %d, %Y'
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-
 # Options for HTML output
 # -----------------------
 
 # When using docset browsers like Dash and Zeal the side bar is redundant.
 if BUILD_DOCSET:
-    html_theme_options = {
-        'nosidebar': 'true'
-    }
+    html_theme_options = {'nosidebar': 'true'}
 
 # The style sheet to use for HTML and HTML Help pages. A file of that name
 # must exist either in Sphinx' static/ path, or in one of the custom paths
@@ -161,7 +160,7 @@ html_use_index = BUILD_DOCSET
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Chacodoc'
 
-html_theme='classic'
+html_theme = 'classic'
 
 # Options for LaTeX output
 # ------------------------
@@ -176,7 +175,7 @@ html_theme='classic'
 # (source start file, target name, title, author, document class
 # [howto/manual]).
 latex_documents = [
-  ('index', 'Chaco.tex', 'Chaco Documentation', 'Enthought', 'manual'),
+    ('index', 'Chaco.tex', 'Chaco Documentation', 'Enthought', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

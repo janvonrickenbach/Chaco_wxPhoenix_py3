@@ -1,6 +1,3 @@
-
-
-
 # Major library imports
 from numpy import array, compress, concatenate, searchsorted
 
@@ -10,6 +7,7 @@ from traits.api import Instance, Property
 # Chaco imports
 from .abstract_data_source import AbstractDataSource
 from .base_candle_plot import BaseCandlePlot
+
 
 def broaden(mask):
     """ Takes a 1D boolean mask array and returns a copy with all the non-zero
@@ -76,10 +74,14 @@ class CandlePlot(BaseCandlePlot):
         return array((self.index_mapper.map_data(x),
                       self.value_mapper.map_data(y)))
 
-    def map_index(self, screen_pt, threshold=0.0, outside_returns_none=True,
-                  index_only = True):
+    def map_index(self,
+                  screen_pt,
+                  threshold=0.0,
+                  outside_returns_none=True,
+                  index_only=True):
         if not index_only:
-            raise NotImplementedError("Candle Plots only support index_only map_index()")
+            raise NotImplementedError(
+                "Candle Plots only support index_only map_index()")
         if len(screen_pt) == 0:
             return None
 
@@ -96,9 +98,10 @@ class CandlePlot(BaseCandlePlot):
         # Bracket index and map those points to screen space, then
         # compute the distance
         if index > 0:
-            lower = index_data[index-1]
+            lower = index_data[index - 1]
             upper = index_data[index]
-            screen_low, screen_high = self.index_mapper.map_screen(array([lower, upper]))
+            screen_low, screen_high = self.index_mapper.map_screen(
+                array([lower, upper]))
             # Find the closest index
             low_dist = abs(screen_pt[0] - screen_low)
             high_dist = abs(screen_pt[0] - screen_high)
@@ -130,7 +133,8 @@ class CandlePlot(BaseCandlePlot):
 
         data_pts = [compress(mask, index)]
 
-        for v in (self.min_values, self.bar_min, self.center_values, self.bar_max, self.max_values):
+        for v in (self.min_values, self.bar_min, self.center_values,
+                  self.bar_max, self.max_values):
             if v is None or len(v.get_data()) == 0:
                 data_pts.append(None)
             else:
@@ -175,5 +179,3 @@ class CandlePlot(BaseCandlePlot):
             return self.bar_min
         elif self.bar_max is not None:
             return self.bar_max
-
-

@@ -26,11 +26,12 @@ from chaco.tools.api import RangeSelection
 # Relative imports
 from zoom_overlay import ZoomOverlay
 
-sample_path = os.path.join('examples','data','sample.wav')
-alt_path = os.path.join('..','data','sample.wav')
-fname = find_resource('Chaco', sample_path, alt_path=alt_path,
-    return_path=True)
+sample_path = os.path.join('examples', 'data', 'sample.wav')
+alt_path = os.path.join('..', 'data', 'sample.wav')
+fname = find_resource(
+    'Chaco', sample_path, alt_path=alt_path, return_path=True)
 numpts = 3000
+
 
 def read_music_data():
     from wav_to_numeric import wav_to_numeric
@@ -50,7 +51,7 @@ class ZoomPlot(HasTraits):
     data = Instance(ArrayPlotData)
 
     plot = Instance(Component)
-    
+
     def update_data(self, x, y):
         '''Update the data in the plot windows'''
         # FIXME: This isn't forcing the update, so the crufty code below is used.
@@ -62,28 +63,29 @@ class ZoomPlot(HasTraits):
         self.plot.components[1].value.set_data(y)
 
     def _data_default(self):
-        x = linspace(0, 4*pi, 1201)
+        x = linspace(0, 4 * pi, 1201)
         y = sin(x**2)
 
         data = ArrayPlotData(x=x, y=y)
-        
+
         return data
 
     def _plot_default(self):
         plotter = Plot(data=self.data)
-        main_plot = plotter.plot(['x','y'])[0]
+        main_plot = plotter.plot(['x', 'y'])[0]
         self.configure_plot(main_plot, xlabel='')
 
         plotter2 = Plot(data=self.data)
-        zoom_plot = plotter2.plot(['x','y'])[0]
+        zoom_plot = plotter2.plot(['x', 'y'])[0]
         self.configure_plot(zoom_plot)
-        
-        outer_container = VPlotContainer(padding=20,
-                                         fill_padding=True,
-                                         spacing=0,
-                                         stack_order='top_to_bottom',
-                                         bgcolor='lightgray',
-                                         use_backbuffer=True)
+
+        outer_container = VPlotContainer(
+            padding=20,
+            fill_padding=True,
+            spacing=0,
+            stack_order='top_to_bottom',
+            bgcolor='lightgray',
+            use_backbuffer=True)
 
         outer_container.add(main_plot)
         outer_container.add(zoom_plot)
@@ -91,7 +93,7 @@ class ZoomPlot(HasTraits):
         #outer_container.bgcolor = (236/255., 233/255., 216/255., 1.0)
 
         main_plot.controller = RangeSelection(main_plot)
-        
+
         zoom_overlay = ZoomOverlay(source=main_plot, destination=zoom_plot)
         outer_container.overlays.append(zoom_overlay)
 
@@ -106,29 +108,31 @@ class ZoomPlot(HasTraits):
         plot.padding = [40, 15, 15, 20]
         plot.color = 'darkred'
         plot.line_width = 1.1
-        
-        vertical_grid = PlotGrid(component=plot,
-                                mapper=plot.index_mapper,
-                                orientation='vertical',
-                                line_color="gray",
-                                line_style='dot',
-                                use_draw_order = True)
 
-        horizontal_grid = PlotGrid(component=plot,
-                                mapper=plot.value_mapper,
-                                orientation='horizontal',
-                                line_color="gray",
-                                line_style='dot',
-                                use_draw_order = True)
+        vertical_grid = PlotGrid(
+            component=plot,
+            mapper=plot.index_mapper,
+            orientation='vertical',
+            line_color="gray",
+            line_style='dot',
+            use_draw_order=True)
 
-        vertical_axis = PlotAxis(orientation='left',
-                                mapper=plot.value_mapper,
-                                use_draw_order = True)
-        
-        horizontal_axis = PlotAxis(orientation='bottom',
-                                title=xlabel,
-                                mapper=plot.index_mapper,
-                                use_draw_order = True)
+        horizontal_grid = PlotGrid(
+            component=plot,
+            mapper=plot.value_mapper,
+            orientation='horizontal',
+            line_color="gray",
+            line_style='dot',
+            use_draw_order=True)
+
+        vertical_axis = PlotAxis(
+            orientation='left', mapper=plot.value_mapper, use_draw_order=True)
+
+        horizontal_axis = PlotAxis(
+            orientation='bottom',
+            title=xlabel,
+            mapper=plot.index_mapper,
+            use_draw_order=True)
 
         plot.underlays.append(vertical_grid)
         plot.underlays.append(horizontal_grid)
@@ -137,11 +141,13 @@ class ZoomPlot(HasTraits):
         # and only overlays get to render in addition to the backbuffer.
         plot.overlays.append(vertical_axis)
         plot.overlays.append(horizontal_axis)
-        
+
+
 #===============================================================================
 # Attributes to use for the plot view.
 size = (800, 600)
 title = fname
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -149,20 +155,24 @@ title = fname
 class ZoomPlotView(HasTraits):
 
     zoom_plot = Instance(ZoomPlot, ())
-    
+
     traits_view = View(
-                    Group(
-                        Item('object.zoom_plot.plot', editor=ComponentEditor(size=size), 
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title='Zoom Plot',
-                    width=size[0], height=size[1]
-                    )
+        Group(
+            Item(
+                'object.zoom_plot.plot',
+                editor=ComponentEditor(size=size),
+                show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title='Zoom Plot',
+        width=size[0],
+        height=size[1])
+
 
 demo = ZoomPlotView()
 # Configure the zoom plot by giving it data
 try:
-    x,y = read_music_data()
+    x, y = read_music_data()
     demo.zoom_plot.update_data(x, y)
 except:
     # Use the defaults

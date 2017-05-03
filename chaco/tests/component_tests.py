@@ -36,9 +36,11 @@ def test_padding_init():
     assert c.padding_left == 50
     assert c.padding_right == 15
 
+
 def test_padding_trait_default():
     class PaddedComponent(Component):
         padding_top = 50
+
     c = PaddedComponent()
     assert c.padding_top == 50
     assert c.padding_bottom == 0
@@ -49,4 +51,3 @@ def test_padding_trait_default():
     assert c.padding_bottom == 0
     assert c.padding_left == 15
     assert c.padding_right == 0
-

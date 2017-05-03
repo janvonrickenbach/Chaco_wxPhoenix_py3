@@ -3,6 +3,7 @@ from chaco.tools.toolbars.plot_toolbar import PlotToolbar
 from traits.api import Type, DelegatesTo, Instance, Enum, \
         on_trait_change
 
+
 class ToolbarPlot(Plot):
     # Should we turn on the auto-hide feature on the toolbar?
     auto_hide = DelegatesTo('toolbar')

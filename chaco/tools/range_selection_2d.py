@@ -15,7 +15,6 @@ class RangeSelection2D(RangeSelection):
     the user left-clicks to deselect.
     """
 
-
     #------------------------------------------------------------------------
     # Event handlers for the "selected" event state
     #------------------------------------------------------------------------
@@ -51,7 +50,8 @@ class RangeSelection2D(RangeSelection):
         if tmp[self.axis_index] >= low and tmp[self.axis_index] <= high:
             self.event_state = "moving"
             self._down_point = numpy.array([event.x, event.y])
-            self._down_data_coord = self._map_data([self._down_point])[0][self.axis_index]
+            self._down_data_coord = self._map_data(
+                [self._down_point])[0][self.axis_index]
 
             self._original_selection = numpy.array(self.selection)
         elif self.allow_deselection:
@@ -179,7 +179,7 @@ class RangeSelection2D(RangeSelection):
         x_pos = self._get_axis_coord(event, "index")
         y_pos = self._get_axis_coord(event, "value")
         self._down_point = numpy.array([x_pos, y_pos])
-        mapped_pos = self._map_data([(x_pos,y_pos)])[0][self.axis_index]
+        mapped_pos = self._map_data([(x_pos, y_pos)])[0][self.axis_index]
 
         self.selection = (mapped_pos, mapped_pos)
 
@@ -207,7 +207,7 @@ class RangeSelection2D(RangeSelection):
             if tmp >= low and tmp <= high:
                 x_pos = self._get_axis_coord(event, "index")
                 y_pos = self._get_axis_coord(event, "value")
-                new_edge = self._map_data([(x_pos,y_pos)])[0][self.axis_index]
+                new_edge = self._map_data([(x_pos, y_pos)])[0][self.axis_index]
 
                 if self._drag_edge == "high":
                     low_val = self.selection[0]
@@ -216,7 +216,8 @@ class RangeSelection2D(RangeSelection):
                     # if it appears that only 1 point is selected, move one
                     # edge over a pixel
                     if new_edge == low_val:
-                        new_edge = self._map_data([(x_pos+1,y_pos+1)])[0][self.axis_index]
+                        new_edge = self._map_data(
+                            [(x_pos + 1, y_pos + 1)])[0][self.axis_index]
 
                     if new_edge > low_val:
                         self.selection = (low_val, new_edge)
@@ -230,7 +231,8 @@ class RangeSelection2D(RangeSelection):
                     # if it appears that only 1 point is selected, move one
                     # edge over a pixel
                     if new_edge == high_val:
-                        new_edge = self._map_data([(x_pos-1,y_pos-1)])[0][self.axis_index]
+                        new_edge = self._map_data(
+                            [(x_pos - 1, y_pos - 1)])[0][self.axis_index]
 
                     if new_edge < high_val:
                         self.selection = (new_edge, high_val)
@@ -260,9 +262,11 @@ class RangeSelection2D(RangeSelection):
         pos = self._get_axis_coord(event)
         if pos >= high:
             if self.axis == 'index':
-                selection_high = self._map_data([(high, 0)])[0][self.axis_index]
+                selection_high = self._map_data(
+                    [(high, 0)])[0][self.axis_index]
             else:
-                selection_high = self._map_data([(0, high)])[0][self.axis_index]
+                selection_high = self._map_data(
+                    [(0, high)])[0][self.axis_index]
         elif pos <= low:
             if self.axis == 'index':
                 selection_low = self._map_data([(low, 0)])[0][self.axis_index]
@@ -293,9 +297,17 @@ class RangeSelection2D(RangeSelection):
         selection = self.selection
         if selection is not None and len(selection) == 2:
             if self.axis == 'index':
-                return [x for x,y in self._map_screen([(x,0) for x in self.selection])]
+                return [
+                    x
+                    for x, y in self._map_screen([(x, 0)
+                                                  for x in self.selection])
+                ]
             else:
-                return [y for x,y in self._map_screen([(0,y) for y in self.selection])]
+                return [
+                    y
+                    for x, y in self._map_screen([(0, y)
+                                                  for y in self.selection])
+                ]
 
         else:
             return None

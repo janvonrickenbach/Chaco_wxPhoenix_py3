@@ -1,8 +1,5 @@
-
-
-
 from traits.api import (Bool, Enum, Float, Int, CList, Property, Trait,
-        on_trait_change)
+                        on_trait_change)
 from enable.api import ColorTrait
 from chaco.api import AbstractOverlay
 
@@ -51,8 +48,8 @@ class DataBox(AbstractOverlay):
     # Private Traits
     #-------------------------------------------------------------------------
 
-    _data_position = CList([0,0])
-    _data_bounds = CList([0,0])
+    _data_position = CList([0, 0])
+    _data_bounds = CList([0, 0])
     _position_valid = False
     _bounds_valid = False
 
@@ -62,16 +59,22 @@ class DataBox(AbstractOverlay):
     def __init__(self, *args, **kw):
         super(DataBox, self).__init__(*args, **kw)
         if hasattr(self.component, "range2d"):
-            self.component.range2d._xrange.on_trait_change(self.my_component_moved, "updated")
-            self.component.range2d._yrange.on_trait_change(self.my_component_moved, "updated")
-        elif hasattr(self.component, "x_mapper") and hasattr(self.component, "y_mapper"):
-            self.component.x_mapper.range.on_trait_change(self.my_component_moved, "updated")
-            self.component.y_mapper.range.on_trait_change(self.my_component_moved, "updated")
+            self.component.range2d._xrange.on_trait_change(
+                self.my_component_moved, "updated")
+            self.component.range2d._yrange.on_trait_change(
+                self.my_component_moved, "updated")
+        elif hasattr(self.component, "x_mapper") and hasattr(self.component,
+                                                             "y_mapper"):
+            self.component.x_mapper.range.on_trait_change(
+                self.my_component_moved, "updated")
+            self.component.y_mapper.range.on_trait_change(
+                self.my_component_moved, "updated")
         else:
-            raise RuntimeError("DataBox cannot find a suitable mapper on its component.")
+            raise RuntimeError(
+                "DataBox cannot find a suitable mapper on its component.")
         self.component.on_trait_change(self.my_component_resized, "bounds")
-        self.component.on_trait_change(self.my_component_resized, "bounds_items")
-
+        self.component.on_trait_change(self.my_component_resized,
+                                       "bounds_items")
 
     def overlay(self, component, gc, view_bounds=None, mode="normal"):
         if not self._position_valid:
@@ -100,7 +103,8 @@ class DataBox(AbstractOverlay):
             gc.set_antialias(0)
             gc.set_line_width(self.border_size)
             gc.set_stroke_color(self.border_color_)
-            gc.clip_to_rect(component.x, component.y, component.width, component.height)
+            gc.clip_to_rect(component.x, component.y, component.width,
+                            component.height)
             rect = self.position + self.bounds
 
             if self.color != "transparent":
@@ -172,6 +176,3 @@ class DataBox(AbstractOverlay):
     def my_component_resized(self):
         self._bounds_valid = False
         self._position_valid = False
-
-
-

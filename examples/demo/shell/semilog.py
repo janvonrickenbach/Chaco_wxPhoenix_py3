@@ -7,7 +7,6 @@ from numpy import linspace, exp
 # Enthought library imports
 from chaco.shell import semilogy, hold, title, show
 
-
 # Create some data
 x = linspace(1, 10, 200)
 
@@ -22,4 +21,3 @@ title("simple semilog plots")
 
 #This command is only necessary if running from command line
 show()
-

@@ -25,8 +25,8 @@ class Preferences(HasTraits):
     bgcolor = white_color_trait
 
     # The default location of the origin for new image plots
-    image_default_origin = Enum("top left", "bottom left",
-                                "bottom right", "top right")
+    image_default_origin = Enum("top left", "bottom left", "bottom right",
+                                "top right")
 
     @classmethod
     def from_file(cls, filename):
@@ -36,12 +36,10 @@ class Preferences(HasTraits):
         prefs.load(filename)
         return prefs
 
-
     def load(self, filename):
         """ Loads a preferences file; existing settings are overwritten.
         """
         pass
-
 
     def save(self, filename):
         """ Saves the preferences to *filename*.

@@ -1,7 +1,7 @@
-
 from traits.api import Any, Enum, Int, Property, Trait
 
 from enable.api import NativeScrollBar
+
 
 class PlotScrollBar(NativeScrollBar):
     """
@@ -34,7 +34,6 @@ class PlotScrollBar(NativeScrollBar):
 
     # Stores the index (0 or 1) corresponding to self.axis
     _axis_index = Trait(None, None, Int)
-
 
     #----------------------------------------------------------------------
     # Public methods
@@ -95,14 +94,15 @@ class PlotScrollBar(NativeScrollBar):
 
         # Compute the size available for the scrollbar to scroll in
         scrollrange = (totalmax - totalmin) - view
-        if round(scrollrange/20.0) > 0.0:
-            ticksize = scrollrange / round(scrollrange/20.0)
+        if round(scrollrange / 20.0) > 0.0:
+            ticksize = scrollrange / round(scrollrange / 20.0)
         else:
             ticksize = 1
         foo = (totalmin, totalmax, view, ticksize)
         print("scrollrange:", foo)
-        self.set(range = foo,
-                 scroll_position = max(min(self.scroll_position, totalmax-view), totalmin),
+        self.set(range=foo,
+                 scroll_position=max(
+                     min(self.scroll_position, totalmax - view), totalmin),
                  trait_change_notify=False)
         self._scroll_updated = True
         self.request_redraw()
@@ -150,17 +150,17 @@ class PlotScrollBar(NativeScrollBar):
 
     def _modify_plot_listeners(self, plot, action="attach"):
         if action == "attach":
-            remove=False
+            remove = False
         else:
-            remove=True
-        plot.on_trait_change(self._component_bounds_handler,
-                             "bounds", remove=remove)
-        plot.on_trait_change(self._component_bounds_handler,
-                             "bounds_items", remove=remove)
-        plot.on_trait_change(self._component_pos_handler,
-                             "position", remove=remove)
-        plot.on_trait_change(self._component_pos_handler,
-                             "position_items", remove=remove)
+            remove = True
+        plot.on_trait_change(
+            self._component_bounds_handler, "bounds", remove=remove)
+        plot.on_trait_change(
+            self._component_bounds_handler, "bounds_items", remove=remove)
+        plot.on_trait_change(
+            self._component_pos_handler, "position", remove=remove)
+        plot.on_trait_change(
+            self._component_pos_handler, "position_items", remove=remove)
         return
 
     def _component_bounds_handler(self):
@@ -222,9 +222,9 @@ class PlotScrollBar(NativeScrollBar):
         """
         event_pos = (event.x, event.y)
         if axis == "index":
-            return event_pos[ self.axis_index ]
+            return event_pos[self.axis_index]
         else:
-            return event_pos[ 1 - self.axis_index ]
+            return event_pos[1 - self.axis_index]
 
     def _determine_axis(self):
         """ Determines whether the index of the coordinate along this tool's
@@ -239,7 +239,7 @@ class PlotScrollBar(NativeScrollBar):
                 return 0
             else:
                 return 1
-        else:   # self.axis == "value"
+        else:  # self.axis == "value"
             if self.plot.orientation == "h":
                 return 1
             else:

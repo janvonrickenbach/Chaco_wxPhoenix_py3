@@ -5,6 +5,7 @@ from traits.api import Trait, Callable, Tuple, Float, on_trait_change
 
 from .speedups import map_colors, map_colors_uint8
 
+
 class TransformColorMapper(ColorMapper):
     """This class adds arbitrary data transformations to a ColorMapper.
     
@@ -25,12 +26,12 @@ class TransformColorMapper(ColorMapper):
     """
 
     data_func = Trait(None, None, Callable)
-    
+
     unit_func = Trait(None, None, Callable)
-    
-    transformed_bounds = Tuple(Trait(None, None, Float),
-                               Trait(None, None, Float))
-    
+
+    transformed_bounds = Tuple(
+        Trait(None, None, Float), Trait(None, None, Float))
+
     #-------------------------------------------------------------------
     # Trait handlers
     #-------------------------------------------------------------------       
@@ -60,17 +61,26 @@ class TransformColorMapper(ColorMapper):
     #-------------------------------------------------------------------
 
     @classmethod
-    def from_color_mapper(cls, color_mapper, data_func=None, unit_func=None,
+    def from_color_mapper(cls,
+                          color_mapper,
+                          data_func=None,
+                          unit_func=None,
                           **traits):
         """ Create a TransformColorMapper from an existing ColorMapper instance.
         """
         segdata = color_mapper._segmentdata
-        return cls.from_segment_map(segdata, range=color_mapper.range,
-                                    data_func=data_func, unit_func=unit_func,
-                                    **traits)
+        return cls.from_segment_map(
+            segdata,
+            range=color_mapper.range,
+            data_func=data_func,
+            unit_func=unit_func,
+            **traits)
 
     @classmethod
-    def from_color_map(cls, color_map, data_func=None, unit_func=None,
+    def from_color_map(cls,
+                       color_map,
+                       data_func=None,
+                       unit_func=None,
                        **traits):
         """Create a TransformColorMapper from a colormap generator function.
         
@@ -83,12 +93,18 @@ class TransformColorMapper(ColorMapper):
         # ColorMapper.
         color_mapper = color_map(None, **traits)
         segdata = color_mapper._segmentdata
-        return cls.from_segment_map(segdata, range=color_mapper.range,
-                                    data_func=data_func, unit_func=unit_func,
-                                    **traits)
+        return cls.from_segment_map(
+            segdata,
+            range=color_mapper.range,
+            data_func=data_func,
+            unit_func=unit_func,
+            **traits)
 
     @classmethod
-    def factory_from_color_map(cls, color_map, data_func=None, unit_func=None,
+    def factory_from_color_map(cls,
+                               color_map,
+                               data_func=None,
+                               unit_func=None,
                                **traits):
         """
         Create a TransformColorMapper factory function from a standard colormap
@@ -102,8 +118,11 @@ class TransformColorMapper(ColorMapper):
         color_mapper = color_map(None, **traits)
 
         def factory(range, **traits):
-            tcm = cls.from_color_mapper(color_mapper,
-                            data_func=data_func, unit_func=unit_func, **traits)
+            tcm = cls.from_color_mapper(
+                color_mapper,
+                data_func=data_func,
+                unit_func=unit_func,
+                **traits)
             return tcm
 
         return factory
@@ -119,15 +138,14 @@ class TransformColorMapper(ColorMapper):
         norm_data = self._compute_normalized_data(data_array)
         # The data are normalized, so we can pass low = 0, high = 1
         rgba = map_colors(norm_data, self.steps, 0, 1, self._red_lut,
-                self._green_lut, self._blue_lut, self._alpha_lut)
+                          self._green_lut, self._blue_lut, self._alpha_lut)
         return rgba
-
 
     def map_index(self, data_array):
         """ Maps an array of values to their corresponding color band index. 
         """
         norm_data = self._compute_normalized_data(data_array)
-        indices = (norm_data * (self.steps-1)).astype(int)
+        indices = (norm_data * (self.steps - 1)).astype(int)
         return indices
 
     def map_uint8(self, data_array):
@@ -135,8 +153,8 @@ class TransformColorMapper(ColorMapper):
         """
         norm_data = self._compute_normalized_data(data_array)
         rgba = map_colors_uint8(norm_data, self.steps, 0.0, 1.0,
-                self._red_lut_uint8, self._green_lut_uint8,
-                self._blue_lut_uint8, self._alpha_lut_uint8)
+                                self._red_lut_uint8, self._green_lut_uint8,
+                                self._blue_lut_uint8, self._alpha_lut_uint8)
 
         return rgba
 
@@ -149,7 +167,7 @@ class TransformColorMapper(ColorMapper):
         Apply `data_func`, then linearly scale to the unit interval, and
         then apply `unit_func`.
         """
-        
+
         # FIXME: Deal with nans?
 
         if self._dirty:
@@ -167,7 +185,7 @@ class TransformColorMapper(ColorMapper):
         if range_diff == 0.0 or isinf(range_diff):
             # Handle null range, or infinite range (which can happen during 
             # initialization before range is connected to a data source).
-            norm_data = 0.5*ones_like(data_array)
+            norm_data = 0.5 * ones_like(data_array)
         else:
             norm_data = empty(data_array.shape, dtype='float32')
             norm_data[:] = data_array

@@ -15,9 +15,11 @@ class OverlayContainerExample(HasTraits):
     plot = Instance(OverlayPlotContainer)
 
     traits_view = View(
-        Item('plot', editor=ComponentEditor(), show_label=False),
-        width=800, height=600, resizable=True
-    )
+        Item(
+            'plot', editor=ComponentEditor(), show_label=False),
+        width=800,
+        height=600,
+        resizable=True)
 
     def _plot_default(self):
         # Create data
@@ -26,23 +28,22 @@ class OverlayContainerExample(HasTraits):
         pd = ArrayPlotData(index=x, value=y)
 
         zoomable_plot = Plot(pd)
-        zoomable_plot.plot(('index', 'value'),
-                           name='external', color='red', line_width=3)
+        zoomable_plot.plot(
+            ('index', 'value'), name='external', color='red', line_width=3)
 
         # Attach tools to the plot
-        zoom = ZoomTool(component=zoomable_plot,
-                        tool_mode="box", always_on=False)
+        zoom = ZoomTool(
+            component=zoomable_plot, tool_mode="box", always_on=False)
         zoomable_plot.overlays.append(zoom)
         zoomable_plot.tools.append(PanTool(zoomable_plot))
 
         # Create a second inset plot, not resizable, not zoom-able
         inset_plot = Plot(pd)
         inset_plot.plot(('index', 'value'), color='blue')
-        inset_plot.set(resizable = '',
-                       bounds = [250, 150],
-                       position = [450, 350],
-                       border_visible = True
-                       )
+        inset_plot.set(resizable='',
+                       bounds=[250, 150],
+                       position=[450, 350],
+                       border_visible=True)
 
         # Create a container and add our plots
         container = OverlayPlotContainer()
@@ -50,7 +51,7 @@ class OverlayContainerExample(HasTraits):
         container.add(inset_plot)
         return container
 
+
 if __name__ == '__main__':
     demo = OverlayContainerExample()
     demo.configure_traits()
-

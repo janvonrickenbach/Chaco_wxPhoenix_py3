@@ -7,6 +7,7 @@ from chaco.ui.plot_window import PlotWindow
 
 from traitsui.wx.constants import WindowColor
 
+
 class PopupablePlot(Plot):
     """A Plot class that pops up in a new window on double click"""
     # FIXME: It would be nice to queue up other types of commands and settings
@@ -31,5 +32,3 @@ class PopupablePlot(Plot):
         self.command_queue.append((data, kw))
         super(PopupablePlot, self).plot(data, **kw)
         return
-
-

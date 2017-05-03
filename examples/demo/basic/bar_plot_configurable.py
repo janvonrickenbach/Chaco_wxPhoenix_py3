@@ -26,8 +26,8 @@ class BarPlotDemo(HasTraits):
         View(
             VGroup(
                 Group(
-                    UItem('bar_plot', 
-                          editor=ComponentEditor(), 
+                    UItem('bar_plot',
+                          editor=ComponentEditor(),
                           style='custom'),
                 ),
                 VGroup(
@@ -61,17 +61,17 @@ class BarPlotDemo(HasTraits):
         value_mapper = LinearMapper(range=value_range)
 
         # The bar plot
-        plot = BarPlot(index=index, value=value,
-                       value_mapper=value_mapper,
-                       index_mapper=index_mapper,
-                       line_color="black",
-                       fill_color="cornflowerblue",
-                       bgcolor="white",
-                       bar_width=self.bar_width,
-                       line_width=self.line_width,
-                       )
+        plot = BarPlot(
+            index=index,
+            value=value,
+            value_mapper=value_mapper,
+            index_mapper=index_mapper,
+            line_color="black",
+            fill_color="cornflowerblue",
+            bgcolor="white",
+            bar_width=self.bar_width,
+            line_width=self.line_width, )
         return plot
-
 
     #----------------------------------------------------------------------
     # Trait change handlers
@@ -80,12 +80,12 @@ class BarPlotDemo(HasTraits):
     def _line_color_alpha_changed(self):
         alpha = self.line_color_alpha
         color = self.bar_plot.line_color_
-        self.bar_plot.line_color = color[:3] + (alpha,)
+        self.bar_plot.line_color = color[:3] + (alpha, )
 
     def _fill_color_alpha_changed(self):
         alpha = self.fill_color_alpha
         color = self.bar_plot.fill_color_
-        self.bar_plot.fill_color = color[:3] + (alpha,)
+        self.bar_plot.fill_color = color[:3] + (alpha, )
 
     def _alpha_changed(self):
         self.bar_plot.alpha = self.alpha
@@ -95,6 +95,7 @@ class BarPlotDemo(HasTraits):
 
     def _line_width_changed(self):
         self.bar_plot.line_width = self.line_width
+
 
 demo = BarPlotDemo()
 

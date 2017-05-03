@@ -10,7 +10,7 @@ class MoveTool(DragTool):
     """
 
     # The (x,y) offset of the start of the drag relative to the component.
-    _offset = Tuple((0,0))
+    _offset = Tuple((0, 0))
 
     def drag_start(self, event):
         """ Called when the drag operation starts.
@@ -38,4 +38,3 @@ class MoveTool(DragTool):
             c.hgrid.invalidate()
         event.handled = True
         c.request_redraw()
-

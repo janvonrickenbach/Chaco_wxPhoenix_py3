@@ -89,14 +89,12 @@ class Base2DPlot(AbstractPlotRenderer):
         self.set(**kwargs_tmp)
         super(Base2DPlot, self).__init__(**kwargs)
         if self.index is not None:
-            self.index.on_trait_change(self._update_index_data,
-                                       "data_changed")
+            self.index.on_trait_change(self._update_index_data, "data_changed")
         if self.index_mapper:
             self.index_mapper.on_trait_change(self._update_index_mapper,
                                               "updated")
         if self.value is not None:
-            self.value.on_trait_change(self._update_value_data,
-                                       "data_changed")
+            self.value.on_trait_change(self._update_value_data, "data_changed")
         # If we are not resizable, we will not get a bounds update upon layout,
         # so we have to manually update our mappers
         if self.resizable == "":
@@ -125,8 +123,11 @@ class Base2DPlot(AbstractPlotRenderer):
         """
         return self.index_mapper.map_data(screen_pts)
 
-    def map_index(self, screen_pt, threshold=2.0,
-                  outside_returns_none=True, index_only=False):
+    def map_index(self,
+                  screen_pt,
+                  threshold=2.0,
+                  outside_returns_none=True,
+                  index_only=False):
         """ Maps a screen space point to an index into the plot's index arrays.
 
         Implements the AbstractPlotRenderer interface.
@@ -134,9 +135,9 @@ class Base2DPlot(AbstractPlotRenderer):
         intrinsically 2-D.
         """
         if self.orientation == 'h':
-            x_pt,y_pt = self.map_data([screen_pt])[0]
+            x_pt, y_pt = self.map_data([screen_pt])[0]
         else:
-            x_pt,y_pt = self.map_data([(screen_pt[1],screen_pt[0])])[0]
+            x_pt, y_pt = self.map_data([(screen_pt[1], screen_pt[0])])[0]
 
         if ((x_pt < self.index_mapper.range.low[0]) or
             (x_pt > self.index_mapper.range.high[0]) or
@@ -153,28 +154,28 @@ class Base2DPlot(AbstractPlotRenderer):
         x_data = x_index_data.get_data()
         y_data = y_index_data.get_data()
         try:
-            x_ndx = reverse_map_1d(x_data, x_pt, self.index.sort_order[0],
-                                   floor_only=True)
+            x_ndx = reverse_map_1d(
+                x_data, x_pt, self.index.sort_order[0], floor_only=True)
         except IndexError as e:
             if outside_returns_none:
                 return None, None
 
             # x index
             if x_pt < x_data[0]:
-                x_ndx =  0
+                x_ndx = 0
             else:
                 x_ndx = len(x_data) - 1
 
         try:
-            y_ndx = reverse_map_1d(y_data, y_pt, self.index.sort_order[1],
-                                   floor_only=True)
+            y_ndx = reverse_map_1d(
+                y_data, y_pt, self.index.sort_order[1], floor_only=True)
         except IndexError as e:
             if outside_returns_none:
                 return None, None
 
             # y index
             if y_pt < y_data[0]:
-                y_ndx =  0
+                y_ndx = 0
             else:
                 y_ndx = len(y_data) - 1
 
@@ -186,8 +187,8 @@ class Base2DPlot(AbstractPlotRenderer):
         if isnan(x) or isnan(y):
             return None, None
 
-        sx, sy =  self.map_screen([(x,y)])[0]
-        if ((screen_pt[0]-sx)**2 + (screen_pt[1]-sy)**2 < threshold**2):
+        sx, sy = self.map_screen([(x, y)])[0]
+        if ((screen_pt[0] - sx)**2 + (screen_pt[1] - sy)**2 < threshold**2):
             return x_ndx, y_ndx
         else:
             return None, None
@@ -225,7 +226,7 @@ class Base2DPlot(AbstractPlotRenderer):
 
     def _get_labels(self):
         labels = []
-        for obj in self.underlays+self.overlays:
+        for obj in self.underlays + self.overlays:
             if isinstance(obj, PlotLabel):
                 labels.append(obj)
         return labels
@@ -241,7 +242,6 @@ class Base2DPlot(AbstractPlotRenderer):
             return self.index_mapper._ymapper
         else:
             return self.index_mapper._xmapper
-
 
     #------------------------------------------------------------------------
     # Private methods
@@ -274,9 +274,11 @@ class Base2DPlot(AbstractPlotRenderer):
 
         if self.index_mapper is not None:
             if self.orientation == 'h':
-                self.index_mapper.screen_bounds = (x_low, x_high, y_low, y_high)
+                self.index_mapper.screen_bounds = (x_low, x_high, y_low,
+                                                   y_high)
             else:
-                self.index_mapper.screen_bounds = (y_low, y_high, x_low, x_high)
+                self.index_mapper.screen_bounds = (y_low, y_high, x_low,
+                                                   x_high)
             self.index_mapper_changed = True
             self.invalidate_draw()
 
@@ -295,7 +297,6 @@ class Base2DPlot(AbstractPlotRenderer):
         """
         self.value_data_changed = True
         self.invalidate_draw()
-
 
     #------------------------------------------------------------------------
     # Event handlers
@@ -317,25 +318,24 @@ class Base2DPlot(AbstractPlotRenderer):
 
     def _index_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._update_index_data,
-                                "data_changed", remove=True)
+            old.on_trait_change(
+                self._update_index_data, "data_changed", remove=True)
         if new is not None:
             new.on_trait_change(self._update_index_data, "data_changed")
         self._update_index_data()
 
     def _value_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._update_value_data,
-                                "data_changed", remove=True)
+            old.on_trait_change(
+                self._update_value_data, "data_changed", remove=True)
         if new is not None:
             new.on_trait_change(self._update_value_data, "data_changed")
         self._update_value_data()
 
     def _index_mapper_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._update_index_mapper,
-                                "updated", remove=True)
+            old.on_trait_change(
+                self._update_index_mapper, "updated", remove=True)
         if new is not None:
             new.on_trait_change(self._update_index_mapper, "updated")
         self._update_index_mapper()
-

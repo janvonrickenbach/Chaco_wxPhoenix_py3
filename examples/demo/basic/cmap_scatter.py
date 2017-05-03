@@ -25,6 +25,7 @@ from chaco.api import ArrayPlotData, ColorBar, \
 from chaco.tools.api import PanTool, ZoomTool, RangeSelection, \
                                        RangeSelectionOverlay
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
@@ -44,16 +45,17 @@ def _create_plot_component():
 
     # Create the plot
     plot = Plot(pd)
-    plot.plot(("index", "value", "color"),
-              type="cmap_scatter",
-              name="my_plot",
-              color_mapper=jet,
-              marker = "square",
-              fill_alpha = 0.5,
-              marker_size = 6,
-              outline_color = "black",
-              border_visible = True,
-              bgcolor = "white")
+    plot.plot(
+        ("index", "value", "color"),
+        type="cmap_scatter",
+        name="my_plot",
+        color_mapper=jet,
+        marker="square",
+        fill_alpha=0.5,
+        marker_size=6,
+        outline_color="black",
+        border_visible=True,
+        bgcolor="white")
 
     # Tweak some of the plot properties
     plot.title = "Colormapped Scatter Plot with Range-selectable Data Points"
@@ -71,8 +73,8 @@ def _create_plot_component():
     plot.tools.append(PanTool(plot, constrain_key="shift"))
     zoom = ZoomTool(component=plot, tool_mode="box", always_on=False)
     plot.overlays.append(zoom)
-    selection = ColormappedSelectionOverlay(cmap_renderer, fade_alpha=0.35,
-                                            selection_type="mask")
+    selection = ColormappedSelectionOverlay(
+        cmap_renderer, fade_alpha=0.35, selection_type="mask")
     cmap_renderer.overlays.append(selection)
 
     # Create the colorbar, handing in the appropriate range and colormap
@@ -82,30 +84,36 @@ def _create_plot_component():
     colorbar.padding_bottom = plot.padding_bottom
 
     # Create a container to position the plot and the colorbar side-by-side
-    container = HPlotContainer(use_backbuffer = True)
+    container = HPlotContainer(use_backbuffer=True)
     container.add(plot)
     container.add(colorbar)
     container.bgcolor = "lightgray"
     return container
 
+
 def create_colorbar(colormap):
-    colorbar = ColorBar(index_mapper=LinearMapper(range=colormap.range),
-                        color_mapper=colormap,
-                        orientation='v',
-                        resizable='v',
-                        width=30,
-                        padding=20)
+    colorbar = ColorBar(
+        index_mapper=LinearMapper(range=colormap.range),
+        color_mapper=colormap,
+        orientation='v',
+        resizable='v',
+        width=30,
+        padding=20)
     colorbar.tools.append(RangeSelection(component=colorbar))
-    colorbar.overlays.append(RangeSelectionOverlay(component=colorbar,
-                                                   border_color="white",
-                                                   alpha=0.8,
-                                                   fill_color="lightgray"))
+    colorbar.overlays.append(
+        RangeSelectionOverlay(
+            component=colorbar,
+            border_color="white",
+            alpha=0.8,
+            fill_color="lightgray"))
     return colorbar
+
 
 #===============================================================================
 # Attributes to use for the plot view.
-size=(650,650)
-title="Colormapped scatter plot"
+size = (650, 650)
+title = "Colormapped scatter plot"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -114,16 +122,17 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    VGroup(
-                        Label('Right-drag on colorbar to select data range'),
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        ),
-                    resizable=True, 
-                    title=title
-                    )
+        VGroup(
+            Label('Right-drag on colorbar to select data range'),
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+        ),
+        resizable=True,
+        title=title)
+
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
+
 
 demo = Demo()
 

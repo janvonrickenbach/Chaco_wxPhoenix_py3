@@ -1,6 +1,3 @@
-
-
-
 # Major library imports
 from numpy import column_stack, compress, invert, isnan, transpose
 import logging
@@ -14,7 +11,6 @@ from .abstract_data_source import AbstractDataSource
 
 # Set up a logger for this module
 logger = logging.getLogger(__name__)
-
 
 
 class ErrorBarPlot(LinePlot):
@@ -73,7 +69,9 @@ class ErrorBarPlot(LinePlot):
 
         l1, l2, l3 = list(map(len, (index, value_low, value_high)))
         if 0 in (l1, l2, l3) or not (l1 == l2 == l3):
-            logger.warn("Chaco: using empty dataset; index_len=%d, value_low_len=%d, value_high_len=%d." % (l1,l2,l3))
+            logger.warn(
+                "Chaco: using empty dataset; index_len=%d, value_low_len=%d, value_high_len=%d."
+                % (l1, l2, l3))
             self._cached_data_pts = []
             self._cache_valid = True
             return
@@ -130,7 +128,6 @@ class ErrorBarPlot(LinePlot):
             self._draw_default_axes(gc)
         return
 
-
     def _render_bar_endcap(self, gc, start, end, low, high, axis):
         """ Renders the endcaps for endcap_style == "bar".  start and end are
         the two endpoints of the bare errorbar.  axis is the column index
@@ -140,20 +137,18 @@ class ErrorBarPlot(LinePlot):
         This method modifies start and end.
         """
         delta = self.endcap_size / 2.0
-        start[:,axis] -= delta
-        end[:,axis] += delta
+        start[:, axis] -= delta
+        end[:, axis] += delta
 
-        start[:,1-axis] = low
-        end[:,1-axis] = low
+        start[:, 1 - axis] = low
+        end[:, 1 - axis] = low
         gc.line_set(start, end)
 
-        start[:,1-axis] = high
-        end[:,1-axis] = high
+        start[:, 1 - axis] = high
+        end[:, 1 - axis] = high
         gc.line_set(start, end)
         gc.stroke_path()
         return
 
-
     def _render_icon(self, gc, x, y, width, height):
         pass
-

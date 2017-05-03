@@ -1,8 +1,6 @@
 """ Defines the Label class.
 """
 
-
-
 # Major library imports
 from math import cos, sin, pi
 from numpy import array, dot
@@ -104,31 +102,33 @@ class Label(HasTraits):
             return (width, height)
         else:
             angle = self.rotate_angle
-            return (abs(width*cos(angle))+abs(height*sin(angle)),
-                    abs(height*sin(angle))+abs(width*cos(angle)))
+            return (abs(width * cos(angle)) + abs(height * sin(angle)),
+                    abs(height * sin(angle)) + abs(width * cos(angle)))
 
     def get_bounding_poly(self, gc):
         """ Returns a list [(x0,y0), (x1,y1),...] of tuples representing a
         polygon that bounds the label.
         """
         width, height = self.get_width_height(gc)
-        offset = array(self.get_bounding_box(gc))/2.
+        offset = array(self.get_bounding_box(gc)) / 2.
         # unrotated points relative to centre
         base_points = [
-            array([[-width/2.], [-height/2.]]),
-            array([[-width/2.], [height/2.]]),
-            array([[width/2.], [height/2.]]),
-            array([[width/2.], [-height/2.]]),
-            array([[-width/2.], [-height/2.]]),
+            array([[-width / 2.], [-height / 2.]]),
+            array([[-width / 2.], [height / 2.]]),
+            array([[width / 2.], [height / 2.]]),
+            array([[width / 2.], [-height / 2.]]),
+            array([[-width / 2.], [-height / 2.]]),
         ]
         # rotate about centre, and offset to bounding box coords
-        points = [dot(self.get_rotation_matrix(), point).transpose()[0]+offset
-                  for point in base_points]
+        points = [
+            dot(self.get_rotation_matrix(), point).transpose()[0] + offset
+            for point in base_points
+        ]
         return points
 
     def get_rotation_matrix(self):
         return array([[cos(self.rotate_angle), -sin(self.rotate_angle)],
-                     [sin(self.rotate_angle), cos(self.rotate_angle)]])
+                      [sin(self.rotate_angle), cos(self.rotate_angle)]])
 
     def draw(self, gc):
         """ Draws the label.
@@ -148,9 +148,9 @@ class Label(HasTraits):
 
             # Rotate label about center of bounding box
             width, height = self._bounding_box
-            gc.translate_ctm(bb_width/2.0, bb_height/2.0)
-            gc.rotate_ctm(pi/180.0*self.rotate_angle)
-            gc.translate_ctm(-width/2.0, -height/2.0)
+            gc.translate_ctm(bb_width / 2.0, bb_height / 2.0)
+            gc.rotate_ctm(pi / 180.0 * self.rotate_angle)
+            gc.translate_ctm(-width / 2.0, -height / 2.0)
 
             # Draw border and fill background
             if self.bgcolor != "transparent":
@@ -159,9 +159,9 @@ class Label(HasTraits):
             if self.border_visible and self.border_width > 0:
                 gc.set_stroke_color(self.border_color_)
                 gc.set_line_width(self.border_width)
-                border_offset = (self.border_width-1)/2.0
+                border_offset = (self.border_width - 1) / 2.0
                 gc.rect(border_offset, border_offset,
-                        width-2*border_offset, height-2*border_offset)
+                        width - 2 * border_offset, height - 2 * border_offset)
                 gc.stroke_path()
 
             gc.set_fill_color(self.color_)
@@ -275,7 +275,7 @@ class Label(HasTraits):
             self._line_xpos = x_pos[::-1]
             self._line_ypos = y_pos[::-1]
             border_width = self.border_width if self.border_visible else 0
-            self._bounding_box[0] = max_width + 2*margin + 2*border_width
+            self._bounding_box[0] = max_width + 2 * margin + 2 * border_width
             self._bounding_box[1] = prev_y_pos + prev_y_height + margin \
                 + 2*border_width
             self._position_cache_valid = True

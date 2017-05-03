@@ -1,7 +1,6 @@
 """ Defines the LineSegmentTool class.
 """
 
-
 # Major library imports
 from numpy import array
 
@@ -11,7 +10,6 @@ from traits.api import Any, Bool, Enum, Instance, Int, List, Trait, Tuple
 
 # Chaco imports
 from chaco.api import AbstractOverlay
-
 
 
 class LineSegmentTool(AbstractOverlay):
@@ -71,7 +69,6 @@ class LineSegmentTool(AbstractOverlay):
     delete_cursor = Pointer("bullseye")
     # Cursor shape for moving points.
     move_cursor = Pointer("sizing")
-
 
     #------------------------------------------------------------------------
     # Traits inherited from Component
@@ -170,7 +167,8 @@ class LineSegmentTool(AbstractOverlay):
             if event.control_down:
                 # Delete the point
                 self.points.pop(over)
-                self.line.points = list(self.component.map_screen(array(self.points)))
+                self.line.points = list(
+                    self.component.map_screen(array(self.points)))
                 self.request_redraw()
             else:
                 self.event_state = "dragging"
@@ -308,7 +306,8 @@ class LineSegmentTool(AbstractOverlay):
         draw_func = getattr(self, self.event_state + "_draw", None)
         if draw_func:
             with gc:
-                gc.clip_to_rect(component.x, component.y, component.width-1, component.height-1)
+                gc.clip_to_rect(component.x, component.y, component.width - 1,
+                                component.height - 1)
                 draw_func(gc)
         return
 
@@ -350,7 +349,6 @@ class LineSegmentTool(AbstractOverlay):
             x = x_mapper.map_screen(point[1])
             y = y_mapper.map_screen(point[0])
         return (x, y)
-
 
     def _is_near_point(self, point, event):
         """ Determines if the pointer is near a specified point.

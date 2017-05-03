@@ -3,7 +3,6 @@ This particular editor allows the user to set two endpoints of an
 interval.
 """
 
-
 from traits.etsconfig.api import ETSConfig
 if ETSConfig.toolkit == 'wx':
     from traitsui.wx.editor import Editor
@@ -54,11 +53,16 @@ class IntervalEditorFactory(EditorFactory):
     def simple_editor(self, ui, object, name, description, parent):
         trait = object.trait(name).trait_type
         low, high = trait.value
-        return IntervalEditorImpl(parent, factory=self, ui=ui,
-                                  object=object, name=name,
-                                  description=description,
-                                  low=low,
-                                  high=high)
+        return IntervalEditorImpl(
+            parent,
+            factory=self,
+            ui=ui,
+            object=object,
+            name=name,
+            description=description,
+            low=low,
+            high=high)
+
 
 class RangeKnobsOverlay(RangeSelectionOverlay):
     radius = Float(3)
@@ -71,7 +75,7 @@ class RangeKnobsOverlay(RangeSelectionOverlay):
     border_color = ColorTrait("black")
 
     def overlay(self, component, gc, view_bounds=None, mode="normal"):
-        mid_y = component.position[1] + component.bounds[1]/2
+        mid_y = component.position[1] + component.bounds[1] / 2
         # Draw each of a possibly disjoint set of selections
         coords = self._get_selection_screencoords()
         for coord in coords:
@@ -82,7 +86,7 @@ class RangeKnobsOverlay(RangeSelectionOverlay):
                 gc.set_line_width(self.border_width)
 
                 gc.rect(start + self.radius, mid_y - 1,
-                        (end - start - 2*self.radius), 2)
+                        (end - start - 2 * self.radius), 2)
                 gc.draw_path()
 
                 gc.set_fill_color(self.low_color_)
@@ -98,7 +102,7 @@ class RangeKnobsOverlay(RangeSelectionOverlay):
     def _circle(self, gc, x, y, radius):
         with gc:
             gc.translate_ctm(x, y)
-            gc.arc(0, 0, 2*radius, 0, 2*pi)
+            gc.arc(0, 0, 2 * radius, 0, 2 * pi)
 
 
 class IntervalEditorImpl(Editor):
@@ -108,16 +112,16 @@ class IntervalEditorImpl(Editor):
 
     def init(self, parent):
         factory = self.factory
-        container = OverlayPlotContainer(bgcolor='transparent',
-                                         padding=0, spacing=0)
+        container = OverlayPlotContainer(
+            bgcolor='transparent', padding=0, spacing=0)
 
         window = Window(parent, component=container)
 
         interval = self.high - self.low
-        data = ([self.low, self.high], [0.5]*2)
+        data = ([self.low, self.high], [0.5] * 2)
         plot = create_line_plot(data, color='black', bgcolor="sys_window")
-        plot.x_mapper.range.low = self.low - interval*0.1
-        plot.x_mapper.range.high = self.high + interval*0.1
+        plot.x_mapper.range.low = self.low - interval * 0.1
+        plot.x_mapper.range.high = self.high + interval * 0.1
         plot.y_mapper.range.high = 1.0
         plot.y_mapper.range.low = 0.0
 
@@ -155,26 +159,25 @@ class IntervalEditorImpl(Editor):
     def update_editor(self):
         pass
 
+
 # The user normally uses the factory as if it were an editor, e.g.:
 #
 #   View(Item('interval', editor=IntervalEditor()))
 #
 IntervalEditor = IntervalEditorFactory
 
-
-
 # --- Demonstration ---
 
 if __name__ == "__main__":
     from traits.api import HasTraits
     from traitsui.api import View, Item
+
     class IntervalTest(HasTraits):
         interval = Interval(low=0, high=1)
 
-        traits_view = View(Item('interval',
-                                editor=IntervalEditor()
-                                ),
-                           resizable=True)
+        traits_view = View(
+            Item(
+                'interval', editor=IntervalEditor()), resizable=True)
 
     it = IntervalTest()
     it.configure_traits()

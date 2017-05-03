@@ -7,8 +7,6 @@
 #
 #################################################################################
 
-
-
 # Enthought library imports
 from traits.api import Bool, Float
 
@@ -34,7 +32,7 @@ class CrossPlotFrame(BasePlotFrame):
     slot_names = ("center", "left", "right", "top", "bottom")
 
     # Default width and height. Class attribute.
-    default_bounds = (500,500)
+    default_bounds = (500, 500)
 
     # The sizes of the various areas
 
@@ -49,7 +47,6 @@ class CrossPlotFrame(BasePlotFrame):
 
     # Does the component need to do a layout call?
     _layout_needed = Bool(True)
-
 
     def __init__(self, **kwtraits):
         if "bounds" in kwtraits:
@@ -79,7 +76,6 @@ class CrossPlotFrame(BasePlotFrame):
             else:
                 self.get_slot(slot).visible = False
         return
-
 
     #------------------------------------------------------------------------
     # Protected methods
@@ -159,13 +155,12 @@ class CrossPlotFrame(BasePlotFrame):
 
         return
 
-
     ### Persistence ###########################################################
 
     #_pickles = ("left_width", "right_width", "top_height", "bottom_height")
 
     def __getstate__(self):
-        state = super(CrossPlotFrame,self).__getstate__()
+        state = super(CrossPlotFrame, self).__getstate__()
         for key in ['_layout_needed']:
             if key in state:
                 del state[key]

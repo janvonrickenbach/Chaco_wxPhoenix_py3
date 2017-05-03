@@ -674,7 +674,7 @@ class RangeSelection(AbstractController):
                 return 0
             else:
                 return 1
-        else:   # self.axis == "value"
+        else:  # self.axis == "value"
             if self.plot.orientation == "h":
                 return 1
             else:
@@ -686,11 +686,11 @@ class RangeSelection(AbstractController):
 
     def _axis_changed(self, old, new):
         if old is not None:
-            self.plot.on_trait_change(self.__mapper_changed,
-                                      old + "_mapper", remove=True)
+            self.plot.on_trait_change(
+                self.__mapper_changed, old + "_mapper", remove=True)
         if new is not None:
-            self.plot.on_trait_change(self.__mapper_changed,
-                                      old + "_mapper", remove=True)
+            self.plot.on_trait_change(
+                self.__mapper_changed, old + "_mapper", remove=True)
         return
 
 

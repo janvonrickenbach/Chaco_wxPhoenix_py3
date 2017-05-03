@@ -9,11 +9,12 @@ from traits.api import Delegate, Dict, Enum, Instance, Int, Property, Trait, Tup
 from chaco.api import BaseTool
 from chaco.tools.api import PanTool, DragZoom, LegendTool, RangeSelection
 
-
 BOGUS_BLOB_ID = -1
 
+
 def l2norm(v):
-    return sqrt(dot(v,v))
+    return sqrt(dot(v, v))
+
 
 class MPPanTool(PanTool):
     cur_bid = Int(BOGUS_BLOB_ID)
@@ -52,8 +53,8 @@ class MPDragZoom(DragZoom):
     speed = 1.0
 
     # The original dataspace points where blobs 1 and 2 went down
-    _orig_low = CArray #Trait(None, None, Tuple)
-    _orig_high = CArray #Trait(None, None, Tuple)
+    _orig_low = CArray  #Trait(None, None, Tuple)
+    _orig_high = CArray  #Trait(None, None, Tuple)
 
     # Dataspace center of the zoom action
     _center_pt = Trait(None, None, Tuple)
@@ -76,7 +77,7 @@ class MPDragZoom(DragZoom):
         if self.axis == 'index':
             idx = self.axis_index
         else:
-            idx = 1-self.axis_index
+            idx = 1 - self.axis_index
         d2 = {}
         for id, coords in list(d.items()):
             d2[id] = coords[idx]
@@ -91,16 +92,17 @@ class MPDragZoom(DragZoom):
     def drag_start(self, event, capture_mouse=False):
         bid1, bid2 = sorted(self._moves)
         xy01, xy02 = self._moves[bid1], self._moves[bid2]
-        self._orig_low, self._orig_high = list(map(asarray,
-            self._map_coordinate_box(xy01, xy02)))
+        self._orig_low, self._orig_high = list(
+            map(asarray, self._map_coordinate_box(xy01, xy02)))
         self.orig_center = (self._orig_high + self._orig_low) / 2.0
         self.orig_diag = l2norm(self._orig_high - self._orig_low)
 
         #DragZoom.drag_start(self, event, capture_mouse)
         self._original_xy = xy02
         c = self.component
-        self._orig_screen_bounds = ((c.x,c.y), (c.x2,c.y2))
-        self._original_data = (c.x_mapper.map_data(xy02[0]), c.y_mapper.map_data(xy02[1]))
+        self._orig_screen_bounds = ((c.x, c.y), (c.x2, c.y2))
+        self._original_data = (c.x_mapper.map_data(xy02[0]),
+                               c.y_mapper.map_data(xy02[1]))
         self._prev_y = xy02[1]
         if capture_mouse:
             event.window.set_pointer(self.drag_pointer)
@@ -108,8 +110,8 @@ class MPDragZoom(DragZoom):
     def normal_blob_down(self, event):
         if len(self._blobs) < 2:
             self._blobs[event.bid] = (event.x, event.y)
-            event.window.capture_blob(self, event.bid,
-                transform=event.net_transform())
+            event.window.capture_blob(
+                self, event.bid, transform=event.net_transform())
             event.handled = True
 
     def normal_blob_up(self, event):
@@ -148,9 +150,10 @@ class MPDragZoom(DragZoom):
         new_low = center - zoom * (center - orig_screen_low) - translation
         new_high = center + zoom * (orig_screen_high - center) - translation
 
-        for ndx in (0,1):
+        for ndx in (0, 1):
             if self._zoom_limit_reached(orig_screen_low[ndx],
-                    orig_screen_high[ndx], new_low[ndx], new_high[ndx]):
+                                        orig_screen_high[ndx], new_low[ndx],
+                                        new_high[ndx]):
                 return
 
         c = self.component
@@ -251,7 +254,7 @@ class MPLegendTool(LegendTool):
                                           event.net_transform())
             else:
                 event.window.set_mouse_owner(self, event.net_transform())
-            self.mouse_down_position = (event.x,event.y)
+            self.mouse_down_position = (event.x, event.y)
             self.event_state = "dragging"
             event.handled = True
         return
@@ -261,7 +264,6 @@ class MPLegendTool(LegendTool):
             event.window.release_blob(event.bid)
         self.event_state = "normal"
         LegendTool.drag_end(self, event)
-
 
 
 class MPRangeSelection(RangeSelection):
@@ -284,7 +286,7 @@ class MPRangeSelection(RangeSelection):
         if self.axis == 'index':
             idx = self.axis_index
         else:
-            idx = 1-self.axis_index
+            idx = 1 - self.axis_index
         d2 = {}
         for id, coords in list(d.items()):
             d2[id] = coords[idx]
@@ -299,8 +301,8 @@ class MPRangeSelection(RangeSelection):
     def normal_blob_down(self, event):
         if len(self._blobs) < 2:
             self._blobs[event.bid] = (event.x, event.y)
-            event.window.capture_blob(self, event.bid,
-                transform=event.net_transform())
+            event.window.capture_blob(
+                self, event.bid, transform=event.net_transform())
             event.handled = True
 
     def normal_blob_up(self, event):
@@ -344,13 +346,13 @@ class MPRangeSelection(RangeSelection):
             if low <= m0 <= high:
                 m1 = self.mapper.map_data(self._axis_blobs[id])
                 dm = m1 - m0
-                self.selection = (low+dm, high+dm)
+                self.selection = (low + dm, high + dm)
 
     def selected_blob_down(self, event):
         if len(self._blobs) < 2:
             self._blobs[event.bid] = (event.x, event.y)
-            event.window.capture_blob(self, event.bid,
-                transform=event.net_transform())
+            event.window.capture_blob(
+                self, event.bid, transform=event.net_transform())
             event.handled = True
 
     def selected_blob_move(self, event):
@@ -375,4 +377,3 @@ class MPRangeSelection(RangeSelection):
 
         if len(self._blobs) < 2:
             self.event_state = "selected"
-

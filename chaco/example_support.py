@@ -12,7 +12,6 @@ from numpy import array
 
 from traits.etsconfig.api import ETSConfig
 
-
 # Set up the debug logger for all chaco examples.
 # We don't want users to go digging around for the default Enthought logfile
 # in ~/envisage.log, so we add a handler to the global logger for a file
@@ -27,10 +26,8 @@ from traits.etsconfig.api import ETSConfig
 #    # If we can't override the default handler, it's OK.
 #    pass
 
-
 # Import a default palette for backwards compatibility
 from .default_colors import cbrewer as COLOR_PALETTE
-
 
 # FIXME - it should be enough to do the following import, but because of the
 # PyQt/traits problem (see below) we can't because it would drag in traits too
@@ -48,7 +45,6 @@ if not ETSConfig.toolkit:
     else:
         raise RuntimeError("Can't load wx or qt4 backend for Chaco.")
 
-
 if ETSConfig.toolkit == 'wx':
     import wx
 
@@ -56,9 +52,10 @@ if ETSConfig.toolkit == 'wx':
         """ Wraps boilerplate WX calls that almost all the demo programs have
         to use.
         """
-        def __init__ ( self, *args, **kw ):
-            wx.Frame.__init__( *(self,) + args, **kw )
-            self.SetAutoLayout( True )
+
+        def __init__(self, *args, **kw):
+            wx.Frame.__init__(*(self, ) + args, **kw)
+            self.SetAutoLayout(True)
 
             # Create the subclass's window
             self.plot_window = self._create_window()
@@ -66,15 +63,14 @@ if ETSConfig.toolkit == 'wx':
             sizer = wx.BoxSizer(wx.HORIZONTAL)
             sizer.Add(self.plot_window.control, 1, wx.EXPAND)
             self.SetSizer(sizer)
-            self.Show( True )
+            self.Show(True)
             return
 
         def _create_window(self):
             "Subclasses should override this method and return an enable.wx.Window"
             raise NotImplementedError
 
-
-    def demo_main(demo_class, size=(400,400), title="Chaco plot"):
+    def demo_main(demo_class, size=(400, 400), title="Chaco plot"):
         "Takes the class of the demo to run as an argument."
         app = wx.PySimpleApp()
         frame = demo_class(None, size=size, title=title)
@@ -91,7 +87,7 @@ elif ETSConfig.toolkit == 'qt4':
         _app = QtGui.QApplication(sys.argv)
 
     class DemoFrame(QtGui.QWidget):
-        def __init__ (self, parent, **kw):
+        def __init__(self, parent, **kw):
             QtGui.QWidget.__init__(self)
 
             # Create the subclass's window
@@ -115,8 +111,7 @@ elif ETSConfig.toolkit == 'qt4':
             "Subclasses should override this method and return an enable.Window"
             raise NotImplementedError
 
-
-    def demo_main(demo_class, size=(400,400), title="Chaco plot"):
+    def demo_main(demo_class, size=(400, 400), title="Chaco plot"):
         "Takes the class of the demo to run as an argument."
         frame = demo_class(None, size=size, title=title)
         _app.exec_()
@@ -136,7 +131,7 @@ elif ETSConfig.toolkit == 'pyglet':
         def _create_window(self):
             raise NotImplementedError
 
-    def demo_main(demo_class, size=(640,480), title="Chaco Example"):
+    def demo_main(demo_class, size=(640, 480), title="Chaco Example"):
         """ Runs a simple application in Pyglet using an instance of
         **demo_class** as the main window or frame.
 

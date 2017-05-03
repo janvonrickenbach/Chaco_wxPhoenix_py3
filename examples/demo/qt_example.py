@@ -19,9 +19,9 @@ from chaco.tools.api import PanTool, ZoomTool
 
 def create_chaco_plot(parent):
     x = linspace(-2.0, 10.0, 100)
-    pd = ArrayPlotData(index = x)
+    pd = ArrayPlotData(index=x)
     for i in range(5):
-        pd.set_data("y" + str(i), jn(i,x))
+        pd.set_data("y" + str(i), jn(i, x))
 
     # Create some line plots of some of the data
     plot = Plot(pd, title="Line Plot", padding=50, border_visible=True)
@@ -44,7 +44,7 @@ def create_chaco_plot(parent):
 def main():
     app = get_app_qt4()
     main_window = QtGui.QMainWindow()
-    main_window.resize(500,500)
+    main_window.resize(500, 500)
 
     enable_window = create_chaco_plot(main_window)
 

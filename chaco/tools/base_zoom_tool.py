@@ -1,13 +1,14 @@
 """ Defines the base class for various types of zoom tools.
 """
 import warnings
-warnings.warn("BaseZoomTool has been deprecated, use BetterZoomTool", DeprecationWarning)
-
+warnings.warn("BaseZoomTool has been deprecated, use BetterZoomTool",
+              DeprecationWarning)
 
 from numpy import allclose, inf
 
 # Enthought library imports
 from traits.api import Enum, Float, HasTraits
+
 
 class BaseZoomTool(HasTraits):
     """ Defines traits and methods to actually perform the logic of zooming
@@ -26,7 +27,12 @@ class BaseZoomTool(HasTraits):
     # bounds.  If None, then there is no limit.
     max_zoom_out_factor = Float(1e5, allow_none=True)
 
-    def _zoom_limit_reached(self, orig_low, orig_high, new_low, new_high, mapper=None):
+    def _zoom_limit_reached(self,
+                            orig_low,
+                            orig_high,
+                            new_low,
+                            new_high,
+                            mapper=None):
         """ Returns True if the new low and high exceed the maximum zoom
         limits
         """
@@ -67,16 +73,15 @@ class BaseZoomTool(HasTraits):
         else:
             return None
 
-
     def _get_axis_coord(self, event, axis="index"):
         """ Returns the coordinate of the event along the axis of interest
         to the tool (or along the orthogonal axis, if axis="value").
         """
         event_pos = (event.x, event.y)
         if axis == "index":
-            return event_pos[ self._determine_axis() ]
+            return event_pos[self._determine_axis()]
         else:
-            return event_pos[ 1 - self._determine_axis() ]
+            return event_pos[1 - self._determine_axis()]
 
     def _determine_axis(self):
         """ Determines whether the index of the coordinate along the axis of
@@ -87,7 +92,7 @@ class BaseZoomTool(HasTraits):
                 return 0
             else:
                 return 1
-        else:   # self.axis == "value"
+        else:  # self.axis == "value"
             if self.component.orientation == "h":
                 return 1
             else:
@@ -97,8 +102,8 @@ class BaseZoomTool(HasTraits):
         """ Given start and end points in screen space, returns corresponding
         low and high points in data space.
         """
-        low = [0,0]
-        high = [0,0]
+        low = [0, 0]
+        high = [0, 0]
         for axis_index, mapper in [(0, self.component.x_mapper), \
                                    (1, self.component.y_mapper)]:
             low_val = mapper.map_data(start[axis_index])
@@ -109,4 +114,3 @@ class BaseZoomTool(HasTraits):
             low[axis_index] = low_val
             high[axis_index] = high_val
         return low, high
-

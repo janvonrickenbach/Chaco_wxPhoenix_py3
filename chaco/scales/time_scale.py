@@ -6,17 +6,19 @@ from math import floor
 
 from .scales import AbstractScale, ScaleSystem, frange, heckbert_interval
 from .formatters import TimeFormatter
-from .safetime import (safe_fromtimestamp, datetime, timedelta, EPOCH,
-                      MINYEAR, MAXYEAR)
+from .safetime import (safe_fromtimestamp, datetime, timedelta, EPOCH, MINYEAR,
+                       MAXYEAR)
 
 # Labels for date and time units.
-datetime_scale = ["microsecond", "second", "minute", "hour",
-                  "day", "month", "year"]
+datetime_scale = [
+    "microsecond", "second", "minute", "hour", "day", "month", "year"
+]
 datetime_zeros = list(zip(datetime_scale, [0, 0, 0, 0, 1, 1, 1]))
 
-
-__all__ = ["TimeScale", "CalendarScaleSystem", "HMSScales", "MDYScales",
-           "trange", "tfrac", "td_to_sec", "dt_to_sec"]
+__all__ = [
+    "TimeScale", "CalendarScaleSystem", "HMSScales", "MDYScales", "trange",
+    "tfrac", "td_to_sec", "dt_to_sec"
+]
 
 
 def td_to_sec(td):
@@ -87,13 +89,15 @@ def tfrac(t, **time_unit):
 
     return dt_to_sec(whole), frac
 
+
 def _advance_month(dt, months):
     """ Advance a datetime object by a given number of months.
     """
     new_month = dt.month + months
-    years, extra_months = divmod(new_month-1, 12)
+    years, extra_months = divmod(new_month - 1, 12)
     new_month = extra_months + 1
-    return dt.replace(year=dt.year+years, month=new_month)
+    return dt.replace(year=dt.year + years, month=new_month)
+
 
 def trange_months(start, end, months):
     """ Create a range of timestamps separated by a given number of months.
@@ -103,8 +107,10 @@ def trange_months(start, end, months):
     dt_start = safe_fromtimestamp(start)
     dt_end = safe_fromtimestamp(end)
     dmonths = (12 * (dt_start.year - 2000) + dt_start.month - 1) % months
-    dt = _advance_month(dt_start.replace(day=1, hour=0, minute=0, second=0,
-        microsecond=0), -dmonths)
+    dt = _advance_month(
+        dt_start.replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0),
+        -dmonths)
     while dt < dt_start:
         dt = _advance_month(dt, months)
     timestamps = []
@@ -113,10 +119,12 @@ def trange_months(start, end, months):
         dt = _advance_month(dt, months)
     return timestamps
 
+
 def _advance_years(dt, years):
     """ Advance a datetime object by a given number of years.
     """
-    return dt.replace(year=dt.year+years)
+    return dt.replace(year=dt.year + years)
+
 
 def trange_years(start, end, years):
     """ Create a range of timestamps separated by a given number of years.
@@ -128,7 +136,7 @@ def trange_years(start, end, years):
     dyears = (dt_start.year - 2000) % years
     if dyears < 0:
         dyears += years
-    dt = datetime(dt_start.year-dyears, 1, 1, 0, 0, 0, 0)
+    dt = datetime(dt_start.year - dyears, 1, 1, 0, 0, 0, 0)
     while dt < dt_start:
         dt = _advance_years(dt, years)
     timestamps = []
@@ -136,6 +144,7 @@ def trange_years(start, end, years):
         timestamps.append(dt_to_sec(dt))
         dt = _advance_years(dt, years)
     return timestamps
+
 
 def trange(start, end, **time_unit):
     """ Like range(), but for times, and with "natural" alignment depending on
@@ -161,7 +170,8 @@ def trange(start, end, **time_unit):
     and *end* fall within the same interval.
     """
     if len(time_unit) > 1:
-        raise ValueError("trange() only takes one keyword argument, got %d" % len(time_unit))
+        raise ValueError("trange() only takes one keyword argument, got %d" %
+                         len(time_unit))
 
     # Months and years are non-uniform, so we special-case them.
     unit, value = list(time_unit.items())[0]
@@ -191,7 +201,7 @@ def trange(start, end, **time_unit):
     delta = td_to_sec(timedelta(**time_unit))
     count = (end_whole - start_whole) / delta
 
-    ticks = [start_whole + i*delta for i in range(int(round(count))+1)]
+    ticks = [start_whole + i * delta for i in range(int(round(count)) + 1)]
     return ticks[first_tick_ndx:]
 
 
@@ -209,16 +219,17 @@ class TimeScale(AbstractScale):
     """
 
     # This is used to compute an approximate resolution for each type of scale.
-    SECS_PER_UNIT = {"microseconds": 1e-6,
-                     "milliseconds": 1e-3,
-                     "seconds": 1,
-                     "minutes": 60,
-                     "hours": 3600,
-                     "days": 24*3600,
-                     "day_of_month": 30*24*3600,
-                     "month_of_year": 365*24*3600,
-                     "years": 365*24*3600,
-                     }
+    SECS_PER_UNIT = {
+        "microseconds": 1e-6,
+        "milliseconds": 1e-3,
+        "seconds": 1,
+        "minutes": 60,
+        "hours": 3600,
+        "days": 24 * 3600,
+        "day_of_month": 30 * 24 * 3600,
+        "month_of_year": 365 * 24 * 3600,
+        "years": 365 * 24 * 3600,
+    }
 
     CALENDAR_UNITS = ("day_of_month", "month_of_year")
 
@@ -249,7 +260,8 @@ class TimeScale(AbstractScale):
         # This is only approximate, but puts us in the ballpark
         if self.unit in ("milliseconds", "microseconds"):
             ticks = self.ticks(start, end, desired_ticks=8)
-            coarsest_scale_count = (end - start) / (500 * self.SECS_PER_UNIT[self.unit])
+            coarsest_scale_count = (end - start) / (
+                500 * self.SECS_PER_UNIT[self.unit])
             return max(len(ticks), coarsest_scale_count)
         else:
             return (end - start) / self.resolution
@@ -273,8 +285,8 @@ class TimeScale(AbstractScale):
             if desired_ticks is None:
                 min, max, delta = heckbert_interval(start, end, enclose=True)
             else:
-                min, max, delta = heckbert_interval(start, end, desired_ticks,
-                                                    enclose=True)
+                min, max, delta = heckbert_interval(
+                    start, end, desired_ticks, enclose=True)
             min *= secs_per_unit
             max *= secs_per_unit
             delta *= secs_per_unit
@@ -298,18 +310,22 @@ class TimeScale(AbstractScale):
         # get range of years of interest
         # add 2 because of python ranges + guard against timezone shifts
         # eg. if 20000101 -> 19991231 because of local timezone, end is 1999+2
-        years = list(range(start_dt.year, min(end_dt.year+2, MAXYEAR+1)))
+        years = list(range(start_dt.year, min(end_dt.year + 2, MAXYEAR + 1)))
         if self.unit == "day_of_month":
             # get naive datetimes for start of each day of each month
             # in range of years.  Excess will be discarded later.
             months = list(range(1, 13))
-            dates = [datetime(year, month, i)
-                     for year in years for month in months for i in self.vals]
+            dates = [
+                datetime(year, month, i)
+                for year in years for month in months for i in self.vals
+            ]
 
         elif self.unit == "month_of_year":
             # get naive datetimes for start of each month in range of years
-            dates = [datetime(year, month, 1)
-                     for year in years for month in self.vals]
+            dates = [
+                datetime(year, month, 1) for year in years
+                for month in self.vals
+            ]
         else:
             raise ValueError("Unknown calendar unit '%s'" % self.unit)
 
@@ -328,7 +344,8 @@ class TimeScale(AbstractScale):
         Overrides AbstractScale.
         """
         ticks = self.ticks(start, end, numlabels)
-        labels = self.formatter.format(ticks, numlabels, char_width, ticker=self)
+        labels = self.formatter.format(
+            ticks, numlabels, char_width, ticker=self)
         return list(zip(ticks, labels))
 
     def label_width(self, start, end, numlabels=None, char_width=None):
@@ -338,8 +355,8 @@ class TimeScale(AbstractScale):
 
         Overrides AbstractScale.
         """
-        return self.formatter.estimate_width(start, end, numlabels, char_width,
-                                             ticker=self)
+        return self.formatter.estimate_width(
+            start, end, numlabels, char_width, ticker=self)
 
 
 # Declare some default scale systems
@@ -359,6 +376,7 @@ MDYScales = [TimeScale(day_of_month=list(range(1,31,3))),
              TimeScale(month_of_year=(1,7)),
              TimeScale(month_of_year=(1,)),] + \
             [TimeScale(years=dt) for dt in (1,2,5,10)]
+
 
 class CalendarScaleSystem(ScaleSystem):
     """ Scale system for calendars.

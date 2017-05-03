@@ -1,9 +1,8 @@
-
 # Major library imports
 import warnings
 
 try:
-# PDF imports from reportlab
+    # PDF imports from reportlab
     from reportlab.pdfgen.canvas import Canvas
     from reportlab.lib.pagesizes import letter, A4, landscape
     from reportlab.lib.units import inch, cm, mm, pica
@@ -13,7 +12,6 @@ except ImportError:
     PdfPlotGraphicsContext = None
 
 from kiva.pdf import GraphicsContext
-
 
 PAGE_DPI = 72.0
 
@@ -32,6 +30,7 @@ UNITS_MAP = {
 }
 
 if Canvas is not None:
+
     class PdfPlotGraphicsContext(GraphicsContext):
         """ A convenience class for rendering PlotComponents onto PDF
         """
@@ -54,10 +53,14 @@ if Canvas is not None:
         dest_box = (0.5, 0.5, -0.5, -0.5)
 
         # The units of the values in dest_box
-        dest_box_units = "inch"   # Enum("inch", "cm", "mm", "pica")
+        dest_box_units = "inch"  # Enum("inch", "cm", "mm", "pica")
 
-        def __init__(self, pdf_canvas=None, filename=None, pagesize=None,
-                     dest_box=None, dest_box_units=None):
+        def __init__(self,
+                     pdf_canvas=None,
+                     filename=None,
+                     pagesize=None,
+                     dest_box=None,
+                     dest_box_units=None):
             if filename:
                 self.filename = filename
             if pagesize:
@@ -86,8 +89,11 @@ if Canvas is not None:
             # We'll need to call _initialize_page() before drawing
             self._page_initialized = False
 
-        def render_component(self, component, container_coords=False,
-                             halign="center", valign="top"):
+        def render_component(self,
+                             component,
+                             container_coords=False,
+                             halign="center",
+                             valign="top"):
             """ Erases the current contents of the graphics context and renders
             the given component at the maximum possible scaling while
             preserving aspect ratio.

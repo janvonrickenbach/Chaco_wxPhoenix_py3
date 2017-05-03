@@ -15,9 +15,7 @@ Also defines the convenience function::
 
 """
 
-
 from traits.api import Bool, Dict, HasTraits, Instance, Str
-
 
 
 def bind_template(template, vars, type_check=False):
@@ -56,8 +54,6 @@ class TemplateDescriptor(HasTraits):
     vars = Dict
 
 
-
-
 class Templatizable(HasTraits):
     """ Mix-in class that makes objects capable of being incorporated
     into a Chaco template.
@@ -65,7 +61,9 @@ class Templatizable(HasTraits):
     Primarily defines the protocol used to query the class for its contents.
     """
 
-    def templatize(self, my_name, ):
+    def templatize(
+            self,
+            my_name, ):
         """ Returns a dict mapping the name of the child in the local name space
         to a Templatizable object reference.
         """
@@ -97,13 +95,10 @@ class PlotTemplate(HasTraits):
     pass
 
 
-
-
 class AbstractTemplatizer(HasTraits):
     """ A Templatizer accepts any subclass of Templatizable and returns a
     PlotTemplate.
     """
-
 
 
 class CodeMetadata(HasTraits):
@@ -130,6 +125,7 @@ class CodeMetadata(HasTraits):
     # this for aesthetic or readability reasons.
     root_name = Str
 
+
 class CodeTemplate(PlotTemplate):
     """ A Chaco plot template.
 
@@ -144,7 +140,6 @@ class CodeTemplate(PlotTemplate):
 
     # Is the template completely bound?
     is_bound = Bool(False)
-
 
     #-------------------------------------------------------------------------
     # Object graph traits
@@ -200,7 +195,9 @@ class CodeTemplate(PlotTemplate):
         """
         pass
 
-    def create_import(self, import_line, ):
+    def create_import(
+            self,
+            import_line, ):
         """ Adds another import line, verbatim, to the top of the output code.
 
         No order of imports is guaranteed.

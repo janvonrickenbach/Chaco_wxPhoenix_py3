@@ -65,7 +65,6 @@ class MultiLinePlotDemo(HasTraits):
             resizable=True,
         )
 
-
     #-----------------------------------------------------------------------
     # Trait defaults
     #-----------------------------------------------------------------------
@@ -102,14 +101,16 @@ class MultiLinePlotDemo(HasTraits):
         plot = Plot(title="MultiLinePlot Demo")
         plot.add(self.multi_line_plot_renderer)
 
-        x_axis = PlotAxis(component=plot,
-                            mapper=self.multi_line_plot_renderer.index_mapper,
-                            orientation='bottom',
-                            title='t (seconds)')
-        y_axis = PlotAxis(component=plot,
-                            mapper=self.multi_line_plot_renderer.value_mapper,
-                            orientation='left',
-                            title='channel')
+        x_axis = PlotAxis(
+            component=plot,
+            mapper=self.multi_line_plot_renderer.index_mapper,
+            orientation='bottom',
+            title='t (seconds)')
+        y_axis = PlotAxis(
+            component=plot,
+            mapper=self.multi_line_plot_renderer.value_mapper,
+            orientation='left',
+            title='channel')
         plot.overlays.extend([x_axis, y_axis])
         return plot
 
@@ -137,7 +138,7 @@ if __name__ == "__main__":
 
     channels = np.arange(12)
     # Frequencies of the sine functions in each channel.
-    freqs = 3*(channels[:,None] + 1)
+    freqs = 3 * (channels[:, None] + 1)
     y = np.sin(freqs * t)
 
     # Create an instance of DataModel.  This is the data to

@@ -65,7 +65,6 @@ class ArrayPlotData(AbstractPlotData):
         data = dict(list(zip(self._generate_names(len(data)), data)))
         self._update_data(data)
 
-
     #------------------------------------------------------------------------
     # AbstractPlotData Interface
     #------------------------------------------------------------------------
@@ -75,14 +74,12 @@ class ArrayPlotData(AbstractPlotData):
         """
         return list(self.arrays.keys())
 
-
     def get_data(self, name):
         """ Returns the array associated with *name*.
 
         Implements AbstractDataSource.
         """
         return self.arrays.get(name, None)
-
 
     def del_data(self, name):
         """ Deletes the array specified by *name*, or raises a KeyError if
@@ -96,7 +93,6 @@ class ArrayPlotData(AbstractPlotData):
             self.data_changed = {'removed': [name]}
         else:
             raise KeyError("Data series '%s' does not exist." % name)
-
 
     def set_data(self, name, new_data, generate_name=False):
         """ Sets the specified array as the value for either the specified
@@ -128,10 +124,9 @@ class ArrayPlotData(AbstractPlotData):
         if generate_name:
             names = self._generate_names(1)
             name = names[0]
-            
+
         self.update_data({name: new_data})
         return name
-
 
     def update_data(self, *args, **kwargs):
         """ Sets the specified array as the value for either the specified
@@ -143,7 +138,7 @@ class ArrayPlotData(AbstractPlotData):
         """
         if not self.writable:
             return None
-        
+
         data = dict(*args, **kwargs)
         event = {}
         for name in data:
@@ -154,7 +149,6 @@ class ArrayPlotData(AbstractPlotData):
 
         self._update_data(data)
         self.data_changed = event
-
 
     def set_selection(self, name, selection):
         """ Overrides AbstractPlotData to do nothing and not raise an error.
@@ -169,13 +163,16 @@ class ArrayPlotData(AbstractPlotData):
         """ Generate n new names
         """
         max_index = max(self._generate_indices())
-        names = ["series{0:d}".format(n) for n in range(max_index+1, max_index+n+1)]
+        names = [
+            "series{0:d}".format(n)
+            for n in range(max_index + 1, max_index + n + 1)
+        ]
         return names
 
     def _generate_indices(self):
         """ Generator that yields all integers that match "series%d" in keys
         """
-        yield 0 # default minimum
+        yield 0  # default minimum
         for name in self.list_data():
             if name.startswith('series'):
                 try:
@@ -196,4 +193,3 @@ class ArrayPlotData(AbstractPlotData):
                 data[name] = value
 
         self.arrays.update(data)
-

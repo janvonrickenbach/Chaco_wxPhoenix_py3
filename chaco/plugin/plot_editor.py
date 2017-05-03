@@ -13,10 +13,9 @@ class PlotUI(HasTraits):
     component = Any()
 
     traits_view = tui.View(
-        tui.Item('component', editor=ComponentEditor(), show_label=False),
-
-        resizable=True,
-    )
+        tui.Item(
+            'component', editor=ComponentEditor(), show_label=False),
+        resizable=True, )
 
 
 class PlotEditor(TraitsUIEditor):
@@ -24,8 +23,8 @@ class PlotEditor(TraitsUIEditor):
     """
 
     bgcolor = Str('white')
-    image_default_origin = Enum("bottom left", "top left",
-                                "bottom right", "top right")
+    image_default_origin = Enum("bottom left", "top left", "bottom right",
+                                "top right")
 
     # The plot.
     component = Property(Any)
@@ -38,8 +37,12 @@ class PlotEditor(TraitsUIEditor):
     # to notify it of our being closed, etc.
     session = Any()
 
-    def __init__(self, is_image=False, bgcolor="white",
-                 image_default_origin="top left", *args, **kw):
+    def __init__(self,
+                 is_image=False,
+                 bgcolor="white",
+                 image_default_origin="top left",
+                 *args,
+                 **kw):
 
         super(TraitsUIEditor, self).__init__(**kw)
 
@@ -54,7 +57,6 @@ class PlotEditor(TraitsUIEditor):
             top_container = self._create_top_container()
 
         self.obj = PlotUI(component=top_container)
-
 
     #### PlotWindow interface ##################################################
 
@@ -85,7 +87,6 @@ class PlotEditor(TraitsUIEditor):
     def raise_window(self):
         self.window.activate_editor(self)
 
-
     #### Editor interface ######################################################
 
     def destroy_control(self):
@@ -93,7 +94,6 @@ class PlotEditor(TraitsUIEditor):
         """
         self._on_window_close()
         super(TraitsUIEditor, self).destroy_control()
-
 
     #### Private interface #####################################################
 
@@ -114,8 +114,7 @@ class PlotEditor(TraitsUIEditor):
             padding=50,
             fill_padding=True,
             bgcolor=self.bgcolor,
-            use_backbuffer=True,
-        )
+            use_backbuffer=True, )
         return plot
 
     def _create_top_img_container(self):
@@ -124,8 +123,7 @@ class PlotEditor(TraitsUIEditor):
             fill_padding=True,
             bgcolor=self.bgcolor,
             use_backbuffer=True,
-            default_origin=self.image_default_origin,
-        )
+            default_origin=self.image_default_origin, )
         return plot
 
     def _on_window_close(self):
@@ -135,4 +133,3 @@ class PlotEditor(TraitsUIEditor):
                 self.session.del_window(ndx)
             except ValueError:
                 pass
-

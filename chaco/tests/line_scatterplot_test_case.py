@@ -10,7 +10,6 @@ from chaco.line_scatterplot_1d import LineScatterPlot1D
 
 
 class LineScatterPlot1DTest(unittest.TestCase):
-
     def setUp(self):
         self.size = (250, 250)
         data_source = ArrayDataSource(arange(10))
@@ -20,8 +19,7 @@ class LineScatterPlot1DTest(unittest.TestCase):
         self.scatterplot = LineScatterPlot1D(
             index=data_source,
             index_mapper=index_mapper,
-            border_visible=False,
-        )
+            border_visible=False, )
         self.scatterplot.outer_bounds = list(self.size)
 
     def test_scatter_1d(self):
@@ -98,32 +96,29 @@ class LineScatterPlot1DTest(unittest.TestCase):
 
     def test_scatter_1d_map_data(self):
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([4.5, 0]))
+        assert_almost_equal(self.scatterplot.map_data(points), array([4.5, 0]))
 
     def test_scatter_1d_map_data_horizontal(self):
         self.scatterplot.orientation = 'h'
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([0, 4.5]))
+        assert_almost_equal(self.scatterplot.map_data(points), array([0, 4.5]))
 
     def test_scatter_1d_map_data_flipped(self):
         self.scatterplot.direction = 'flipped'
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([4.5, 9.0]))
+        assert_almost_equal(
+            self.scatterplot.map_data(points), array([4.5, 9.0]))
 
     def test_scatter_1d_map_data_horizontal_flipped(self):
         self.scatterplot.direction = 'flipped'
         self.scatterplot.orientation = 'h'
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([9.0, 4.5]))
+        assert_almost_equal(
+            self.scatterplot.map_data(points), array([9.0, 4.5]))
 
     def test_scatter_1d_selection(self):
-        self.scatterplot.index.metadata['selections'] = [
-            (arange(10) % 2 == 0),
-        ]
+        self.scatterplot.index.metadata['selections'] = [(arange(10) % 2 == 0),
+                                                         ]
 
         gc = PlotGraphicsContext(self.size)
         gc.render_component(self.scatterplot)
@@ -145,9 +140,8 @@ class LineScatterPlot1DTest(unittest.TestCase):
     def test_scatter_1d_selection_alpha(self):
         # test with different alpha
         self.scatterplot.unselected_alpha = 0.4
-        self.scatterplot.index.metadata['selections'] = [
-            (arange(10) % 2 == 0),
-        ]
+        self.scatterplot.index.metadata['selections'] = [(arange(10) % 2 == 0),
+                                                         ]
 
         gc = PlotGraphicsContext(self.size)
         gc.render_component(self.scatterplot)

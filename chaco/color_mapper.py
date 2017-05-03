@@ -52,14 +52,13 @@ class ColorMapTemplate(HasTraits):
     def to_colormap(self, range=None):
         """ Returns a ColorMapper instance from this template.
         """
-        colormap = ColorMapper(self.segment_map, steps = self.steps)
+        colormap = ColorMapper(self.segment_map, steps=self.steps)
         if range:
             colormap.range = range
         else:
-            colormap.range = DataRange1D(low = self.range_low_setting,
-                                       high = self.range_high_setting)
+            colormap.range = DataRange1D(
+                low=self.range_low_setting, high=self.range_high_setting)
         return colormap
-
 
 
 class ColorMapper(AbstractColormap):
@@ -99,7 +98,6 @@ class ColorMapper(AbstractColormap):
     # The raw segment data for creating the mapping array.
     _segmentdata = Dict  # (Str, Tuple | List)
 
-
     #------------------------------------------------------------------------
     # Static methods.
     #------------------------------------------------------------------------
@@ -123,25 +121,25 @@ class ColorMapper(AbstractColormap):
         n_colors, n_components = palette.shape
         if n_colors < 2:
             raise ValueError("Palette must contain at least two colors.")
-        if n_components not in (3,4):
+        if n_components not in (3, 4):
             raise ValueError("Palette must be of RGB or RGBA colors. "
-                "Got %s color components." % n_components)
+                             "Got %s color components." % n_components)
 
         # Compute the % offset for each of the color locations.
         offsets = linspace(0.0, 1.0, n_colors)
 
         # From the offsets and the color data, generate a segment map.
         segment_map = {}
-        red_values = palette[:,0]
+        red_values = palette[:, 0]
         segment_map['red'] = list(zip(offsets, red_values, red_values))
-        green_values = palette[:,1]
+        green_values = palette[:, 1]
         segment_map['green'] = list(zip(offsets, green_values, green_values))
-        blue_values = palette[:,2]
+        blue_values = palette[:, 2]
         segment_map['blue'] = list(zip(offsets, blue_values, blue_values))
         if n_components == 3:
             alpha_values = ones(n_colors)
         else:
-            alpha_values = palette[:,3]
+            alpha_values = palette[:, 3]
         segment_map['alpha'] = list(zip(offsets, alpha_values, alpha_values))
 
         return cls(segment_map, **traits)
@@ -186,16 +184,16 @@ class ColorMapper(AbstractColormap):
         colormap_file = open(filename, 'r')
         lines = colormap_file.readlines()
         colormap_file.close()
-        rgba_arr = [[],[],[],[]]
+        rgba_arr = [[], [], [], []]
         for line in lines[1:]:
             strvalues = line.strip().split()
             values = [float32(value) for value in strvalues]
             if len(values) > 4:
-                channels = (0,1,2,3)
+                channels = (0, 1, 2, 3)
             else:
-                channels = (0,1,2)
+                channels = (0, 1, 2)
             for i in channels:
-                channeltuple = (values[0], values[i+1], values[i+1])
+                channeltuple = (values[0], values[i + 1], values[i + 1])
                 rgba_arr[i].append(channeltuple)
         # Alpha is frequently unspecified.
         if len(rgba_arr[-1]) == 0:
@@ -211,7 +209,6 @@ class ColorMapper(AbstractColormap):
         }
 
         return cls(rgba_dict, **traits)
-
 
     #------------------------------------------------------------------------
     # Public methods
@@ -240,7 +237,6 @@ class ColorMapper(AbstractColormap):
         super(ColorMapper, self).__init__(**kwtraits)
         return
 
-
     def map_screen(self, data_array):
         """ Maps an array of data values to an array of colors.
         """
@@ -248,11 +244,10 @@ class ColorMapper(AbstractColormap):
             self._recalculate()
 
         rgba = map_colors(data_array, self.steps, self.range.low,
-                self.range.high, self._red_lut, self._green_lut,
-                self._blue_lut, self._alpha_lut)
+                          self.range.high, self._red_lut, self._green_lut,
+                          self._blue_lut, self._alpha_lut)
 
         return rgba
-
 
     def map_index(self, ary):
         """ Maps an array of values to their corresponding color band index.
@@ -261,7 +256,8 @@ class ColorMapper(AbstractColormap):
         if self._dirty:
             self._recalculate()
 
-        indices = (ary - self.range.low) / (self.range.high - self.range.low) * self.steps
+        indices = (ary - self.range.low) / (
+            self.range.high - self.range.low) * self.steps
 
         return clip(indices.astype(int), 0, self.steps - 1)
 
@@ -270,8 +266,8 @@ class ColorMapper(AbstractColormap):
         """
         for name in ("red", "green", "blue", "alpha"):
             data = asarray(self._segmentdata[name])
-            data[:, (1,2)] = data[:, (2,1)]
-            data[:,0] = (1.0 - data[:,0])
+            data[:, (1, 2)] = data[:, (2, 1)]
+            data[:, 0] = (1.0 - data[:, 0])
             self._segmentdata[name] = data[::-1]
         self._recalculate()
 
@@ -282,16 +278,15 @@ class ColorMapper(AbstractColormap):
             self._recalculate()
 
         rgba = map_colors_uint8(data_array, self.steps, self.range.low,
-                self.range.high, self._red_lut_uint8, self._green_lut_uint8,
-                self._blue_lut_uint8, self._alpha_lut_uint8)
+                                self.range.high, self._red_lut_uint8,
+                                self._green_lut_uint8, self._blue_lut_uint8,
+                                self._alpha_lut_uint8)
 
         return rgba
-
 
     #------------------------------------------------------------------------
     # Private methods
     #------------------------------------------------------------------------
-
 
     def _get_color_bands(self):
         """ Gets the color bands array.
@@ -311,18 +306,14 @@ class ColorMapper(AbstractColormap):
         """ Recalculates the mapping arrays.
         """
 
-        self._red_lut = self._make_mapping_array(
-            self.steps, self._segmentdata['red']
-        )
-        self._green_lut = self._make_mapping_array(
-            self.steps, self._segmentdata['green']
-        )
-        self._blue_lut = self._make_mapping_array(
-            self.steps, self._segmentdata['blue']
-        )
-        self._alpha_lut = self._make_mapping_array(
-            self.steps, self._segmentdata['alpha']
-        )
+        self._red_lut = self._make_mapping_array(self.steps,
+                                                 self._segmentdata['red'])
+        self._green_lut = self._make_mapping_array(self.steps,
+                                                   self._segmentdata['green'])
+        self._blue_lut = self._make_mapping_array(self.steps,
+                                                  self._segmentdata['blue'])
+        self._alpha_lut = self._make_mapping_array(self.steps,
+                                                   self._segmentdata['alpha'])
         self._red_lut_uint8 = (self._red_lut * 255.0).astype('uint8')
         self._green_lut_uint8 = (self._green_lut * 255.0).astype('uint8')
         self._blue_lut_uint8 = (self._blue_lut * 255.0).astype('uint8')
@@ -363,25 +354,25 @@ class ColorMapper(AbstractColormap):
         if len(shape) != 2 and shape[1] != 3:
             raise ValueError("data must be nx3 format")
 
-        x  = adata[:,0]
-        y0 = adata[:,1]
-        y1 = adata[:,2]
+        x = adata[:, 0]
+        y0 = adata[:, 1]
+        y1 = adata[:, 2]
 
         if x[0] != 0. or x[-1] != 1.0:
             raise ValueError(
                 "data mapping points must start with x=0. and end with x=1")
-        if sometrue(sort(x)-x):
+        if sometrue(sort(x) - x):
             raise ValueError(
                 "data mapping points must have x in increasing order")
         # begin generation of lookup table
-        x = x * (n-1)
-        lut = zeros((n,), float32)
+        x = x * (n - 1)
+        lut = zeros((n, ), float32)
         xind = arange(float32(n), dtype=float32)
         ind = searchsorted(x, xind)[1:-1]
 
-        lut[1:-1] = ( divide(xind[1:-1] - take(x,ind-1),
-                             take(x,ind)-take(x,ind-1) )
-                      *(take(y0,ind)-take(y1,ind-1)) + take(y1,ind-1))
+        lut[1:-1] = (divide(xind[1:-1] - take(x, ind - 1),
+                            take(x, ind) - take(x, ind - 1)) *
+                     (take(y0, ind) - take(y1, ind - 1)) + take(y1, ind - 1))
         lut[0] = y1[0]
         lut[-1] = y0[-1]
 
@@ -415,23 +406,22 @@ class ColorMapper(AbstractColormap):
         #xa = where(xa>1.,1.,xa)
         #xa = where(xa<0.,0.,xa)
 
-
         nanmask = isnan(xa)
-        xa = where(nanmask, 0, (xa * (self.steps-1)).astype(int))
-        rgba = zeros(xa.shape+(4,), float)
-        rgba[...,0] = where(nanmask, 0, take(self._red_lut, xa))
-        rgba[...,1] = where(nanmask, 0, take(self._green_lut, xa))
-        rgba[...,2] = where(nanmask, 0, take(self._blue_lut, xa))
-        rgba[...,3] = where(nanmask, 0, take(self._alpha_lut, xa))
+        xa = where(nanmask, 0, (xa * (self.steps - 1)).astype(int))
+        rgba = zeros(xa.shape + (4, ), float)
+        rgba[..., 0] = where(nanmask, 0, take(self._red_lut, xa))
+        rgba[..., 1] = where(nanmask, 0, take(self._green_lut, xa))
+        rgba[..., 2] = where(nanmask, 0, take(self._blue_lut, xa))
+        rgba[..., 3] = where(nanmask, 0, take(self._alpha_lut, xa))
         if vtype == 'scalar':
-            rgba = tuple(rgba[0,:])
+            rgba = tuple(rgba[0, :])
 
         return rgba
 
     def _range_changed(self, old, new):
         if old is not None:
-            old.on_trait_change(self._range_change_handler, "updated",
-                                remove = True)
+            old.on_trait_change(
+                self._range_change_handler, "updated", remove=True)
         if new is not None:
             new.on_trait_change(self._range_change_handler, "updated")
 
@@ -440,7 +430,6 @@ class ColorMapper(AbstractColormap):
     def _range_change_handler(self, obj, name, new):
         "Handles the range changing; dynamically attached to our ranges"
         self.updated = obj
-
 
 
 # EOF

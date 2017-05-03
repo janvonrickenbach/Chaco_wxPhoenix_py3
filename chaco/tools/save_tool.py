@@ -57,18 +57,21 @@ class SaveTool(BaseTool):
         """ Saves an image of the component.
         """
         from chaco.api import PlotGraphicsContext
-        gc = PlotGraphicsContext((int(self.component.outer_width), int(self.component.outer_height)))
+        gc = PlotGraphicsContext((int(self.component.outer_width),
+                                  int(self.component.outer_height)))
         self.component.draw(gc, mode="normal")
         gc.save(self.filename)
         return
 
     def _save_pdf(self):
         from chaco.pdf_graphics_context import PdfPlotGraphicsContext
-        gc = PdfPlotGraphicsContext(filename=self.filename,
-                pagesize = self.pagesize,
-                dest_box = self.dest_box,
-                dest_box_units = self.dest_box_units)
+        gc = PdfPlotGraphicsContext(
+            filename=self.filename,
+            pagesize=self.pagesize,
+            dest_box=self.dest_box,
+            dest_box_units=self.dest_box_units)
         gc.render_component(self.component)
         gc.save()
+
 
 # EOF

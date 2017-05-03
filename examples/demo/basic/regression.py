@@ -24,6 +24,7 @@ from chaco.api import ArrayPlotData, Plot
 from chaco.tools.api import PanTool, ZoomTool, RegressionLasso, \
         RegressionOverlay
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
@@ -46,17 +47,20 @@ def _create_plot_component():
 
     # Add the regression tool and overlay.  These need to be added
     # directly to the scatterplot instance (and not the Plot instance).
-    regression = RegressionLasso(scatterplot,
-        selection_datasource=scatterplot.index)
+    regression = RegressionLasso(
+        scatterplot, selection_datasource=scatterplot.index)
     scatterplot.tools.append(regression)
-    scatterplot.overlays.append(RegressionOverlay(scatterplot,
-                                                  lasso_selection=regression))
+    scatterplot.overlays.append(
+        RegressionOverlay(
+            scatterplot, lasso_selection=regression))
     return plot
+
 
 #===============================================================================
 # Attributes to use for the plot view.
 size = (600, 600)
 title = "Regression Selection"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -65,15 +69,16 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title=title
-                    )
+        Group(
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title)
 
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
+
 
 demo = Demo()
 

@@ -26,26 +26,38 @@ from .base import reverse_map_1d
 # Traits UI View for customizing a scatter plot.
 #------------------------------------------------------------------------------
 
+
 class ScatterPlotView(View):
     """ Traits UI View for customizing a scatter plot.
     """
+
     def __init__(self):
         vgroup = VGroup(
-                Item("marker", label="Marker type"),
-                Item("marker_size", label="Size"),
-                Item("color", label="Color", style="custom"),
-                )
+            Item(
+                "marker", label="Marker type"),
+            Item(
+                "marker_size", label="Size"),
+            Item(
+                "color", label="Color", style="custom"), )
         super(ScatterPlotView, self).__init__(vgroup)
         self.buttons = ["OK", "Cancel"]
+
 
 #------------------------------------------------------------------------------
 # Helper functions for scatterplot rendering
 #------------------------------------------------------------------------------
 
 
-def render_markers(gc, points, marker, marker_size,
-                   color, line_width, outline_color,
-                   custom_symbol=None, debug=False, point_mask=None):
+def render_markers(gc,
+                   points,
+                   marker,
+                   marker_size,
+                   color,
+                   line_width,
+                   outline_color,
+                   custom_symbol=None,
+                   debug=False,
+                   point_mask=None):
     """ Helper function for a PlotComponent instance to render a
     set of (x,y) points onto a graphics context.  Currently, it makes some
     assumptions about the attributes on the plot object; these may be factored
@@ -133,7 +145,7 @@ def render_markers(gc, points, marker, marker_size,
         if not marker.antialias:
             gc.set_antialias(False)
         if not isinstance(marker, CustomMarker):
-            for pt,size in zip(points, marker_size):
+            for pt, size in zip(points, marker_size):
                 sx, sy = pt
                 with gc:
                     gc.translate_ctm(sx, sy)
@@ -142,7 +154,7 @@ def render_markers(gc, points, marker, marker_size,
                     gc.draw_path(marker.draw_mode)
         else:
             path = custom_symbol
-            for pt,size in zip(points, marker_size):
+            for pt, size in zip(points, marker_size):
                 sx, sy = pt
                 with gc:
                     gc.translate_ctm(sx, sy)
@@ -151,6 +163,7 @@ def render_markers(gc, points, marker, marker_size,
                     gc.draw_path(STROKE)
 
     return
+
 
 #------------------------------------------------------------------------------
 # The scatter plot
@@ -202,8 +215,8 @@ class ScatterPlot(BaseXYPlot):
     # The RGBA tuple for rendering the fill.  It is always a tuple of length 4.
     # It has the same RGB values as outline_color_, and its alpha value is the
     # alpha value of self.outline_color multiplied by self.alpha.
-    effective_outline_color = Property(Tuple, depends_on=['outline_color', 'alpha'])
-
+    effective_outline_color = Property(
+        Tuple, depends_on=['outline_color', 'alpha'])
 
     # Traits UI View for customizing the plot.
     traits_view = ScatterPlotView()
@@ -301,7 +314,8 @@ class ScatterPlot(BaseXYPlot):
                 return None
 
             try:
-                ndx = reverse_map_1d(index_data, data_pt, self.index.sort_order)
+                ndx = reverse_map_1d(index_data, data_pt,
+                                     self.index.sort_order)
             except IndexError as e:
                 # if reverse_map raises this exception, it means that data_pt is
                 # outside the range of values in index_data.
@@ -321,8 +335,8 @@ class ScatterPlot(BaseXYPlot):
             y = value_data[ndx]
             if isnan(x) or isnan(y):
                 return None
-            sx, sy = self.map_screen([x,y])
-            if ((threshold == 0.0) or (screen_pt[0]-sx) < threshold):
+            sx, sy = self.map_screen([x, y])
+            if ((threshold == 0.0) or (screen_pt[0] - sx) < threshold):
                 return ndx
             else:
                 return None
@@ -333,16 +347,15 @@ class ScatterPlot(BaseXYPlot):
             if len(screen_points) == 0:
                 return None
             if index_only:
-                distances = abs(screen_points[:,0] - screen_pt[0])
+                distances = abs(screen_points[:, 0] - screen_pt[0])
             else:
                 delta = screen_points - array([screen_pt])
-                distances = sqrt(sum(delta*delta, axis=1))
+                distances = sqrt(sum(delta * delta, axis=1))
             closest_ndx = nanargmin(distances)
             if distances[closest_ndx] <= threshold:
                 return closest_ndx
             else:
                 return None
-
 
     #------------------------------------------------------------------------
     # Private methods; implements the BaseXYPlot stub methods
@@ -371,8 +384,8 @@ class ScatterPlot(BaseXYPlot):
         index_range_mask = self.index_mapper.range.mask_data(index)
         value_range_mask = self.value_mapper.range.mask_data(value)
 
-        nan_mask = (isfinite(index) & index_mask &
-                    isfinite(value) & value_mask)
+        nan_mask = (isfinite(index) & index_mask & isfinite(value) &
+                    value_mask)
         point_mask = nan_mask & index_range_mask & value_range_mask
 
         if not self._cache_valid:
@@ -443,11 +456,16 @@ class ScatterPlot(BaseXYPlot):
             if ds.metadata.get('selection_mask', None) is not None:
                 kw[axis + "_sel_mask"] = ds.metadata['selection_mask']
 
-        points, selections = scatterplot_gather_points(index, index_range.low, index_range.high,
-                                    value, value_range.low, value_range.high,
-                                    index_mask = index_mask,
-                                    value_mask = value_mask,
-                                    **kw)
+        points, selections = scatterplot_gather_points(
+            index,
+            index_range.low,
+            index_range.high,
+            value,
+            value_range.low,
+            value_range.high,
+            index_mask=index_mask,
+            value_mask=value_mask,
+            **kw)
 
         if not self._cache_valid:
             self._cached_data_pts = points
@@ -460,7 +478,6 @@ class ScatterPlot(BaseXYPlot):
             else:
                 self._cached_selected_pts = None
                 self._selection_cache_valid = True
-
 
     def _gather_points(self):
         #self._gather_points_fast()
@@ -477,16 +494,30 @@ class ScatterPlot(BaseXYPlot):
             gc.save_state()
             gc.clip_to_rect(self.x, self.y, self.width, self.height)
 
-        self.render_markers_func(gc, points, self.marker, self.marker_size,
-                       self.effective_color, self.line_width, self.effective_outline_color,
-                       self.custom_symbol, point_mask=self._cached_point_mask)
+        self.render_markers_func(
+            gc,
+            points,
+            self.marker,
+            self.marker_size,
+            self.effective_color,
+            self.line_width,
+            self.effective_outline_color,
+            self.custom_symbol,
+            point_mask=self._cached_point_mask)
 
-        if self._cached_selected_pts is not None and len(self._cached_selected_pts) > 0:
+        if self._cached_selected_pts is not None and len(
+                self._cached_selected_pts) > 0:
             sel_pts = self.map_screen(self._cached_selected_pts)
-            self.render_markers_func(gc, sel_pts, self.selection_marker,
-                    self.selection_marker_size, self.selection_color_,
-                    self.selection_line_width, self.selection_outline_color_,
-                    self.custom_symbol, point_mask=self._cached_point_mask)
+            self.render_markers_func(
+                gc,
+                sel_pts,
+                self.selection_marker,
+                self.selection_marker_size,
+                self.selection_color_,
+                self.selection_line_width,
+                self.selection_outline_color_,
+                self.custom_symbol,
+                point_mask=self._cached_point_mask)
 
         if not icon_mode:
             # Draw the default axes, if necessary
@@ -494,7 +525,7 @@ class ScatterPlot(BaseXYPlot):
             gc.restore_state()
 
     def _render_icon(self, gc, x, y, width, height):
-        point = array([x+width/2, y+height/2])
+        point = array([x + width / 2, y + height / 2])
         self._render(gc, [point], icon_mode=True)
         return
 
@@ -551,7 +582,7 @@ class ScatterPlot(BaseXYPlot):
             edge_alpha = self.color_[-1]
         else:
             edge_alpha = 1.0
-        c = self.color_[:3] + (edge_alpha * self.alpha,)
+        c = self.color_[:3] + (edge_alpha * self.alpha, )
         return c
 
     @cached_property
@@ -560,7 +591,8 @@ class ScatterPlot(BaseXYPlot):
             edge_alpha = self.outline_color_[-1]
         else:
             edge_alpha = 1.0
-        c = self.outline_color_[:3] + (edge_alpha * self.alpha,)
+        c = self.outline_color_[:3] + (edge_alpha * self.alpha, )
         return c
+
 
 # EOF

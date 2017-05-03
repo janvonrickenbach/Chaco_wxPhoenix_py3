@@ -12,7 +12,7 @@ from chaco.tools.api import PanTool, ZoomTool
 
 # Note: these are imported to be exposed in the namespace.
 from chaco.scales.api import (FixedScale, Pow10Scale, LogScale,
-    CalendarScaleSystem)
+                              CalendarScaleSystem)
 from chaco.default_colormaps import *
 
 from . import plot_maker
@@ -20,10 +20,10 @@ from .session import PlotSession
 
 session = PlotSession()
 
-
 #------------------------------------------------------------------------
 # General help commands
 #------------------------------------------------------------------------
+
 
 def chaco_commands():
     """
@@ -134,9 +134,11 @@ def chaco_commands():
     load_prefs -- loads a previously-saved set of preferences
     """
 
+
 #------------------------------------------------------------------------
 # Window management commands
 #------------------------------------------------------------------------
+
 
 def figure(name=None, title=None):
     """ Creates a new figure window and returns its index.
@@ -176,6 +178,7 @@ def activate(ident=None):
         win.raise_window()
     return
 
+
 def show():
     """ Shows all the figure windows that have been created thus far, and
     creates a GUI main loop. This function is useful in scripts to show plots
@@ -185,8 +188,10 @@ def show():
 
     from traits.etsconfig.api import ETSConfig
     from pyface.util import guisupport
-    is_event_loop_running = getattr(guisupport, 'is_event_loop_running_' + ETSConfig.toolkit)
-    start_event_loop = getattr(guisupport, 'start_event_loop_' + ETSConfig.toolkit)
+    is_event_loop_running = getattr(
+        guisupport, 'is_event_loop_running_' + ETSConfig.toolkit)
+    start_event_loop = getattr(guisupport,
+                               'start_event_loop_' + ETSConfig.toolkit)
 
     if not is_event_loop_running():
         frame = session.active_window
@@ -215,6 +220,7 @@ def close(ident=None):
     for win in win_list:
         win.close()
     return
+
 
 def colormap(map):
     """Sets the active colormap.
@@ -246,15 +252,18 @@ def hold(state=None):
         session.hold = state
     return
 
+
 def curplot():
     if session.active_window:
         return session.active_window.get_container()
     else:
         return None
 
+
 #------------------------------------------------------------------------
 # Plotting functions
 #------------------------------------------------------------------------
+
 
 def _do_plot_boilerplate(kwargs, image=False):
     """ Used by various plotting functions.  Checks/handles hold state,
@@ -283,7 +292,9 @@ def _do_plot_boilerplate(kwargs, image=False):
     if not PanTool in existing_tools:
         cont.tools.append(PanTool(cont))
     if not ZoomTool in existing_tools:
-        cont.overlays.append(ZoomTool(cont, tool_mode="box", always_on=True, drag_button="right"))
+        cont.overlays.append(
+            ZoomTool(
+                cont, tool_mode="box", always_on=True, drag_button="right"))
 
     if not session.hold:
         cont.delplot(*list(cont.plots.keys()))
@@ -305,8 +316,7 @@ def plot(*data, **kwargs):
 
     cont = _do_plot_boilerplate(kwargs)
 
-    plots = plot_maker.do_plot(session.data, cont,
-                               *data, **kwargs)
+    plots = plot_maker.do_plot(session.data, cont, *data, **kwargs)
 
     cont.request_redraw()
     return
@@ -398,8 +408,7 @@ def imshow(*data, **kwargs):
 
     if "colormap" not in kwargs:
         kwargs["colormap"] = session.colormap
-    plots = plot_maker.do_imshow(session.data, cont,
-                                 *data, **kwargs)
+    plots = plot_maker.do_imshow(session.data, cont, *data, **kwargs)
     cont.request_redraw()
     return
 
@@ -422,11 +431,10 @@ def pcolor(*data, **kwargs):
 
     cont = _do_plot_boilerplate(kwargs)
 
-    plots = plot_maker.do_pcolor(session.data, session.colormap, cont,
-                                 *data, **kwargs)
+    plots = plot_maker.do_pcolor(session.data, session.colormap, cont, *data,
+                                 **kwargs)
     cont.request_redraw()
     return
-
 
 
 def contour(*data, **kwargs):
@@ -447,11 +455,10 @@ def contour(*data, **kwargs):
 
     cont = _do_plot_boilerplate(kwargs)
 
-    plots = plot_maker.do_contour(session.data, session.colormap, cont,
-                                  "line", *data, **kwargs)
+    plots = plot_maker.do_contour(session.data, session.colormap, cont, "line",
+                                  *data, **kwargs)
     cont.request_redraw()
     return
-
 
 
 def contourf(*data, **kwargs):
@@ -472,11 +479,10 @@ def contourf(*data, **kwargs):
 
     cont = _do_plot_boilerplate(kwargs)
 
-    plots = plot_maker.do_contour(session.data, session.colormap, cont,
-                                  "poly", *data, **kwargs)
+    plots = plot_maker.do_contour(session.data, session.colormap, cont, "poly",
+                                  *data, **kwargs)
     cont.request_redraw()
     return
-
 
 
 def plotv(*args, **kwargs):
@@ -548,6 +554,7 @@ def plotv(*args, **kwargs):
 # Annotations
 #-----------------------------------------------------------------------------
 
+
 def xtitle(text):
     """ Sets the horizontal axis label to *text*. """
     p = curplot()
@@ -563,12 +570,14 @@ def ytitle(text):
         p.y_axis.title = text
         p.request_redraw()
 
+
 def title(text):
     """ Sets the plot title to *text*. """
     p = curplot()
     if p:
         p.title = text
         p.request_redraw()
+
 
 _axis_params = """Parameters
     ----------
@@ -609,6 +618,7 @@ _axis_params = """Parameters
     axis_line_style : LineStyle('solid')
         The dash style of the axis line"""
 
+
 def xaxis(**kwds):
     """ Configures the x-axis.
 
@@ -627,6 +637,7 @@ def xaxis(**kwds):
             p.x_axis.visible ^= True
         p.request_redraw()
 
+
 xaxis.__doc__ = """ Configures the x-axis.
 
     Usage
@@ -636,6 +647,7 @@ xaxis.__doc__ = """ Configures the x-axis.
 
     %s
     """ % _axis_params
+
 
 def yaxis(**kwds):
     """ Configures the y-axis.
@@ -655,7 +667,8 @@ def yaxis(**kwds):
             p.y_axis.visible ^= True
         p.request_redraw()
 
-yaxis.__doc__ =     """ Configures the y-axis.
+
+yaxis.__doc__ = """ Configures the y-axis.
 
     Usage
     -----
@@ -673,12 +686,14 @@ def xgrid():
         p.x_grid.visible ^= True
         p.request_redraw()
 
+
 def ygrid():
     """ Toggles the grid perpendicular to the Y axis. """
     p = curplot()
     if p:
         p.y_grid.visible ^= True
         p.request_redraw()
+
 
 def _set_scale(axis, system):
     p = curplot()
@@ -695,10 +710,12 @@ def _set_scale(axis, system):
             setattr(p, log_linear_trait, system)
         else:
             if system is None:
-                system = dict(linear=p.linear_scale, log=p.log_scale).get(
-                    p.get(log_linear_trait), p.linear_scale)
+                system = dict(
+                    linear=p.linear_scale, log=p.log_scale).get(
+                        p.get(log_linear_trait), p.linear_scale)
             ticks.scale = system
         p.request_redraw()
+
 
 def xscale(system=None):
     """ Change the scale system for the X-axis ticks.
@@ -713,6 +730,7 @@ def xscale(system=None):
     """
     _set_scale('x', system)
 
+
 def yscale(system=None):
     """ Change the scale system for the Y-axis ticks.
 
@@ -725,6 +743,7 @@ def yscale(system=None):
     * ``yscale(some_scale_system)``: use an arbitrary ScaleSystem object.
     """
     _set_scale('y', system)
+
 
 def legend(setting=None):
     """ Sets or toggles the presence of the legend
@@ -747,6 +766,7 @@ def legend(setting=None):
 # Tools
 #-----------------------------------------------------------------------------
 
+
 def tool():
     """ Toggles tools on and off. """
     p = curplot()
@@ -754,12 +774,16 @@ def tool():
         pass
 
 
-
 #-----------------------------------------------------------------------------
 # Saving and IO
 #-----------------------------------------------------------------------------
 
-def save(filename="chacoplot.png", dpi=72, pagesize="letter", dest_box=None, units="inch"):
+
+def save(filename="chacoplot.png",
+         dpi=72,
+         pagesize="letter",
+         dest_box=None,
+         units="inch"):
     """ Saves the active plot to an file.  Currently supported file types
     are: bmp, png, jpg.
     """
@@ -776,10 +800,11 @@ def save(filename="chacoplot.png", dpi=72, pagesize="letter", dest_box=None, uni
         # Set some default PDF options if none are provided
         if dest_box is None:
             dest_box = (0.5, 0.5, -0.5, -0.5)
-        gc = PdfPlotGraphicsContext(filename = filename,
-                                    pagesize = pagesize,
-                                    dest_box = dest_box,
-                                    dest_box_units = units)
+        gc = PdfPlotGraphicsContext(
+            filename=filename,
+            pagesize=pagesize,
+            dest_box=dest_box,
+            dest_box_units=units)
 
         # temporarily turn off the backbuffer for offscreen rendering
         use_backbuffer = p.use_backbuffer
@@ -808,7 +833,6 @@ def save(filename="chacoplot.png", dpi=72, pagesize="letter", dest_box=None, uni
         print("Format not yet supported:", ext)
         print("Currently supported formats are: bmp, png, jpg.")
     return
-
 
 
 # EOF

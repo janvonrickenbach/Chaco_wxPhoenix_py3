@@ -2,8 +2,6 @@
 CompositeIconRenderer classes.
 """
 
-
-
 from numpy import array, zeros_like
 
 from enable.api import black_color_trait, white_color_trait
@@ -23,6 +21,7 @@ from .scatterplot import ScatterPlot
 class AbstractCompositeIconRenderer(HasTraits):
     """ Abstract class for an icon renderer.
     """
+
     def render_icon(self, plots, gc, x, y, width, height):
         """ Renders an icon representing the given list of plots onto the
         graphics context, using the given dimensions and at the specified
@@ -34,6 +33,7 @@ class AbstractCompositeIconRenderer(HasTraits):
 class CompositeIconRenderer(AbstractCompositeIconRenderer):
     """ Renderer for composite icons.
     """
+
     def render_icon(self, plots, *render_args):
         """ Renders an icon for a list of plots. """
         types = set(map(type, plots))
@@ -62,7 +62,6 @@ class CompositeIconRenderer(AbstractCompositeIconRenderer):
         line = [p for p in plots if type(p) == LinePlot]
         line[0]._render_icon(gc, x, y, width, height)
         scatter[0]._render_icon(gc, x, y, width, height)
-
 
 
 class Legend(AbstractOverlay):
@@ -189,8 +188,6 @@ class Legend(AbstractOverlay):
 
         return in_x and in_y
 
-
-
     def overlay(self, component, gc, view_bounds=None, mode="normal"):
         """ Draws this component overlaid on another component.
 
@@ -215,7 +212,6 @@ class Legend(AbstractOverlay):
                 PlotComponent._draw(self, gc, view_bounds, mode)
         else:
             PlotComponent._draw(self, gc, view_bounds, mode)
-
 
         return
 
@@ -256,8 +252,8 @@ class Legend(AbstractOverlay):
         # feature.
 
         with gc:
-            gc.clip_to_rect(int(self.x), int(self.y),
-                            int(self.width), int(self.height))
+            gc.clip_to_rect(
+                int(self.x), int(self.y), int(self.width), int(self.height))
             edge_space = self.border_width + self.border_padding
             icon_width, icon_height = self.icon_bounds
 
@@ -267,7 +263,7 @@ class Legend(AbstractOverlay):
 
             if self._cached_label_positions is not None:
                 if len(self._cached_label_positions) > 0:
-                    self._cached_label_positions[:,0] = icon_x
+                    self._cached_label_positions[:, 0] = icon_x
 
             for i, label_name in enumerate(self._cached_label_names):
                 # Compute the current label's position
@@ -296,7 +292,8 @@ class Legend(AbstractOverlay):
                         if len(plots) == 1:
                             plots[0]._render_icon(*render_args)
                         else:
-                            self.composite_icon_renderer.render_icon(plots, *render_args)
+                            self.composite_icon_renderer.render_icon(
+                                plots, *render_args)
                     elif plots is not None:
                         # Single plot
                         if not plots.visible:
@@ -355,7 +352,8 @@ class Legend(AbstractOverlay):
         if len(self.plots) == 0:
             return [0, 0]
 
-        plot_names, visible_plots = list(map(list, list(zip(*sorted(self.plots.items())))))
+        plot_names, visible_plots = list(
+            map(list, list(zip(*sorted(self.plots.items())))))
         label_names = self.labels
         if len(label_names) == 0:
             if len(self.plots) > 0:
@@ -407,18 +405,20 @@ class Legend(AbstractOverlay):
 
         # We need a dummy GC in order to get font metrics
         dummy_gc = font_metrics_provider()
-        label_sizes = array([label.get_width_height(dummy_gc) for label in labels])
+        label_sizes = array(
+            [label.get_width_height(dummy_gc) for label in labels])
 
         if len(label_sizes) > 0:
             max_label_width = max(label_sizes[:, 0])
-            total_label_height = sum(label_sizes[:, 1]) + (len(label_sizes)-1)*self.line_spacing
+            total_label_height = sum(label_sizes[:, 1]) + (
+                len(label_sizes) - 1) * self.line_spacing
         else:
             max_label_width = 0
             total_label_height = 0
 
         legend_width = max_label_width + self.icon_spacing + self.icon_bounds[0] \
                         + self.hpadding + 2*self.border_padding
-        legend_height = total_label_height + self.vpadding + 2*self.border_padding
+        legend_height = total_label_height + self.vpadding + 2 * self.border_padding
 
         self._cached_labels = labels
         self._cached_label_sizes = label_sizes
@@ -453,8 +453,13 @@ class Legend(AbstractOverlay):
         """ Returns a new Label instance for the given text.  Subclasses can
         override this method to customize the creation of labels.
         """
-        return Label(text=text, font=self.font, margin=0, color=self.color_,
-                     bgcolor="transparent", border_width=0)
+        return Label(
+            text=text,
+            font=self.font,
+            margin=0,
+            color=self.color_,
+            bgcolor="transparent",
+            border_width=0)
 
     def _composite_icon_renderer_default(self):
         return CompositeIconRenderer()
@@ -500,6 +505,6 @@ class Legend(AbstractOverlay):
             self._cached_labels.append(self._create_label(self.title))
             self._cached_label_names.append(self.title)
             self._cached_visible_plots.append(None)
+
+
 #-- end Legend ----------------------------------------------------------------
-
-

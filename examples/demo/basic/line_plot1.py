@@ -22,6 +22,7 @@ from traitsui.api import Item, Group, View
 from chaco.api import ArrayPlotData, HPlotContainer, Plot
 from chaco.tools.api import PanTool, ZoomTool
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
@@ -29,9 +30,9 @@ def _create_plot_component():
 
     # Create some x-y data series to plot
     x = linspace(-2.0, 10.0, 100)
-    pd = ArrayPlotData(index = x)
+    pd = ArrayPlotData(index=x)
     for i in range(5):
-        pd.set_data("y" + str(i), jn(i,x))
+        pd.set_data("y" + str(i), jn(i, x))
 
     # Create some line plots of some of the data
     plot1 = Plot(pd, title="Line Plot", padding=50, border_visible=True)
@@ -46,8 +47,12 @@ def _create_plot_component():
 
     # Create a second scatter plot of one of the datasets, linking its
     # range to the first plot
-    plot2 = Plot(pd, range2d=plot1.range2d, title="Scatter plot", padding=50,
-                 border_visible=True)
+    plot2 = Plot(
+        pd,
+        range2d=plot1.range2d,
+        title="Scatter plot",
+        padding=50,
+        border_visible=True)
     plot2.plot(('index', 'y3'), type="scatter", color="blue", marker="circle")
 
     # Create a container and add our plots
@@ -57,10 +62,12 @@ def _create_plot_component():
 
     return container
 
+
 #===============================================================================
 # Attributes to use for the plot view.
-size=(900,500)
-title="Basic x-y plots"
+size = (900, 500)
+title = "Basic x-y plots"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -69,15 +76,16 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title=title
-                    )
+        Group(
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title)
 
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
+
 
 demo = Demo()
 

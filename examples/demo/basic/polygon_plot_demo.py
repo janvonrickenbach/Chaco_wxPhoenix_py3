@@ -68,12 +68,13 @@ class PolygonPlotDemo(HasTraits):
         return plot
 
     def _polygon_plot_default(self):
-        p = self.plot.plot(('px', 'py'),
-                  type='polygon',
-                  face_color=(0,0.8,1) + (self.face_alpha,),
-                  edge_color=(0,0,0) + (self.edge_alpha,),
-                  edge_style=self.edge_style,
-                  alpha=self.alpha)
+        p = self.plot.plot(
+            ('px', 'py'),
+            type='polygon',
+            face_color=(0, 0.8, 1) + (self.face_alpha, ),
+            edge_color=(0, 0, 0) + (self.edge_alpha, ),
+            edge_style=self.edge_style,
+            alpha=self.alpha)
         return p[0]
 
     #----------------------------------------------------------------------
@@ -87,10 +88,12 @@ class PolygonPlotDemo(HasTraits):
         self.polygon_plot.edge_width = self.edge_width
 
     def _edge_alpha_changed(self):
-        self.polygon_plot.edge_color = self.polygon_plot.edge_color[:3] + (self.edge_alpha,)
+        self.polygon_plot.edge_color = self.polygon_plot.edge_color[:3] + (
+            self.edge_alpha, )
 
     def _face_alpha_changed(self):
-        self.polygon_plot.face_color = self.polygon_plot.face_color[:3] + (self.face_alpha,)
+        self.polygon_plot.face_color = self.polygon_plot.face_color[:3] + (
+            self.face_alpha, )
 
     def _alpha_changed(self):
         self.polygon_plot.alpha = self.alpha
@@ -99,7 +102,6 @@ class PolygonPlotDemo(HasTraits):
 demo = PolygonPlotDemo()
 # Hack to force initial rendering of the plot.
 demo.face_alpha = 0.5
-
 
 if __name__ == "__main__":
     demo.configure_traits()

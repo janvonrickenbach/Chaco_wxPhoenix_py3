@@ -53,12 +53,11 @@ class OverlappingPlotContainer(OverlayPlotContainer):
         for i in range(self.num_funs):
             y = jn(i, x)
             if i % 2 == 1:
-                plot = create_line_plot((x, y),
-                                        color=tuple(COLOR_PALETTE[i]),
-                                        width=2.0)
+                plot = create_line_plot(
+                    (x, y), color=tuple(COLOR_PALETTE[i]), width=2.0)
             else:
-                plot = create_scatter_plot((x, y),
-                                            color=tuple(COLOR_PALETTE[i]))
+                plot = create_scatter_plot(
+                    (x, y), color=tuple(COLOR_PALETTE[i]))
 
             if i == 0:
                 value_mapper, index_mapper, legend = \
@@ -73,10 +72,12 @@ class OverlappingPlotContainer(OverlayPlotContainer):
         legend.plots = plots
 
         # Add the title at the top
-        self.overlays.append(PlotLabel("Bessel functions",
-                                       component=self,
-                                       font="swiss 16",
-                                       overlay_position="top"))
+        self.overlays.append(
+            PlotLabel(
+                "Bessel functions",
+                component=self,
+                font="swiss 16",
+                overlay_position="top"))
 
         # Add the traits inspector tool to the container
         self.tools.append(TraitsTool(self))
@@ -130,21 +131,24 @@ class PlotExample(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        orientation="vertical"),
-                    resizable=True, title=title,
-                    width=size[0], height=size[1]
-                    )
+        Group(
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title,
+        width=size[0],
+        height=size[1])
 
     def _plot_default(self):
-        return OverlappingPlotContainer(padding=50, fill_padding=True,
-                                     bgcolor="lightgray", use_backbuffer=True)
+        return OverlappingPlotContainer(
+            padding=50,
+            fill_padding=True,
+            bgcolor="lightgray",
+            use_backbuffer=True)
 
 
 demo = PlotExample()
-
 
 if __name__ == "__main__":
     demo.configure_traits()

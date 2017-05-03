@@ -11,7 +11,6 @@ from chaco.jitterplot import JitterPlot
 
 
 class Jitterplot1DTest(unittest.TestCase):
-
     def setUp(self):
         self.size = (250, 250)
         data_source = ArrayDataSource(arange(10))
@@ -21,8 +20,7 @@ class Jitterplot1DTest(unittest.TestCase):
         self.scatterplot = JitterPlot(
             index=data_source,
             index_mapper=index_mapper,
-            border_visible=False,
-        )
+            border_visible=False, )
         self.scatterplot.outer_bounds = list(self.size)
 
     def test_scatter_1d(self):
@@ -100,24 +98,22 @@ class Jitterplot1DTest(unittest.TestCase):
 
     def test_scatter_1d_map_data(self):
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([4.5, 0]))
+        assert_almost_equal(self.scatterplot.map_data(points), array([4.5, 0]))
 
     def test_scatter_1d_map_data_horizontal(self):
         self.scatterplot.orientation = 'h'
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([0, 4.5]))
+        assert_almost_equal(self.scatterplot.map_data(points), array([0, 4.5]))
 
     def test_scatter_1d_map_data_flipped(self):
         self.scatterplot.direction = 'flipped'
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([4.5, 9.0]))
+        assert_almost_equal(
+            self.scatterplot.map_data(points), array([4.5, 9.0]))
 
     def test_scatter_1d_map_data_horizontal_flipped(self):
         self.scatterplot.direction = 'flipped'
         self.scatterplot.orientation = 'h'
         points = array([[0, 124.5], [124.5, 0]])
-        assert_almost_equal(self.scatterplot.map_data(points),
-                            array([9.0, 4.5]))
+        assert_almost_equal(
+            self.scatterplot.map_data(points), array([9.0, 4.5]))

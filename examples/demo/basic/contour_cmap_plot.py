@@ -27,11 +27,11 @@ from chaco.tools.api import PanTool, ZoomTool
 def _create_plot_component():
 
     # Create a scalar field to colormap
-    x_extents = (-2*pi, 2*pi)
-    y_extents = (-1.5*pi, 1.5*pi)
-    xs = linspace(-2*pi, 2*pi, 200)
-    ys = linspace(-1.5*pi, 1.5*pi, 100)
-    x, y = meshgrid(xs,ys)
+    x_extents = (-2 * pi, 2 * pi)
+    y_extents = (-1.5 * pi, 1.5 * pi)
+    xs = linspace(-2 * pi, 2 * pi, 200)
+    ys = linspace(-1.5 * pi, 1.5 * pi, 100)
+    x, y = meshgrid(xs, ys)
     zs = sin(log(abs((x+1)**4)+0.05))*cos(y)*1.1*(-y) + \
             sin(((x+1)**2 + y**2)/4)
 
@@ -41,15 +41,14 @@ def _create_plot_component():
 
     # Create the left plot, a colormap and simple contours
     lplot = Plot(pd)
-    lplot.img_plot("imagedata",
-                   name="cm_plot",
-                   xbounds=x_extents,
-                   ybounds=y_extents,
-                   colormap=gmt_drywet)
-    lplot.contour_plot("imagedata",
-                       type="line",
-                       xbounds=x_extents,
-                       ybounds=y_extents)
+    lplot.img_plot(
+        "imagedata",
+        name="cm_plot",
+        xbounds=x_extents,
+        ybounds=y_extents,
+        colormap=gmt_drywet)
+    lplot.contour_plot(
+        "imagedata", type="line", xbounds=x_extents, ybounds=y_extents)
 
     # Tweak some of the plot properties
     lplot.title = "Colormap and contours"
@@ -68,27 +67,29 @@ def _create_plot_component():
 
     # Create the colorbar, handing in the appropriate range and colormap
     colormap = cm_plot.color_mapper
-    colorbar = ColorBar(index_mapper=LinearMapper(range=colormap.range),
-                        color_mapper=colormap,
-                        plot=cm_plot,
-                        orientation='v',
-                        resizable='v',
-                        width=30,
-                        padding=20)
+    colorbar = ColorBar(
+        index_mapper=LinearMapper(range=colormap.range),
+        color_mapper=colormap,
+        plot=cm_plot,
+        orientation='v',
+        resizable='v',
+        width=30,
+        padding=20)
     colorbar.padding_top = lplot.padding_top
     colorbar.padding_bottom = lplot.padding_bottom
 
     # Create the left plot, contours of varying color and width
     rplot = Plot(pd, range2d=lplot.range2d)
-    rplot.contour_plot("imagedata",
-                       type="line",
-                       xbounds=x_extents,
-                       ybounds=y_extents,
-                       bgcolor="black",
-                       levels=15,
-                       styles="solid",
-                       widths=list(linspace(4.0, 0.1, 15)),
-                       colors=gmt_drywet)
+    rplot.contour_plot(
+        "imagedata",
+        type="line",
+        xbounds=x_extents,
+        ybounds=y_extents,
+        bgcolor="black",
+        levels=15,
+        styles="solid",
+        widths=list(linspace(4.0, 0.1, 15)),
+        colors=gmt_drywet)
 
     # Add some tools to the plot
     zoom = ZoomTool(rplot, tool_mode="box", always_on=False)
@@ -102,18 +103,20 @@ def _create_plot_component():
     rplot.fill_padding = True
 
     # Create a container and add our plots
-    container = HPlotContainer(padding=40, fill_padding=True,
-                               bgcolor = "white", use_backbuffer=True)
+    container = HPlotContainer(
+        padding=40, fill_padding=True, bgcolor="white", use_backbuffer=True)
     container.add(colorbar)
     container.add(lplot)
     container.add(rplot)
     return container
 
+
 #===============================================================================
 # Attributes to use for the plot view.
-size=(950,650)
-title="Some contour plots"
-bg_color="lightgray"
+size = (950, 650)
+title = "Some contour plots"
+bg_color = "lightgray"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -122,15 +125,19 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size,
-                                                            bgcolor=bg_color),
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title=title
-                    )
+        Group(
+            Item(
+                'plot',
+                editor=ComponentEditor(
+                    size=size, bgcolor=bg_color),
+                show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title)
+
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
+
 
 demo = Demo()
 

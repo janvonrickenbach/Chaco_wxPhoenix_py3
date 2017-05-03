@@ -2,7 +2,6 @@
 Defines the DataRange1D class.
 """
 
-
 # Major library imports
 from math import ceil, floor, log
 from numpy import compress, inf, isinf, isnan, ndarray
@@ -234,8 +233,8 @@ class DataRange1D(BaseDataRange):
             # value.
             if val == 'auto':
                 if len(self.sources) > 0:
-                    val = min([source.get_bounds()[0]
-                               for source in self.sources])
+                    val = min(
+                        [source.get_bounds()[0] for source in self.sources])
                 else:
                     val = -inf
             elif val == 'track':
@@ -287,8 +286,8 @@ class DataRange1D(BaseDataRange):
             # value.
             if val == 'auto':
                 if len(self.sources) > 0:
-                    val = max([source.get_bounds()[1]
-                               for source in self.sources])
+                    val = max(
+                        [source.get_bounds()[1] for source in self.sources])
                 else:
                     val = inf
             elif val == 'track':
@@ -395,8 +394,15 @@ class DataRange1D(BaseDataRange):
 
 
 ###### method to calculate bounds for a given 1-dimensional set of data
-def calc_bounds(low_set, high_set, mins, maxes, epsilon, tight_bounds,
-                margin=0.08, track_amount=0, bounds_func=None):
+def calc_bounds(low_set,
+                high_set,
+                mins,
+                maxes,
+                epsilon,
+                tight_bounds,
+                margin=0.08,
+                track_amount=0,
+                bounds_func=None):
     """ Calculates bounds for a given 1-D set of data.
 
     Parameters

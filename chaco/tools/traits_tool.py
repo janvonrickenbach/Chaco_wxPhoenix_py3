@@ -13,20 +13,25 @@ class Fifo(object):
     """ Slightly-modified version of the Fifo class from the Python cookbook:
         http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/68436
     """
+
     def __init__(self):
         self.nextin = 0
         self.nextout = 0
         self.data = {}
+
     def append(self, value):
         self.data[self.nextin] = value
         self.nextin += 1
+
     def extend(self, values):
         if len(values) > 0:
-            for i,val in enumerate(values):
-                self.data[i+self.nextin] = val
-            self.nextin += i+1
+            for i, val in enumerate(values):
+                self.data[i + self.nextin] = val
+            self.nextin += i + 1
+
     def isempty(self):
         return self.nextout >= self.nextin
+
     def pop(self):
         value = self.data[self.nextout]
         del self.data[self.nextout]
@@ -44,11 +49,11 @@ def get_nested_components(container, classes):
     """
     components = []
     worklist = Fifo()
-    worklist.append((container, (0,0)))
+    worklist.append((container, (0, 0)))
     while 1:
         item, offset = worklist.pop()
         if isinstance(item, Container):
-            new_offset = (offset[0]+item.x, offset[1]+item.y)
+            new_offset = (offset[0] + item.x, offset[1] + item.y)
             for c in item.components:
                 worklist.append((c, new_offset))
             for overlay in item.overlays + item.underlays:
@@ -96,30 +101,30 @@ class TraitsTool(BaseTool):
         # then that is the only candidate.  If our component is a container,
         # then we add its non-container components to the list of candidates;
         # any nested containers are lower priority than primary plot components.
-        candidates = get_nested_components(self.component, [Container] + self.classes)
+        candidates = get_nested_components(self.component,
+                                           [Container] + self.classes)
 
         # Hittest against all the candidate and take the first one
         item = None
         for candidate, offset in candidates:
-            if candidate.is_in(x-offset[0], y-offset[1]):
-                item=candidate
+            if candidate.is_in(x - offset[0], y - offset[1]):
+                item = candidate
                 break
 
         if item is not None:
             self.component.active_tool = self
             if item.__class__ in self.views:
-                item.edit_traits(kind="livemodal",
-                                 view=self.views[item.__class__],
-                                 parent=event.window.control)
+                item.edit_traits(
+                    kind="livemodal",
+                    view=self.views[item.__class__],
+                    parent=event.window.control)
             else:
-                item.edit_traits(kind="livemodal",
-                                 parent=event.window.control)
+                item.edit_traits(kind="livemodal", parent=event.window.control)
             event.handled = True
             self.component.active_tool = None
             item.request_redraw()
 
         return
-
 
 
 # EOF

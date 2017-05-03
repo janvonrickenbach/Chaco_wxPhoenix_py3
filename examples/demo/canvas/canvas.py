@@ -14,7 +14,6 @@ from numpy import arange, fabs, linspace, pi, sin
 from numpy import random
 from scipy.special import jn
 
-
 # Enthought library imports
 from enable.api import Viewport, Window
 from enable.tools.api import MoveTool, ResizeTool, ViewportPanTool
@@ -22,11 +21,10 @@ from enable.example_support import DemoFrame, demo_main
 from traits.api import Any, Bool, Enum, Float, HasTraits, Instance, \
                                  List, Str
 
-
 # Chaco imports
 from chaco.api import AbstractOverlay, ArrayPlotData, \
         Plot, jet, ScatterPlot, LinePlot, LinearMapper
-from chaco.tools.api import PanTool, ZoomTool , LegendTool
+from chaco.tools.api import PanTool, ZoomTool, LegendTool
 
 # Canvas imports
 from chaco.plot_canvas import PlotCanvas
@@ -57,8 +55,7 @@ DATA = {
     "ORCL": random.uniform(-2.0, 10.0, NUMPOINTS),
     "HPQ": random.uniform(-2.0, 10.0, NUMPOINTS),
     "DELL": random.uniform(-2.0, 10.0, NUMPOINTS),
-    }
-
+}
 
 
 def add_basic_tools(plot):
@@ -67,40 +64,65 @@ def add_basic_tools(plot):
     zoom = ZoomTool(component=plot, tool_mode="box", always_on=False)
     plot.overlays.append(zoom)
 
+
 def do_plot(name, pd):
     xname = name + "_x"
     yname = name + "_y"
     pd.set_data(xname, list(range(len(DATA[name]))))
     pd.set_data(yname, DATA[name])
 
-    plot = Plot(pd, padding = 30,
-                unified_draw = True,
-                border_visible = True,
-                )
+    plot = Plot(
+        pd,
+        padding=30,
+        unified_draw=True,
+        border_visible=True, )
     plot.x_axis.visible = False
     plot.title = name
-    plot.plot((xname, yname), name=name, type="line", color="blue",)
+    plot.plot(
+        (xname, yname),
+        name=name,
+        type="line",
+        color="blue", )
     return plot
+
 
 def clone_renderer(r):
     """ Returns a clone of plot renderer r """
-    basic_traits = ["orientation", "line_width", "color", "outline_color",
-                    "bgcolor", "border_visible", "border_color", "visible",
-                    "fill_padding", "resizable", "aspect_ratio",
-                    "draw_layer", "draw_order", "border_width", "resizable",
-                    "index", "value",]
+    basic_traits = [
+        "orientation",
+        "line_width",
+        "color",
+        "outline_color",
+        "bgcolor",
+        "border_visible",
+        "border_color",
+        "visible",
+        "fill_padding",
+        "resizable",
+        "aspect_ratio",
+        "draw_layer",
+        "draw_order",
+        "border_width",
+        "resizable",
+        "index",
+        "value",
+    ]
 
-    scatter_traits = ["custom_symbol", "marker", "marker_size", "selection_marker",
-                      "selection_marker_size", "selection_line_width",
-                      "selection_color"]
+    scatter_traits = [
+        "custom_symbol", "marker", "marker_size", "selection_marker",
+        "selection_marker_size", "selection_line_width", "selection_color"
+    ]
 
-    line_traits = ["selected_color", "selected_line_style", "metadata_name",
-                   "render_style"]
+    line_traits = [
+        "selected_color", "selected_line_style", "metadata_name",
+        "render_style"
+    ]
 
     if isinstance(r, ScatterPlot):
         return r.clone_traits(basic_traits + scatter_traits)
     elif isinstance(r, LinePlot):
         return r.clone_traits(basic_traits + line_traits)
+
 
 def clone_plot(clonetool, drop_position):
     # A little sketchy...
@@ -109,10 +131,11 @@ def clone_plot(clonetool, drop_position):
     # Create a new Plot object
     oldplot = clonetool.component
     newplot = Plot(oldplot.data)
-    basic_traits = ["orientation", "default_origin", "bgcolor", "border_color",
-                    "border_width", "border_visible", "draw_layer", "unified_draw",
-                    "fit_components", "fill_padding", "visible", "aspect_ratio",
-                    "title"]
+    basic_traits = [
+        "orientation", "default_origin", "bgcolor", "border_color",
+        "border_width", "border_visible", "draw_layer", "unified_draw",
+        "fit_components", "fill_padding", "visible", "aspect_ratio", "title"
+    ]
 
     for attr in basic_traits:
         setattr(newplot, attr, getattr(oldplot, attr))
@@ -154,18 +177,25 @@ def clone_plot(clonetool, drop_position):
     newplot.value_axis.unified_draw = True
 
     # Add new tools to the new plot
-    newplot.tools.append(AxisTool(component=newplot,
-        range_controller=canvas.range_controller))
+    newplot.tools.append(
+        AxisTool(
+            component=newplot, range_controller=canvas.range_controller))
 
     # Add tools to the new plot
-    pan_traits = ["drag_button", "constrain", "constrain_key", "constrain_direction",
-                  "speed"]
-    zoom_traits = ["tool_mode", "always_on", "axis", "enable_wheel", "drag_button",
-                   "wheel_zoom_step", "enter_zoom_key", "exit_zoom_key", "pointer",
-                   "color", "alpha", "border_color", "border_size", "disable_on_complete",
-                   "minimum_screen_delta", "max_zoom_in_factor", "max_zoom_out_factor"]
-    move_traits = ["drag_button", "end_drag_on_leave", "cancel_keys", "capture_mouse",
-                   "modifier_key"]
+    pan_traits = [
+        "drag_button", "constrain", "constrain_key", "constrain_direction",
+        "speed"
+    ]
+    zoom_traits = [
+        "tool_mode", "always_on", "axis", "enable_wheel", "drag_button",
+        "wheel_zoom_step", "enter_zoom_key", "exit_zoom_key", "pointer",
+        "color", "alpha", "border_color", "border_size", "disable_on_complete",
+        "minimum_screen_delta", "max_zoom_in_factor", "max_zoom_out_factor"
+    ]
+    move_traits = [
+        "drag_button", "end_drag_on_leave", "cancel_keys", "capture_mouse",
+        "modifier_key"
+    ]
 
     if not MULTITOUCH:
         for tool in oldplot.tools:
@@ -218,33 +248,39 @@ def clone_plot(clonetool, drop_position):
 
 def make_toolbar(canvas):
     # Create the toolbar
-    toolbar = PlotCanvasToolbar(bounds=[70, 200],
-                                position=[50,350],
-                                fill_padding=True,
-                                bgcolor="lightgrey",
-                                padding = 5,
-                                align = "left",
-                                )
+    toolbar = PlotCanvasToolbar(
+        bounds=[70, 200],
+        position=[50, 350],
+        fill_padding=True,
+        bgcolor="lightgrey",
+        padding=5,
+        align="left", )
 
     # Create the scatterplot
     pd = ArrayPlotData()
-    scatterplot = Plot(pd, padding=15, bgcolor="white", unified_draw=True,
-                       border_visible=True)
+    scatterplot = Plot(
+        pd,
+        padding=15,
+        bgcolor="white",
+        unified_draw=True,
+        border_visible=True)
     if not MULTITOUCH:
         scatterplot.tools.append(PanTool(scatterplot, drag_button="right"))
         scatterplot.tools.append(ZoomTool(scatterplot))
     else:
         scatterplot.tools.append(MPPanZoom(scatterplot))
-    scatterplot.overlays.append(PlotCloneTool(scatterplot, dest=canvas,
-                                              plot_cloner=clone_plot))
+    scatterplot.overlays.append(
+        PlotCloneTool(
+            scatterplot, dest=canvas, plot_cloner=clone_plot))
 
     # Create the overlay
-    overlay = TransientPlotOverlay(component=toolbar,
-                                   overlay_component=scatterplot,
-                                   bounds=[350,350],
-                                   border_visible=True,
-                                   visible = False,  # initially invisible
-                                   )
+    overlay = TransientPlotOverlay(
+        component=toolbar,
+        overlay_component=scatterplot,
+        bounds=[350, 350],
+        border_visible=True,
+        visible=False,  # initially invisible
+    )
     scatterplot.container = overlay
 
     # Create buttons
@@ -254,25 +290,32 @@ def make_toolbar(canvas):
         if MULTITOUCH:
             plot.tools.append(MPPanZoom(plot))
         else:
-            plot.tools.append(PanTool(plot, drag_button="right", constrain=True,
-                                      constrain_direction="x"))
-            plot.tools.append(ZoomTool(plot, tool_mode="range", axis="index",
-                                         always_on=False))
-        plot.overlays.append(PlotCloneTool(plot, dest=canvas,
-                                           plot_cloner=clone_plot))
-        plot_overlay = TransientPlotOverlay(component=toolbar,
-                                            overlay_component=plot,
-                                            border_visible=True,
-                                            visible=False,
-                                            )
+            plot.tools.append(
+                PanTool(
+                    plot,
+                    drag_button="right",
+                    constrain=True,
+                    constrain_direction="x"))
+            plot.tools.append(
+                ZoomTool(
+                    plot, tool_mode="range", axis="index", always_on=False))
+        plot.overlays.append(
+            PlotCloneTool(
+                plot, dest=canvas, plot_cloner=clone_plot))
+        plot_overlay = TransientPlotOverlay(
+            component=toolbar,
+            overlay_component=plot,
+            border_visible=True,
+            visible=False, )
         plot.container = plot_overlay
-        button = DataSourceButton(label=name,
-                                  bounds=[80,46],
-                                  padding = 5,
-                                  button_controller = controller,
-                                  #canvas = canvas,
-                                  plot_overlay = plot_overlay,
-                                  plotname = name)
+        button = DataSourceButton(
+            label=name,
+            bounds=[80, 46],
+            padding=5,
+            button_controller=controller,
+            #canvas = canvas,
+            plot_overlay=plot_overlay,
+            plotname=name)
         toolbar.add(button)
         canvas.overlays.append(plot_overlay)
     controller.plot = scatterplot
@@ -283,11 +326,10 @@ def make_toolbar(canvas):
 
 
 class PlotFrame(DemoFrame):
-
     def _create_viewport(self):
         # Create a container and add our plots
         canvas = PlotCanvas()
-        canvas.range_controller = RangeController(cavas = canvas)
+        canvas.range_controller = RangeController(cavas=canvas)
 
         toolbar = make_toolbar(canvas)
         toolbar.component = canvas
@@ -297,7 +339,9 @@ class PlotFrame(DemoFrame):
         if MULTITOUCH:
             viewport.tools.append(MPViewportPanTool(viewport))
         else:
-            viewport.tools.append(ViewportPanTool(viewport, drag_button="right"))
+            viewport.tools.append(
+                ViewportPanTool(
+                    viewport, drag_button="right"))
         return viewport
 
     def _create_window_mt(self):
@@ -312,7 +356,8 @@ class PlotFrame(DemoFrame):
         tconf = cfg.tconf
         tconf.from_arguments(args)
 
-        provider = NetworkBlobProvider(host=tconf.Server.host, port=tconf.Server.port)
+        provider = NetworkBlobProvider(
+            host=tconf.Server.host, port=tconf.Server.port)
         provider.start()
         return BlobWindow(self, -1, component=viewport, blob_provider=provider)
 
@@ -326,9 +371,10 @@ class PlotFrame(DemoFrame):
         else:
             return self._create_window_simple()
 
+
 if __name__ == "__main__":
     # Save demo so that it doesn't get garbage collected when run within
     # existing event loop (i.e. from ipython).
-    demo = demo_main(PlotFrame, size=(1000,700), title="PlotCanvas")
+    demo = demo_main(PlotFrame, size=(1000, 700), title="PlotCanvas")
 
 # EOF

@@ -8,8 +8,6 @@
 #
 #################################################################################
 
-
-
 # Enthought library imports
 from enable.api import Container
 from traits.api import Enum
@@ -161,7 +159,7 @@ class BasePlotFrame(Container, PlotComponent):
         return
 
     ### Persistence ###########################################################
-#    _pickles = ("_frame_slots", "_components", "fit_components", "fit_window")
+    #    _pickles = ("_frame_slots", "_components", "fit_components", "fit_window")
 
     def post_load(self, path=None):
         super(BasePlotFrame, self).post_load(path)

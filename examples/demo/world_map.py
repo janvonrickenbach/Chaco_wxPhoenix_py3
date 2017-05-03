@@ -24,6 +24,7 @@ from enable.component_editor import ComponentEditor
 from traits.api import HasTraits, Instance, Str
 from traitsui.api import Item, View
 
+
 class WorldMapPlot(HasTraits):
 
     ### Public Traits ##########################################################
@@ -32,8 +33,8 @@ class WorldMapPlot(HasTraits):
     plot = Instance(Plot)
 
     # The URL which points to the world map image to be downloaded
-    image_url = Str("http://eoimages.gsfc.nasa.gov/ve//2433/land_shallow_topo_2048.jpg")
-
+    image_url = Str(
+        "http://eoimages.gsfc.nasa.gov/ve//2433/land_shallow_topo_2048.jpg")
 
     ### Private Traits #########################################################
 
@@ -41,9 +42,14 @@ class WorldMapPlot(HasTraits):
     image_path = Str()
 
     # The view
-    traits_view = View(Item('plot', editor=ComponentEditor(),
-                            width=800, height=400, show_label=False),
-                       resizable=True)
+    traits_view = View(
+        Item(
+            'plot',
+            editor=ComponentEditor(),
+            width=800,
+            height=400,
+            show_label=False),
+        resizable=True)
 
     #---------------------------------------------------------------------------
     # Public interface
@@ -65,8 +71,8 @@ class WorldMapPlot(HasTraits):
 
         # transform each of the locations to the image data space, including
         # moving the origin from bottom left to top left
-        locations_x = (locations_x + 180) * image.data.shape[1]/360
-        locations_y = (locations_y*-1 + 90) * image.data.shape[0]/180
+        locations_x = (locations_x + 180) * image.data.shape[1] / 360
+        locations_y = (locations_y * -1 + 90) * image.data.shape[0] / 180
 
         # Create the plott data, adding the image and the locations
         plot_data = ArrayPlotData()
@@ -81,9 +87,12 @@ class WorldMapPlot(HasTraits):
 
         # Plot the locations as a scatter plot to be overlayed on top
         # of the map
-        loc_plot = self.plot.plot(('locations_x',  'locations_y'),
-                                    type='scatter', size=3, color='yellow',
-                                    marker='dot')[0]
+        loc_plot = self.plot.plot(
+            ('locations_x', 'locations_y'),
+            type='scatter',
+            size=3,
+            color='yellow',
+            marker='dot')[0]
 
         loc_plot.x_mapper.range.high = image.data.shape[1]
         loc_plot.x_mapper.range.low = 0
@@ -105,11 +114,12 @@ class WorldMapPlot(HasTraits):
         """
         example_dir = os.path.dirname(__file__)
         self.image_path = os.path.join(example_dir, 'data',
-                                        os.path.split(self.image_url)[1])
+                                       os.path.split(self.image_url)[1])
 
         if not os.path.exists(self.image_path):
             print("Downloading map image")
             urllib.request.urlretrieve(self.image_url, self.image_path)
+
 
 #===============================================================================
 # demo object that is used by the demo.py application.

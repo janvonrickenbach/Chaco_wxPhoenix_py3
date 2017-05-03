@@ -2,8 +2,6 @@
 Implementation of a plot using a custom overlay and tool
 """
 
-
-
 import numpy
 
 from traits.api import HasTraits, Instance, Enum
@@ -116,10 +114,10 @@ class XRayOverlay(AbstractOverlay):
         value_selection = value_datasource.metadata['selections']
         value = value_datasource.get_data()
 
-        x_indices = numpy.where((index > index_selection[0]) &
-                                (index < index_selection[-1]))
-        y_indices = numpy.where((value > value_selection[0]) &
-                                (value < value_selection[-1]))
+        x_indices = numpy.where((index > index_selection[0]) & (
+            index < index_selection[-1]))
+        y_indices = numpy.where((value > value_selection[0]) & (
+            value < value_selection[-1]))
 
         indices = list(set(x_indices[0]) & set(y_indices[0]))
 
@@ -151,8 +149,9 @@ class PlotExample(HasTraits):
 
     plot = Instance(Plot)
 
-    traits_view = View(Item('plot', editor=ComponentEditor()),
-                       width=600, height=600)
+    traits_view = View(
+        Item(
+            'plot', editor=ComponentEditor()), width=600, height=600)
 
     def __init__(self, index, value, *args, **kw):
         super(PlotExample, self).__init__(*args, **kw)
@@ -165,6 +164,7 @@ class PlotExample(HasTraits):
 
         line.overlays.append(XRayOverlay(line))
         line.tools.append(BoxSelectTool(line))
+
 
 index = numpy.arange(0, 25, 0.25)
 value = numpy.sin(index) + numpy.arange(0, 10, 0.1)

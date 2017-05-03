@@ -17,7 +17,6 @@ class AbstractPlotData(HasTraits):
     # lists of strings. This event is used by consumers of this data.
     data_changed = Event
 
-
     #-------------------------------------------------------------------------
     # Flags - these determine how downstream consumers of the PlotData objet
     # interact with it.  (Typically "consumers" just refers to Plots.)
@@ -30,7 +29,6 @@ class AbstractPlotData(HasTraits):
     # Can consumers (Plots) set selections?
     selectable = Bool(True)
 
-
     def list_data(self):
         """ Returns a list of valid names to use for get_data().
 
@@ -39,7 +37,6 @@ class AbstractPlotData(HasTraits):
         """
         raise NotImplementedError
 
-
     def get_data(self, name):
         """ Returns the data or data source associated with *name*.
 
@@ -47,7 +44,6 @@ class AbstractPlotData(HasTraits):
         returns None.
         """
         raise NotImplementedError
-
 
     def del_data(self, name):
         """ Deletes the array specified by *name*, or raises a KeyError if
@@ -83,7 +79,6 @@ class AbstractPlotData(HasTraits):
 
         """
         raise NotImplementedError
-
 
     def update_data(self, *args, **kwargs):
         """
@@ -126,4 +121,3 @@ class AbstractPlotData(HasTraits):
 
     def update(self, *args, **kwargs):
         self.update_data(*args, **kwargs)
-    

@@ -33,8 +33,7 @@ class WorkbenchSession(PlotSession):
             size=(self.prefs.window_width, self.prefs.window_height),
             bgcolor=self.prefs.bgcolor,
             image_default_origin=self.prefs.image_default_origin,
-            window=workbench.active_window,
-        )
+            window=workbench.active_window, )
         new_win.data = self.data
         new_win.get_container().data = self.data
         new_win.session = self
@@ -52,6 +51,4 @@ class WorkbenchSession(PlotSession):
 
         workbench.edit(new_win.obj, kind=lambda *args, **kwds: new_win)
 
-        return len(self.windows)-1
-
-
+        return len(self.windows) - 1

@@ -1,10 +1,10 @@
-
 # Enthought library imports
 from enable.api import Canvas
 from traits.api import Instance, Tuple
 
 # Local, relative chaco imports
 from .plot_containers import DEFAULT_DRAWING_ORDER
+
 
 class PlotCanvas(Canvas):
     """ The PlotCanvas is basically like Canvas, but we inherit some behaviors
@@ -24,7 +24,7 @@ class PlotCanvas(Canvas):
     #-------------------------------------------------------------------------
 
     # Explicitly use the Chaco drawing order instead of the Enable one
-    draw_order = Instance(list, args=(DEFAULT_DRAWING_ORDER,))
+    draw_order = Instance(list, args=(DEFAULT_DRAWING_ORDER, ))
 
     # Redefine the enable-level set of layers to use "plot" instead
     # of "mainlayer".  This is the same thing that BasePlotContainer does.
@@ -32,7 +32,6 @@ class PlotCanvas(Canvas):
 
     # Override the definition from Component
     use_backbuffer = False
-
 
     #-------------------------------------------------------------------------
     # Inherited methods
@@ -79,4 +78,3 @@ class PlotCanvas(Canvas):
         for component in self.components + self.underlays + self.overlays:
             component.do_layout()
         return
-

@@ -1,5 +1,3 @@
-
-
 import numpy
 
 from chaco.abstract_overlay import AbstractOverlay
@@ -92,9 +90,10 @@ class PlotToolbar(Container, AbstractOverlay):
             self._calculate_height()
 
     def _buttons_default(self):
-        return [IndexAxisLogButton, ValueAxisLogButton,
-                SaveAsButton, CopyToClipboardButton,
-                ExportDataToClipboardButton, ZoomResetButton]
+        return [
+            IndexAxisLogButton, ValueAxisLogButton, SaveAsButton,
+            CopyToClipboardButton, ExportDataToClipboardButton, ZoomResetButton
+        ]
 
     def add_button(self, button):
         """ adds a button to the toolbar
@@ -145,27 +144,23 @@ class PlotToolbar(Container, AbstractOverlay):
         with gc:
             gc.begin_path()
             gc.move_to(x + self.end_radius, y)
-            gc.arc_to(x + self.width, y,
-                    x + self.width, y + self.end_radius,
-                    self.end_radius)
+            gc.arc_to(x + self.width, y, x + self.width, y + self.end_radius,
+                      self.end_radius)
             gc.arc_to(x + self.width, y + height,
-                    x + self.width - self.end_radius, y + height,
-                    self.end_radius)
-            gc.arc_to(x, y + height,
-                    x, y + height - self.end_radius,
-                    self.end_radius)
-            gc.arc_to(x, y,
-                    x + self.end_radius, y,
-                    self.end_radius)
+                      x + self.width - self.end_radius, y + height,
+                      self.end_radius)
+            gc.arc_to(x, y + height, x, y + height - self.end_radius,
+                      self.end_radius)
+            gc.arc_to(x, y, x + self.end_radius, y, self.end_radius)
 
             if self.location in ['top', 'bottom']:
                 gc.linear_gradient(x, y, x, y + 100,
-                        numpy.array([starting_color, ending_color]),
-                        "pad")
+                                   numpy.array([starting_color, ending_color]),
+                                   "pad")
             else:
                 gc.linear_gradient(x, y, x + 100, y,
-                        numpy.array([starting_color, ending_color]),
-                        "pad")
+                                   numpy.array([starting_color, ending_color]),
+                                   "pad")
 
             gc.draw_path()
 
@@ -186,47 +181,47 @@ class PlotToolbar(Container, AbstractOverlay):
             if self.hiding:
                 self.height = height = 10
             else:
-                tallest_button = max([button.height
-                                      for button in self.components])
-                self.height = height = (tallest_button +
-                                        self.vertical_padding * 2)
+                tallest_button = max(
+                    [button.height for button in self.components])
+                self.height = height = (
+                    tallest_button + self.vertical_padding * 2)
         else:
             if self.hiding:
                 self.width = width = 10
             else:
-                widest_button = max([button.width
-                                     for button in self.components])
-                self.width = width = (widest_button +
-                                      self.horizontal_padding * 2)
+                widest_button = max(
+                    [button.width for button in self.components])
+                self.width = width = (
+                    widest_button + self.horizontal_padding * 2)
 
         if component is not None:
             # Overlay positions are not relative to the component's position,
             # so we have to add in the component's position
             cx, cy = component.outer_position
             if self.location is 'top':
-                self.x = (cx + (component.width - self.width) / 2
-                          + component.padding_left)
-                self.y = (cy + component.height + component.padding_bottom
-                          - height - 2)
+                self.x = (cx + (component.width - self.width) / 2 +
+                          component.padding_left)
+                self.y = (cy + component.height + component.padding_bottom -
+                          height - 2)
             elif self.location is 'bottom':
-                self.x = (cx + (component.width - self.width) / 2
-                          + component.padding_left)
+                self.x = (cx + (component.width - self.width) / 2 +
+                          component.padding_left)
                 self.y = cy + component.padding_bottom + 2
             elif self.location is 'left':
                 self.x = cx + component.padding_left + 2
-                self.y = (cy + (component.height - self.height) / 2
-                          + component.padding_bottom)
+                self.y = (cy + (component.height - self.height) / 2 +
+                          component.padding_bottom)
             else:  # 'right'
-                self.x = (cx + component.width + component.padding_left
-                          - width - 2)
-                self.y = (cy + (component.height - self.height) / 2
-                          + component.padding_bottom)
+                self.x = (
+                    cx + component.width + component.padding_left - width - 2)
+                self.y = (cy + (component.height - self.height) / 2 +
+                          component.padding_bottom)
 
         if self.location in ['top', 'bottom']:
             v_position = self.y + self.vertical_padding * 2
 
-            last_button_position = (self.x + self.horizontal_padding
-                                    + self.button_spacing)
+            last_button_position = (
+                self.x + self.horizontal_padding + self.button_spacing)
             for button in self.components:
                 button.x = last_button_position
                 button.y = v_position
@@ -235,8 +230,8 @@ class PlotToolbar(Container, AbstractOverlay):
             # location is 'left' or 'right'
             h_position = self.x + self.horizontal_padding
 
-            last_button_position = (self.y + self.vertical_padding
-                                    + self.button_spacing)
+            last_button_position = (
+                self.y + self.vertical_padding + self.button_spacing)
             for button in reversed(self.components):
                 h_offset = (self.width - button.width) / 2
                 button.y = last_button_position

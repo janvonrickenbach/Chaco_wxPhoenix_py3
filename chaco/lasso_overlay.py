@@ -1,8 +1,6 @@
 """ Defines the LassoOverlay class.
 """
 
-
-
 from numpy import concatenate, newaxis
 
 # Enthought library imports
@@ -11,6 +9,7 @@ from traits.api import Float, Instance, Bool
 
 # Local imports
 from .abstract_overlay import AbstractOverlay
+
 
 class LassoOverlay(AbstractOverlay):
     """ Draws a lasso selection region on top of a plot.

@@ -4,7 +4,6 @@
 from envisage.api import Plugin
 from traits.api import List
 
-
 ID = 'chaco'
 ICHACO_SESSION = ID + '.plugin.session_service.SessionService'
 
@@ -21,13 +20,10 @@ class ChacoPlugin(Plugin):
     # Extension point Ids.
     COMMANDS = 'envisage.plugins.python_shell.commands'
 
-
     contributed_commands = List(contributes_to=COMMANDS)
 
     def _contributed_commands_default(self):
-        commands = [
-            "from chaco.shell.commands import *",
-        ]
+        commands = ["from chaco.shell.commands import *", ]
         return commands
 
     #### Plugin interface ######################################################
@@ -54,4 +50,3 @@ class ChacoPlugin(Plugin):
             win.raise_window()
 
         commands.show = show
-

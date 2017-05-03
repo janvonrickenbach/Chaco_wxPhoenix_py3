@@ -19,7 +19,6 @@ micro = 9
 
 version = "%s.%s.%s" % (major, minor, micro)
 
-
 release_level = "beta"
 branch = ""
 revision = version

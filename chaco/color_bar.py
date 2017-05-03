@@ -1,8 +1,6 @@
 """ Defines the ColorBar class.
 """
 
-
-
 # Major library imports
 from numpy import array, arange, ascontiguousarray, ones, transpose, uint8
 
@@ -27,7 +25,7 @@ class ColorBar(AbstractPlotRenderer):
     index_mapper = Instance(AbstractMapper)
 
     # Screen mapper for color data
-    color_mapper = Property #Instance(ColorMapper)
+    color_mapper = Property  #Instance(ColorMapper)
 
     # Screen mapper for value data (synonym for color_mapper)
     value_mapper = Property(depends_on='color_mapper')
@@ -112,12 +110,14 @@ class ColorBar(AbstractPlotRenderer):
             grid_orientation = 'horizontal'
             axis_orientation = 'left'
 
-        self._grid = PlotGrid(orientation=grid_orientation,
-                              mapper=self.index_mapper,
-                              component=self)
-        self._axis = PlotAxis(orientation=axis_orientation,
-                              mapper=self.index_mapper,
-                              component=self)
+        self._grid = PlotGrid(
+            orientation=grid_orientation,
+            mapper=self.index_mapper,
+            component=self)
+        self._axis = PlotAxis(
+            orientation=axis_orientation,
+            mapper=self.index_mapper,
+            component=self)
         self.overlays.append(self._grid)
         self.overlays.append(self._axis)
 
@@ -140,7 +140,7 @@ class ColorBar(AbstractPlotRenderer):
 
             mapper = self.index_mapper
 
-            scrn_points = arange(mapper.low_pos, mapper.high_pos+1)
+            scrn_points = arange(mapper.low_pos, mapper.high_pos + 1)
 
             # Get the data values associated with the list of screen points.
             if mapper.range.low == mapper.range.high:
@@ -156,8 +156,9 @@ class ColorBar(AbstractPlotRenderer):
             # Get the colors associated with the data points.
             colors = self.color_mapper.map_screen(data_points)
 
-            img = self._make_color_image(colors, self.bounds[perpendicular_dim],
-                                                    self.orientation, self.direction)
+            img = self._make_color_image(colors,
+                                         self.bounds[perpendicular_dim],
+                                         self.orientation, self.direction)
             gc.draw_image(img, (self.x, self.y, self.width, self.height))
 
     def _make_color_image(self, color_values, width, orientation, direction):
@@ -167,14 +168,15 @@ class ColorBar(AbstractPlotRenderer):
         colorbar, and *orientation* is the orientation of the plot.
         """
         bmparray = ones((width, color_values.shape[0],
-                                    color_values.shape[1]))* color_values * 255
+                         color_values.shape[1])) * color_values * 255
 
         if orientation == "v":
-            bmparray = ascontiguousarray(transpose(bmparray, axes=(1,0,2))[::-1])
+            bmparray = ascontiguousarray(
+                transpose(
+                    bmparray, axes=(1, 0, 2))[::-1])
         bmparray = bmparray.astype(uint8)
         img = GraphicsContext(bmparray, "rgba32")
         return img
-
 
     #------------------------------------------------------------------------
     # Trait events

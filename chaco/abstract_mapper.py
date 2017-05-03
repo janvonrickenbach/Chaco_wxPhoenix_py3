@@ -48,12 +48,11 @@ class AbstractMapper(HasTraits):
         """
         return array([self.map_data(v) for v in screen_vals])
 
-
     #------------------------------------------------------------------------
     # Persistence-related methods
     #------------------------------------------------------------------------
     def __getstate__(self):
-        state = super(AbstractMapper,self).__getstate__()
+        state = super(AbstractMapper, self).__getstate__()
         for key in ['_cache_valid']:
             if key in state:
                 del state[key]
@@ -64,5 +63,6 @@ class AbstractMapper(HasTraits):
         self._cache_valid = False
         self._range_changed(None, self.range)
         return
+
 
 # EOF

@@ -19,15 +19,16 @@ from traitsui.api import Item, Group, View
 from chaco.api import ArrayPlotData, OverlayPlotContainer, Plot
 from chaco.tools.api import PanTool, ZoomTool, MoveTool
 
+
 #===============================================================================
 # # Create the Chaco plot.
 #===============================================================================
 def _create_plot_component():
     # Create some x-y data series to plot
     x = linspace(-2.0, 10.0, 100)
-    pd = ArrayPlotData(index = x)
+    pd = ArrayPlotData(index=x)
     for i in range(5):
-        pd.set_data("y" + str(i), jn(i,x))
+        pd.set_data("y" + str(i), jn(i, x))
 
     # Create some line plots of some of the data
     plot1 = Plot(pd)
@@ -47,13 +48,12 @@ def _create_plot_component():
     # range to the first plot
     plot2 = Plot(pd, range2d=plot1.range2d, padding=50)
     plot2.plot(('index', 'y3'), type="scatter", color="blue", marker="circle")
-    plot2.set(resizable = "",
-              bounds = [250, 250],
-              position = [550,150],
-              bgcolor = "white",
-              border_visible = True,
-              unified_draw = True
-              )
+    plot2.set(resizable="",
+              bounds=[250, 250],
+              position=[550, 150],
+              bgcolor="white",
+              border_visible=True,
+              unified_draw=True)
     plot2.tools.append(PanTool(plot2))
     plot2.tools.append(MoveTool(plot2, drag_button="right"))
     zoom = ZoomTool(component=plot2, tool_mode="box", always_on=False)
@@ -65,10 +65,12 @@ def _create_plot_component():
     container.add(plot2)
     return container
 
+
 #===============================================================================
 # Attributes to use for the plot view.
-size=(900,500)
-title="Inset plots"
+size = (900, 500)
+title = "Inset plots"
+
 
 #===============================================================================
 # # Demo class that is used by the demo.py application.
@@ -77,15 +79,16 @@ class Demo(HasTraits):
     plot = Instance(Component)
 
     traits_view = View(
-                    Group(
-                        Item('plot', editor=ComponentEditor(size=size),
-                             show_label=False),
-                        orientation = "vertical"),
-                    resizable=True, title=title
-                    )
+        Group(
+            Item(
+                'plot', editor=ComponentEditor(size=size), show_label=False),
+            orientation="vertical"),
+        resizable=True,
+        title=title)
 
     def _plot_default(self):
-         return _create_plot_component()
+        return _create_plot_component()
+
 
 demo = Demo()
 

@@ -8,11 +8,13 @@ import time as stdlib_time
 from time import *
 from datetime import datetime, timedelta, MINYEAR, MAXYEAR
 
-__all__ = ([x for x in dir(stdlib_time) if not x.startswith('_')]
-    + ['safe_fromtimestamp', 'datetime', 'timedelta', 'MINYEAR', 'MAXYEAR',
-        'EPOCH'])
+__all__ = ([x for x in dir(stdlib_time) if not x.startswith('_')] + [
+    'safe_fromtimestamp', 'datetime', 'timedelta', 'MINYEAR', 'MAXYEAR',
+    'EPOCH'
+])
 
 EPOCH = datetime.fromtimestamp(stdlib_time.time())
+
 
 # Can't monkeypatch methods of anything in datetime, so we have to wrap them
 def safe_fromtimestamp(timestamp, *args, **kwds):
@@ -33,6 +35,7 @@ def safe_fromtimestamp(timestamp, *args, **kwds):
         else:
             return datetime(MAXYEAR, 1, 1, 0, 0, 0)
 
+
 def mktime(t):
     """ mktime(tuple) -> floating point number
 
@@ -46,6 +49,7 @@ def mktime(t):
         # mktime() returns a float
         return 0.0
 
+
 def doy(dt):
     """ Find the day of year of the datetime.
 
@@ -56,7 +60,9 @@ def doy(dt):
     doy = (date - jan01).days + 1
     return doy
 
+
 struct_time = type(stdlib_time.localtime())
+
 
 def localtime(t=None):
     """
@@ -72,6 +78,5 @@ def localtime(t=None):
     else:
         dt = safe_fromtimestamp(t)
     timetuple = (dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second,
-        dt.weekday(), doy(dt), -1)
+                 dt.weekday(), doy(dt), -1)
     return struct_time(timetuple)
-

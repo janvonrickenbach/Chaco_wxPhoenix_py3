@@ -1,8 +1,6 @@
 """ Defines the ContourPolyPlot class.
 """
 
-
-
 # Major library imports
 from numpy import array, isfinite, meshgrid, transpose
 
@@ -53,16 +51,16 @@ class ContourPolyPlot(BaseContourPlot):
             gc.set_line_width(0)
             gc.set_alpha(self.alpha)
 
-            for i in range(len(self._levels)-1):
+            for i in range(len(self._levels) - 1):
                 gc.set_fill_color(self._colors[i])
                 gc.set_stroke_color(self._colors[i])
-                key = (self._levels[i], self._levels[i+1])
+                key = (self._levels[i], self._levels[i + 1])
                 for poly in self._cached_polys[key]:
                     if self.orientation == "h":
                         spoly = self.index_mapper.map_screen(poly)
                     else:
-                        spoly = array(
-                            self.index_mapper.map_screen(poly))[:, ::-1]
+                        spoly = array(self.index_mapper.map_screen(poly))[:, ::
+                                                                          -1]
                     gc.lines(spoly)
                     gc.close_path()
                     gc.draw_path()
@@ -86,8 +84,8 @@ class ContourPolyPlot(BaseContourPlot):
         c = Cntr(xg, yg, data, ~mask)
 
         self._cached_contours = {}
-        for i in range(len(self._levels)-1):
-            key = (self._levels[i], self._levels[i+1])
+        for i in range(len(self._levels) - 1):
+            key = (self._levels[i], self._levels[i + 1])
             self._cached_polys[key] = []
             polys = c.trace(*key)
             for poly in polys:

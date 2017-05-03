@@ -10,14 +10,17 @@ from numpy import abs, argmin, array, isnan, linspace
 # Local imports
 from .formatters import BasicFormatter
 
+__all__ = [
+    "AbstractScale", "DefaultScale", "FixedScale", "Pow10Scale", "LogScale",
+    "ScaleSystem", "heckbert_interval", "frange"
+]
 
-__all__ = ["AbstractScale", "DefaultScale", "FixedScale", "Pow10Scale",
-           "LogScale", "ScaleSystem", "heckbert_interval", "frange"]
 
 def frange(min, max, delta):
     """ Floating point range. """
     count = int(round((max - min) / delta)) + 1
-    return [min + i*delta for i in range(count)]
+    return [min + i * delta for i in range(count)]
+
 
 class AbstractScale(object):
     """ Defines the general interface for scales. """
@@ -105,8 +108,8 @@ class AbstractScale(object):
         -------
         (numlabels, total label width)
         """
-        return self.formatter.estimate_width(start, end, numlabels, char_width,
-                                             ticker=self)
+        return self.formatter.estimate_width(
+            start, end, numlabels, char_width, ticker=self)
 
 
 class FixedScale(AbstractScale):
@@ -114,6 +117,7 @@ class FixedScale(AbstractScale):
     multiples of the resolution.  An optional zero value can be defined
     that offsets the "nice" points to (N*resolution+zero).
     """
+
     def __init__(self, resolution, zero=0.0, formatter=None):
         self.resolution = resolution
         self.zero = zero
@@ -133,7 +137,7 @@ class FixedScale(AbstractScale):
         end -= self.zero
         start_tick = int(ceil(start / res))
         end_tick = int(floor(end / res))
-        ticks = [i*res for i in range(start_tick, end_tick+1)]
+        ticks = [i * res for i in range(start_tick, end_tick + 1)]
         return ticks
 
     def num_ticks(self, start, end, desired_ticks=None):
@@ -146,6 +150,7 @@ class FixedScale(AbstractScale):
         else:
             return (end - start) / self.resolution
 
+
 def _nice(x, round=False):
     """ Returns a bracketing interval around interval *x*, whose endpoints fall
     on "nice" values.  If *round* is False, then it uses ceil(range)
@@ -156,7 +161,8 @@ def _nice(x, round=False):
     """
     if x <= 0:
         import warnings
-        warnings.warn("Invalid (negative) range passed to tick interval calculation")
+        warnings.warn(
+            "Invalid (negative) range passed to tick interval calculation")
         x = abs(x)
     expv = floor(log10(x))
     f = x / pow(10, expv)
@@ -180,7 +186,12 @@ def _nice(x, round=False):
             nf = 10.0
     return nf * pow(10, expv)
 
-def heckbert_interval(data_low, data_high, numticks=8, nicefunc=_nice, enclose=False):
+
+def heckbert_interval(data_low,
+                      data_high,
+                      numticks=8,
+                      nicefunc=_nice,
+                      enclose=False):
     """ Returns a "nice" range and resolution for an interval and a preferred
     number of ticks, using Paul Heckbert's algorithm in Graphics Gems.
 
@@ -210,6 +221,7 @@ class DefaultScale(AbstractScale):
     """ A dynamic scale that tries to place ticks at nice numbers (1, 2, 5, 10)
     so that ticks don't "pop" as the resolution changes.
     """
+
     def __init__(self, formatter=None):
         if formatter is None:
             formatter = BasicFormatter()
@@ -223,7 +235,8 @@ class DefaultScale(AbstractScale):
         """
         if start == end or isnan(start) or isnan(end):
             return [start]
-        min, max, delta = heckbert_interval(start, end, desired_ticks, enclose=True)
+        min, max, delta = heckbert_interval(
+            start, end, desired_ticks, enclose=True)
         return frange(min, max, delta)
 
     def num_ticks(self, start, end, desired_ticks=8):
@@ -253,9 +266,8 @@ class Pow10Scale(AbstractScale):
         """
         if start == end or isnan(start) or isnan(end):
             return [start]
-        min, max, delta = heckbert_interval(start, end, desired_ticks,
-                                            nicefunc=self._nice_pow10,
-                                            enclose = True)
+        min, max, delta = heckbert_interval(
+            start, end, desired_ticks, nicefunc=self._nice_pow10, enclose=True)
         return frange(min, max, delta)
 
     def num_ticks(self, start, end, desired_ticks=8):
@@ -274,6 +286,7 @@ class LogScale(AbstractScale):
     """ A dynamic scale that only produces ticks and labels that work well when
     plotting data on a logarithmic scale.
     """
+
     def __init__(self, formatter=None):
         if formatter is None:
             formatter = BasicFormatter()
@@ -283,52 +296,52 @@ class LogScale(AbstractScale):
     # For a given base interval size i (i.e. "magic number"), there is a one-to-one
     # mapping between the nice tick values and the integers.
 
-    def _irep_to_value(self,n,i):
+    def _irep_to_value(self, n, i):
         """ For a given "magic number" i (i.e. spacing of the evenly spaced ticks
         in the decade [1,10]), compute the tick value of the given integer
         representation."""
         if i == 1:
-            j,k = divmod(n,9)
-            v = (k+1)*10**j
+            j, k = divmod(n, 9)
+            v = (k + 1) * 10**j
             return v
         else:
-            j,k = divmod(n,int(10.0/i))
+            j, k = divmod(n, int(10.0 / i))
             if k == 0:
                 v = 10**j
             else:
-                v = i*k*10**j
+                v = i * k * 10**j
             return v
 
-    def _power_and_interval(self,x,i):
+    def _power_and_interval(self, x, i):
         # j is the power of 10 of the decade in which x lies
         j = int(ceil(log10(x))) - 1
         # b is the interval size of the evenly spaced ticks in the decade
-        b = i*10**j
-        return (j,b)
+        b = i * 10**j
+        return (j, b)
 
-    def _power_and_index_to_irep(self,j,k,i):
+    def _power_and_index_to_irep(self, j, k, i):
         if i == 1:
-            n = j*9+(k-1)
+            n = j * 9 + (k - 1)
         else:
-            n = j*int(10.0/i)+k
+            n = j * int(10.0 / i) + k
         return n
 
-    def _logtickceil_as_irep(self,x,i):
+    def _logtickceil_as_irep(self, x, i):
         """ For a given "magic number" i (i.e. spacing of the evenly spaced ticks
         in the decade [1,10]), compute the integer representation of the smallest
         tick not less than x."""
-        j,b = self._power_and_interval(x,i)
-        k = int(ceil(float(x)/b))
-        n = self._power_and_index_to_irep(j,k,i)
+        j, b = self._power_and_interval(x, i)
+        k = int(ceil(float(x) / b))
+        n = self._power_and_index_to_irep(j, k, i)
         return n
 
-    def _logtickfloor_as_irep(self,x,i):
+    def _logtickfloor_as_irep(self, x, i):
         """ For a given "magic number" i (i.e. spacing of the evenly spaced ticks
         in the decade [1,10]), compute the integer representation of the largest
         tick not greater than x."""
-        j,b = self._power_and_interval(x,i)
-        k = int(floor(float(x)/b))
-        n = self._power_and_index_to_irep(j,k,i)
+        j, b = self._power_and_interval(x, i)
+        k = int(floor(float(x) / b))
+        n = self._power_and_index_to_irep(j, k, i)
         return n
 
     def ticks(self, start, end, desired_ticks=8):
@@ -351,16 +364,18 @@ class LogScale(AbstractScale):
         if log_interval < 1.0:
             # If the data is spaced by less than a factor of 10, then use
             # regular/linear ticking
-            min, max, delta = heckbert_interval(start, end, desired_ticks,
-                                                                enclose=True)
+            min, max, delta = heckbert_interval(
+                start, end, desired_ticks, enclose=True)
             return frange(min, max, delta)
 
         elif log_interval < desired_ticks:
             magic_numbers = [1, 2, 5]
             for interval in magic_numbers:
-                n1 = self._logtickceil_as_irep(start,interval)
-                n2 = self._logtickfloor_as_irep(end,interval)
-                ticks = [self._irep_to_value(n,interval) for n in range(n1,n2+1)]
+                n1 = self._logtickceil_as_irep(start, interval)
+                n2 = self._logtickfloor_as_irep(end, interval)
+                ticks = [
+                    self._irep_to_value(n, interval) for n in range(n1, n2 + 1)
+                ]
                 if len(ticks) < desired_ticks * 1.5:
                     return ticks
             return ticks
@@ -380,11 +395,13 @@ class LogScale(AbstractScale):
         """
         return len(self.ticks(start, end, desired_ticks))
 
+
 ##############################################################################
 #
 # ScaleSystem
 #
 ##############################################################################
+
 
 class ScaleSystem(object):
     """ Represents a collection of scales over some range of resolutions.
@@ -411,7 +428,6 @@ class ScaleSystem(object):
         # The ratio of total label character count to the available character width
         self.fill_ratio = 0.3
         self.default_numticks = 8
-
 
     def ticks(self, start, end, numticks=None):
         """ Computes nice locations for tick marks.
@@ -467,7 +483,8 @@ class ScaleSystem(object):
 
         # Check for insufficient arguments.
         if numlabels is None and char_width is None:
-            raise ValueError("Either numlabels or char_width (or both) must be given.")
+            raise ValueError(
+                "Either numlabels or char_width (or both) must be given.")
 
         if numlabels == 0 or char_width == 0 or isnan(start) or isnan(end):
             return []
@@ -509,14 +526,14 @@ class ScaleSystem(object):
             counts, widths = list(zip(*[s.label_width(start, end, char_width=char_width) \
                                       for s in scales]))
             widths = array(widths)
-            closest = argmin(abs(widths - char_width*self.fill_ratio))
+            closest = argmin(abs(widths - char_width * self.fill_ratio))
             if numlabels is None:
-                numlabels = scales[closest].num_ticks(start, end, counts[closest])
-            labels = scales[closest].labels(start, end, numlabels,
-                                            char_width=char_width)
+                numlabels = scales[closest].num_ticks(start, end,
+                                                      counts[closest])
+            labels = scales[closest].labels(
+                start, end, numlabels, char_width=char_width)
 
         return labels
-
 
     def _get_scale(self, start, end, numticks):
         if len(self.scales) == 0:
@@ -536,7 +553,9 @@ class ScaleSystem(object):
         return closest_scale
 
     def _get_scale_bisect(self, start, end, numticks):
-        scale_intervals = [s.num_ticks(start, end, numticks) for s in self.scales]
+        scale_intervals = [
+            s.num_ticks(start, end, numticks) for s in self.scales
+        ]
         sorted_scales = sorted(zip(scale_intervals, self.scales))
         ndx = bisect(sorted_scales, numticks, lo=0, hi=len(self.scales))
         if ndx == len(self.scales):
@@ -545,7 +564,7 @@ class ScaleSystem(object):
 
     def _get_scale_np(self, start, end, numticks):
         # Extract the intervals from the scales we were given
-        scale_intervals = array([s.num_ticks(start, end, numticks) for s in self.scales])
+        scale_intervals = array(
+            [s.num_ticks(start, end, numticks) for s in self.scales])
         closest = argmin(abs(scale_intervals - numticks))
         return self.scales[closest]
-

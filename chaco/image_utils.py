@@ -1,4 +1,3 @@
-
 X_PARAMS = (0, 2)  # index for x-position and width
 Y_PARAMS = (1, 3)  # index for y-position and height
 
@@ -30,7 +29,7 @@ def trim_screen_rect(screen_rect, view_rect, sub_array_size):
             scale = 2 * view_rect[i_length] / float(image_length)
             if scale < 1:
                 # Sub-image is two pixels wide, so pixel size is half the image
-                pixel_length = image_length/2
+                pixel_length = image_length / 2
                 screen_rect[i_length] *= scale
-                screen_rect[i_pos] += (1-scale) * pixel_length
+                screen_rect[i_pos] += (1 - scale) * pixel_length
     return screen_rect

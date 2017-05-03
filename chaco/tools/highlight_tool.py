@@ -59,7 +59,8 @@ class HighlightTool(BaseTool):
             closest_plot = self._find_curve(self.component.components, event)
             if closest_plot:
                 index = closest_plot.index
-                index.metadata[self.metadata_name] = ones(len(index.get_data()), dtype=bool)
+                index.metadata[self.metadata_name] = ones(
+                    len(index.get_data()), dtype=bool)
                 closest_plot.request_redraw()
             else:
                 # If we are attached to a plot container, then we can deselect
@@ -71,10 +72,12 @@ class HighlightTool(BaseTool):
             event.pop()
 
         elif hasattr(self.component, "hittest"):
-            hit_point = self.component.hittest((event.x, event.y), self.threshold)
+            hit_point = self.component.hittest(
+                (event.x, event.y), self.threshold)
             index = self.component.index
             if hit_point is not None:
-                index.metadata[self.metadata_name] = ones(len(index.get_data()), dtype=bool)
+                index.metadata[self.metadata_name] = ones(
+                    len(index.get_data()), dtype=bool)
                 self.component.request_redraw()
             elif self.metadata_name in index.metadata:
                 del index.metadata[self.metadata_name]
@@ -83,14 +86,14 @@ class HighlightTool(BaseTool):
         event.handled = True
         return
 
-
     def _find_curve(self, plots, event):
         # need to change to use distance - not just return first plot within threshold
         for p in plots:
             if hasattr(p, "hittest"):
-                cpoint = p.hittest((event.x,event.y), self.threshold)
+                cpoint = p.hittest((event.x, event.y), self.threshold)
                 if cpoint is not None:
                     return p
         return None
+
 
 #EOF

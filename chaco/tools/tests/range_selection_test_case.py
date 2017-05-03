@@ -9,7 +9,6 @@ from enable.testing import EnableTestAssistant
 
 
 class RangeSelectionTestCase(EnableTestAssistant, unittest.TestCase):
-
     def test_selecting_mouse_leave_clipping(self):
         # Regression test for #216.
         plot_data = ArrayPlotData()
@@ -21,14 +20,14 @@ class RangeSelectionTestCase(EnableTestAssistant, unittest.TestCase):
             for orientation in ('h', 'v'):
                 for axis in ('index', 'value'):
                     plot = Plot(
-                        plot_data, orientation=orientation, origin='top right'
-                    )
+                        plot_data, orientation=orientation, origin='top right')
 
                     renderer = plot.plot(('x', 'y'))[0]
                     renderer.bounds = [10, 20]
                     tool = RangeSelection(
-                        renderer, left_button_selects=True, axis=axis,
-                    )
+                        renderer,
+                        left_button_selects=True,
+                        axis=axis, )
                     renderer.tools.append(tool)
 
                     low_x, low_y = plot.position
@@ -42,8 +41,7 @@ class RangeSelectionTestCase(EnableTestAssistant, unittest.TestCase):
                         (low_x - 1, low_y),
                         (high_x + 1, low_y),
                         (low_x, low_y - 1),
-                        (low_x, high_y + 1),
-                    )
+                        (low_x, high_y + 1), )
                     for x, y in bounds:
                         self.mouse_down(tool, x=cx, y=cy)
                         self.mouse_leave(tool, x=x, y=y)

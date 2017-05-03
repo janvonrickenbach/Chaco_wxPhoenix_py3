@@ -7,7 +7,6 @@ from chaco.default_colormaps import *
 from traits.api import Any, Bool, Dict, HasTraits, Instance, Int, \
                                  List, Property, Trait, Str
 
-
 # Local, relative imports
 from .plot_window import PlotWindow
 from .preferences import Preferences
@@ -35,7 +34,6 @@ class PlotSession(HasTraits):
     # arrays that are provided to various plotting commands.
     data = Instance(ArrayPlotData, args=())
 
-
     #------------------------------------------------------------------------
     # "active" pointers
     #------------------------------------------------------------------------
@@ -49,7 +47,6 @@ class PlotSession(HasTraits):
     # The active colormap.
     colormap = Trait(jet, Any)
 
-
     def new_window(self, name=None, title=None, is_image=False):
         """Creates a new window and returns the index into the **windows** list
         for the new window.
@@ -58,8 +55,7 @@ class PlotSession(HasTraits):
             is_image=is_image,
             size=(self.prefs.window_width, self.prefs.window_height),
             bgcolor=self.prefs.bgcolor,
-            image_default_origin=self.prefs.image_default_origin,
-        )
+            image_default_origin=self.prefs.image_default_origin, )
         new_win.data = self.data
         new_win.get_container().data = self.data
         new_win.session = self
@@ -74,7 +70,7 @@ class PlotSession(HasTraits):
         self.windows.append(new_win)
         if name != None:
             self.window_map[name] = new_win
-        return len(self.windows)-1
+        return len(self.windows) - 1
 
     def get_window(self, ident):
         """ Retrieves a window either by index or by name """

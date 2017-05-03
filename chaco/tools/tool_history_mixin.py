@@ -14,7 +14,7 @@ class ToolHistoryMixin(HasTraits):
     """
 
     # Key to go to the original or start state in the history.
-    reset_state_key = Instance(KeySpec, args=("Esc",))
+    reset_state_key = Instance(KeySpec, args=("Esc", ))
 
     # Key to go to the previous state in the history.
     prev_state_key = Instance(KeySpec, args=("Left", "control"))
@@ -57,7 +57,6 @@ class ToolHistoryMixin(HasTraits):
         """
         pass
 
-
     #------------------------------------------------------------------------
     # Protected methods for subclasses to use
     #------------------------------------------------------------------------
@@ -83,7 +82,7 @@ class ToolHistoryMixin(HasTraits):
         match the new, truncated history. If it is False, the history index
         is unchanged.
         """
-        new_history = self._history[:self._history_index+1] + [state]
+        new_history = self._history[:self._history_index + 1] + [state]
         self._history = new_history
         if set_index:
             self._history_index = len(self._history) - 1
@@ -118,24 +117,25 @@ class ToolHistoryMixin(HasTraits):
         return
 
     def _history_handle_key(self, event):
-        if self.reset_state_key is not None and self.reset_state_key.match(event):
+        if self.reset_state_key is not None and self.reset_state_key.match(
+                event):
             self._history_index = 0
             self._reset_state_pressed()
             event.handled = True
-        elif self.prev_state_key is not None and self.prev_state_key.match(event):
+        elif self.prev_state_key is not None and self.prev_state_key.match(
+                event):
             if self._history_index > 0:
                 self._history_index -= 1
                 self._prev_state_pressed()
             event.handled = True
-        elif self.next_state_key is not None and self.next_state_key.match(event):
+        elif self.next_state_key is not None and self.next_state_key.match(
+                event):
             if self._history_index <= len(self._history) - 2:
                 self._history_index += 1
                 self._next_state_pressed()
             event.handled = True
         else:
             return
-
-
 
 
 # EOF

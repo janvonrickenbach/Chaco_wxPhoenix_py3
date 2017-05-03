@@ -20,8 +20,8 @@ from .tool_states import ZoomState, PanState, GroupedToolState, ToolState
 class BetterZoom(BaseTool, ToolHistoryMixin):
 
     # Keys to zoom in/out
-    zoom_in_key = Instance(KeySpec, args=("+",), kw={'ignore': ['shift']})
-    zoom_out_key = Instance(KeySpec, args=("-",))
+    zoom_in_key = Instance(KeySpec, args=("+", ), kw={'ignore': ['shift']})
+    zoom_out_key = Instance(KeySpec, args=("-", ))
 
     # Keys to zoom in/out in x direction only
     zoom_in_x_key = Instance(KeySpec, args=("Right", "shift"))
@@ -81,19 +81,19 @@ class BetterZoom(BaseTool, ToolHistoryMixin):
             x_map = self._get_x_mapper()
             y_map = self._get_y_mapper()
 
-            cx = (x_map.range.high + x_map.range.low)/2
+            cx = (x_map.range.high + x_map.range.low) / 2
             if self._index_factor == new_index_factor:
                 nextx = cx
             else:
                 x = x_map.map_data(location[0])
-                nextx = x + (cx - x)*(self._index_factor/new_index_factor)
+                nextx = x + (cx - x) * (self._index_factor / new_index_factor)
 
-            cy = (y_map.range.high + y_map.range.low)/2
+            cy = (y_map.range.high + y_map.range.low) / 2
             if self._value_factor == new_value_factor:
                 nexty = cy
             else:
                 y = y_map.map_data(location[1])
-                nexty = y + (cy - y)*(self._value_factor/new_value_factor)
+                nexty = y + (cy - y) * (self._value_factor / new_value_factor)
 
             pan_state = PanState((cx, cy), (nextx, nexty))
             zoom_state = ZoomState((self._index_factor, self._value_factor),
@@ -290,7 +290,7 @@ class BetterZoom(BaseTool, ToolHistoryMixin):
     #--------------------------------------------------------------------------
 
     def _center_screen(self):
-        return self.component.bounds[0]/2, self.component.bounds[1]/2
+        return self.component.bounds[0] / 2, self.component.bounds[1] / 2
 
     def _zoom_limit_reached(self, factor, xy_axis):
         """ Returns True if the new low and high exceed the maximum zoom
@@ -298,23 +298,23 @@ class BetterZoom(BaseTool, ToolHistoryMixin):
         """
 
         if xy_axis == 'x':
-            return not (self.x_min_zoom_factor <=
-                        factor <= self.x_max_zoom_factor)
+            return not (
+                self.x_min_zoom_factor <= factor <= self.x_max_zoom_factor)
         else:
-            return not (self.y_min_zoom_factor <=
-                        factor <= self.y_max_zoom_factor)
+            return not (
+                self.y_min_zoom_factor <= factor <= self.y_max_zoom_factor)
 
     def _zoom_in_mapper(self, mapper, factor):
 
         high = mapper.range.high
         low = mapper.range.low
-        range = high-low
+        range = high - low
 
-        center = (low + high)/2.0
+        center = (low + high) / 2.0
 
-        new_range = range/factor
-        mapper.range.set_bounds(low=center - new_range/2,
-                                high=center + new_range/2)
+        new_range = range / factor
+        mapper.range.set_bounds(
+            low=center - new_range / 2, high=center + new_range / 2)
 
     def _get_x_mapper(self):
         if isinstance(self.component.index_mapper, GridMapper):
@@ -357,7 +357,7 @@ class BetterZoom(BaseTool, ToolHistoryMixin):
         The **_history_index** will have already been set to the index
         corresponding to the previous state.
         """
-        self._history[self._history_index+1].revert(self)
+        self._history[self._history_index + 1].revert(self)
 
     def _reset_state_pressed(self):
         """ Called when the tool needs to reset its history.

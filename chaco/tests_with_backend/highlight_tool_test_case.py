@@ -27,7 +27,7 @@ def test_highlight_on_log_plot():
 
     plotdata = ArrayPlotData()
     plotdata.set_data("x", x)
-    plotdata.set_data("y", x*x)
+    plotdata.set_data("y", x * x)
 
     plot = Plot(plotdata)
     plot.plot(("x", "y"), index_scale='log', value_scale='log')
