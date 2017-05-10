@@ -491,7 +491,7 @@ class Legend(AbstractOverlay):
             indx = 0
         else:
             indx = -1
-        if old != None:
+        if old is not None:
             self._cached_labels.pop(indx)
             self._cached_label_names.pop(indx)
             self._cached_visible_plots.pop(indx)

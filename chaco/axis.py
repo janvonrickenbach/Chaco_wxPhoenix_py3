@@ -147,9 +147,9 @@ class PlotAxis(AbstractOverlay):
     # Cached position calculations
 
     _tick_list = List  # These are caches of their respective positions
-    _tick_positions = Any  #List
-    _tick_label_list = Any
-    _tick_label_positions = Any
+    _tick_positions = None#Any  #List
+    _tick_label_list = None#Any
+    _tick_label_positions = None#Any
     _tick_label_bounding_boxes = List
     _major_axis_size = Float
     _minor_axis_size = Float

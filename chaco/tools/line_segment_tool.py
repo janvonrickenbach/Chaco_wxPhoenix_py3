@@ -284,7 +284,7 @@ class LineSegmentTool(AbstractOverlay):
     def _cancel_drag(self):
         """ Cancels a drag operation.
         """
-        if self._dragged != None:
+        if self._dragged is not None:
             if self._drag_new_point:
                 # Only remove the point if it was a newly-placed point
                 self.points.pop(self._dragged)

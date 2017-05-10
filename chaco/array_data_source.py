@@ -83,7 +83,7 @@ class ArrayDataSource(AbstractDataSource):
     #------------------------------------------------------------------------
 
     # The data array itself.
-    _data = NumericalSequenceTrait
+    _data = np.zeros(1)#NumericalSequenceTrait
 
     # Cached values of min and max as long as **_data** doesn't change.
     _cached_bounds = Tuple
@@ -276,12 +276,21 @@ class ArrayDataSource(AbstractDataSource):
             self._max_index = 0
             self._cached_bounds = (data[0], data[0])
         else:
+            #for some reason, on Linux this is always ascending
             if self.sort_order == "ascending":
-                self._min_index = 0
-                self._max_index = -1
+                if(data[0]>data[-1]):
+                    self._min_index = -1
+                    self._max_index = 0
+                else:
+                    self._min_index = 0
+                    self._max_index = -1
             elif self.sort_order == "descending":
-                self._min_index = -1
-                self._max_index = 0
+                if(data[0]>data[-1]):
+                    self._min_index = -1
+                    self._max_index = 0
+                else:
+                    self._min_index = 0
+                    self._max_index = -1
             else:
                 # ignore NaN values.  This is probably a little slower,
                 # but also much safer.

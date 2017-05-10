@@ -62,13 +62,13 @@ class PlotSession(HasTraits):
 
         if title is not None:
             new_win.set_title(title)
-        elif name != None:
+        elif name is not None:
             new_win.set_title(name)
         else:
             new_win.set_title(self.prefs.default_window_name)
 
         self.windows.append(new_win)
-        if name != None:
+        if name is not None:
             self.window_map[name] = new_win
         return len(self.windows) - 1
 
