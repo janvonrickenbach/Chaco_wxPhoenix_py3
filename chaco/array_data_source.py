@@ -284,6 +284,8 @@ class ArrayDataSource(AbstractDataSource):
                 else:
                     self._min_index = 0
                     self._max_index = -1
+                self._min_index = bounded_nanargmin(data.view(ndarray))
+                self._max_index = bounded_nanargmax(data.view(ndarray))
             elif self.sort_order == "descending":
                 if(data[0]>data[-1]):
                     self._min_index = -1
@@ -291,6 +293,8 @@ class ArrayDataSource(AbstractDataSource):
                 else:
                     self._min_index = 0
                     self._max_index = -1
+                self._min_index = bounded_nanargmin(data.view(ndarray))
+                self._max_index = bounded_nanargmax(data.view(ndarray))
             else:
                 # ignore NaN values.  This is probably a little slower,
                 # but also much safer.
