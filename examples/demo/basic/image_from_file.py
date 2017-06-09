@@ -11,7 +11,6 @@ Loads and saves RGB images from disk
 
 # Standard library imports
 import os, sys
-
 # Major library imports
 
 # Enthought library imports
@@ -27,10 +26,10 @@ from chaco.api \
 from enable.component_editor import ComponentEditor
 from chaco.tools.api import PanTool, ZoomTool
 
+
 #-------------------------------------------------------------------------------
 # Class 'DemoView'
 #-------------------------------------------------------------------------------
-
 
 class DemoView(HasTraits):
 
@@ -42,17 +41,20 @@ class DemoView(HasTraits):
     # A Plot object to plot our image data
     plot = Instance(Plot)
 
+
     ### Private Traits #########################################################
 
     # File name to load image from
-    resource_path = os.path.join('examples', 'basic', 'capitol.jpg')
+    base_name=os.path.dirname(os.path.abspath( sys.argv[0] ))
+    resource_path = os.path.join(base_name,'basic','capitol.jpg')
     alt_path = 'capitol.jpg'
-    image_path = find_resource(
-        'Chaco', resource_path, alt_path=alt_path, return_path=True)
+    image_path = find_resource('Chaco', resource_path, alt_path=alt_path,
+        return_path=True)
     _load_file = File(image_path)
 
     # File name to save image to
     _save_file = File
+
 
     ### Traits Views ###########################################################
 
@@ -62,7 +64,8 @@ class DemoView(HasTraits):
         buttons=OKCancelButtons,
         kind='livemodal',  # NB must use livemodal, plot objects don't copy well
         width=400,
-        resizable=True, )
+        resizable=True,
+    )
 
     # This view is for a file dialog to select the 'save' filename
     save_file_view = View(
@@ -70,7 +73,8 @@ class DemoView(HasTraits):
         buttons=OKCancelButtons,
         kind='livemodal',  # NB must use livemodal, plot objects don't copy well
         width=400,
-        resizable=True, )
+        resizable=True,
+    )
 
     #---------------------------------------------------------------------------
     # Public 'DemoView' interface
@@ -101,23 +105,23 @@ class DemoView(HasTraits):
         # for the view. Alternatively, we could move the DemoController class
         # to the top and declare view=Instance(HasTraits) instead.
         traits_view = View(
-            Item(
-                'plot',
-                editor=ComponentEditor(),
-                show_label=False, ),
+            Item('plot',
+                 editor=ComponentEditor(),
+                 show_label=False,
+            ),
             menubar=MenuBar(
-                Menu(
-                    Action(
-                        name="Save Plot", action="save"),  # see Controller for
-                    Action(
-                        name="Load Plot", action="load"),  # these callbacks
-                    Separator(),
-                    CloseAction,
-                    name="File", ), ),
+                Menu(Action(name="Save Plot", action="save"), # see Controller for
+                     Action(name="Load Plot", action="load"), # these callbacks
+                     Separator(),
+                     CloseAction,
+                     name="File",
+                ),
+            ),
             width=600,
             height=600,
             resizable=True,
-            handler=DemoController)
+            handler=DemoController
+        )
         return traits_view
 
     #---------------------------------------------------------------------------
@@ -155,7 +159,6 @@ class DemoView(HasTraits):
 #-------------------------------------------------------------------------------
 # Class 'DemoController'
 #-------------------------------------------------------------------------------
-
 
 class DemoController(Handler):
 
@@ -199,7 +202,6 @@ popup = DemoView()
 #-------------------------------------------------------------------------------
 # Function 'main'
 #-------------------------------------------------------------------------------
-
 
 def main(argv=None):
     view = DemoView()

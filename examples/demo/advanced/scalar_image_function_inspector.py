@@ -88,9 +88,10 @@ class Model(HasTraits):
 
     def compute_model(self):
         # The xs and ys used for the image plot range need to be the
-        # edges of the cells.
-        self.xs = linspace(self.min_x, self.max_x, self.npts_x + 1)
-        self.ys = linspace(self.min_y, self.max_y, self.npts_y + 1)
+        # edges of the cells
+        # note 6/8/17, above may be true, but not what Contour is expecting  
+        self.xs = linspace(self.min_x, self.max_x, self.npts_x)# + 1)
+        self.ys = linspace(self.min_y, self.max_y, self.npts_y)# + 1)
 
         # The grid of points at which we will evaluate the 2D function
         # is located at cell centers, so use halfsteps from the
