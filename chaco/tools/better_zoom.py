@@ -269,10 +269,16 @@ class BetterZoom(BaseTool, ToolHistoryMixin):
             return
 
         if event.mouse_wheel != 0:
-            if event.mouse_wheel > 0:
-                self.zoom_in()
-            else:
-                self.zoom_out()
+            try:
+                if event.mouse_wheel > 0:
+                    self.zoom_in()
+                else:
+                    self.zoom_out()
+            except:
+                if event.mouse_wheel.y() > 0:
+                    self.zoom_in()
+                else:
+                    self.zoom_out()                
             event.handled = True
 
     def normal_mouse_move(self, event):
