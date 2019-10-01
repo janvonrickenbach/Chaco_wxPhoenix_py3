@@ -5,4 +5,4 @@
 """
 from ._version import full_version as __version__  # noqa
 
-__requires__ = ['enable', ]
+__requires__ = ['enable==4.6.2.dev27', ]
