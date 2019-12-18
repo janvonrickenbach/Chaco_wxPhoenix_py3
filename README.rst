@@ -15,6 +15,7 @@ http://docs.enthought.com/chaco
   :target: https://coveralls.io/r/enthought/chaco?branch=master
   :alt: Test coverage
 
+This is a fork of the Chaco Package that adds support wxPythonPhoenix and Python3   
 
 Chaco is a Python plotting application toolkit that facilitates writing
 plotting applications at all levels of complexity, from simple scripts with
